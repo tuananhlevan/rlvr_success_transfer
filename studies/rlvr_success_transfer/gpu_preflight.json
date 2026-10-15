@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-10-15T12:58:32.594838+00:00",
+  "cuda_available": true,
+  "torch_version": "2.9.1",
+  "torch_cuda_build": "12.9",
+  "nvidia_device_nodes": [
+    "/dev/nvidia-caps",
+    "/dev/nvidia-modeset",
+    "/dev/nvidia-uvm-tools",
+    "/dev/nvidia-uvm",
+    "/dev/nvidia0",
+    "/dev/nvidiactl"
+  ],
+  "gpu": "NVIDIA GeForce RTX 5060 Ti",
+  "gpu_total_memory_bytes": 16610820096,
+  "driver_module_version": "595.99.02",
+  "model_revision": "060db6499f32faf8b98477b0a26969ef7d8b9987",
+  "model_download": "completed",
+  "dataset_download": "completed",
+  "package_versions": {
+    "torch": "2.9.1",
+    "transformers": "4.57.6",
+    "datasets": "4.8.5",
+    "math-verify": "0.9.0",
+    "accelerate": "1.15.0",
+    "safetensors": "0.8.0",
+    "huggingface-hub": "0.36.2"
+  },
+  "resolution": "GPU devices and shell networking became accessible after environment permissions changed. Earlier device-access blocker is resolved.",
+  "cuda_matrix_product_success": true,
+  "dns_resolves": {
+    "huggingface.co": true,
+    "raw.githubusercontent.com": true
+  }
+}

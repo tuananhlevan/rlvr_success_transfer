@@ -1,0 +1,561 @@
+{
+  "scope": "bounded deterministic theorem checks; not neural evidence, statistical prevalence, or novelty clearance",
+  "rational_sign_certificates": {
+    "method": "exact Fraction Taylor bounds with geometric exponential remainder",
+    "binary_derivative_at_2": [
+      -0.01556703554672629,
+      -0.01556703554672629
+    ],
+    "unnormalized_value_derivative_at_2": [
+      -20.138502095579845,
+      -20.138502095579845
+    ],
+    "binary_derivative_at_rating_optimum": [
+      0.08603554861226763,
+      0.08603554861226763
+    ],
+    "exact_sign_assertions_passed": true
+  },
+  "scalar_cases": {
+    "original_negative": {
+      "features": [
+        0.0,
+        0.7,
+        1.0
+      ],
+      "rewards": [
+        0.0,
+        10.0,
+        4.0
+      ],
+      "reference": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tau": 1.0,
+      "binary_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "rating_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "theta_binary": 2.246254479857887,
+      "theta_rating": 5.822784810126582,
+      "theta_value_optimum": 1.6414085771005924,
+      "J_binary": 5.371937162389794,
+      "J_rating": 4.21628190071053,
+      "endpoint_value_difference": -1.1556552616792644,
+      "classification": "all_positive_weights_harm",
+      "special_weights": {},
+      "finite_weight_rows": [
+        {
+          "lambda": 0.0,
+          "theta": 2.246254479857887,
+          "J_minus_binary": 0.0
+        },
+        {
+          "lambda": 1e-05,
+          "theta": 2.2465748437974495,
+          "J_minus_binary": -6.346033756354785e-05
+        },
+        {
+          "lambda": 0.01,
+          "theta": 2.566722895503279,
+          "J_minus_binary": -0.0746779433346676
+        },
+        {
+          "lambda": 0.1,
+          "theta": 4.466730519215259,
+          "J_minus_binary": -0.7153408242901333
+        },
+        {
+          "lambda": 1.0,
+          "theta": 5.661795983399799,
+          "J_minus_binary": -1.1075959237026094
+        },
+        {
+          "lambda": 10.0,
+          "theta": 5.806472124777898,
+          "J_minus_binary": -1.1508421876445878
+        },
+        {
+          "lambda": 10000.0,
+          "theta": 5.8227684742860415,
+          "J_minus_binary": -1.1556504481971146
+        }
+      ]
+    },
+    "monotone_positive": {
+      "features": [
+        0.0,
+        0.7,
+        1.0
+      ],
+      "rewards": [
+        0.0,
+        10.0,
+        4.0
+      ],
+      "reference": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tau": 1.0,
+      "binary_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "rating_edge_weights": [
+        0.081212609573597,
+        0.11553015461320228,
+        0.3827854666260506
+      ],
+      "theta_binary": 2.246254479857887,
+      "theta_rating": 1.7999999999999998,
+      "theta_value_optimum": 1.6414085771005924,
+      "J_binary": 5.371937162389794,
+      "J_rating": 5.432096936646054,
+      "endpoint_value_difference": 0.060159774256259624,
+      "classification": "monotone_positive",
+      "special_weights": {},
+      "finite_weight_rows": [
+        {
+          "lambda": 0.0,
+          "theta": 2.246254479857887,
+          "J_minus_binary": 0.0
+        },
+        {
+          "lambda": 1e-05,
+          "theta": 2.2462400769703743,
+          "J_minus_binary": 2.8524550659270176e-06
+        },
+        {
+          "lambda": 0.01,
+          "theta": 2.2323566721070476,
+          "J_minus_binary": 0.00272878168563917
+        },
+        {
+          "lambda": 0.1,
+          "theta": 2.139923610517921,
+          "J_minus_binary": 0.019628880451384667
+        },
+        {
+          "lambda": 1.0,
+          "theta": 1.9136338572213134,
+          "J_minus_binary": 0.05077545883861312
+        },
+        {
+          "lambda": 10.0,
+          "theta": 1.8151558757439186,
+          "J_minus_binary": 0.05917345485693293
+        },
+        {
+          "lambda": 10000.0,
+          "theta": 1.8000157571287994,
+          "J_minus_binary": 0.060158792573060005
+        }
+      ]
+    },
+    "safe_overshoot": {
+      "features": [
+        0.0,
+        0.7,
+        1.0
+      ],
+      "rewards": [
+        0.0,
+        10.0,
+        4.0
+      ],
+      "reference": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tau": 1.0,
+      "binary_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "rating_edge_weights": [
+        0.07075264816047122,
+        0.10649395635430875,
+        0.3848371321865998
+      ],
+      "theta_binary": 2.246254479857887,
+      "theta_rating": 1.3000000000000003,
+      "theta_value_optimum": 1.6414085771005924,
+      "J_binary": 5.371937162389794,
+      "J_rating": 5.410706192640576,
+      "endpoint_value_difference": 0.03876903025078171,
+      "classification": "overshoot_but_all_finite_weights_help",
+      "special_weights": {
+        "peak_lambda": 0.7068110926258392
+      },
+      "finite_weight_rows": [
+        {
+          "lambda": 0.0,
+          "theta": 2.246254479857887,
+          "J_minus_binary": 0.0
+        },
+        {
+          "lambda": 1e-05,
+          "theta": 2.2462261887931714,
+          "J_minus_binary": 5.602925154057914e-06
+        },
+        {
+          "lambda": 0.01,
+          "theta": 2.2189971299758655,
+          "J_minus_binary": 0.00530683794064668
+        },
+        {
+          "lambda": 0.1,
+          "theta": 2.038535953376969,
+          "J_minus_binary": 0.03549117277997471
+        },
+        {
+          "lambda": 1.0,
+          "theta": 1.5735851359184907,
+          "J_minus_binary": 0.0642259698085299
+        },
+        {
+          "lambda": 10.0,
+          "theta": 1.3393594073468056,
+          "J_minus_binary": 0.044702637303102755
+        },
+        {
+          "lambda": 10000.0,
+          "theta": 1.3000415044021225,
+          "J_minus_binary": 0.038775712785245275
+        }
+      ]
+    },
+    "unsafe_frozen_onpolicy_overshoot": {
+      "features": [
+        0.0,
+        0.7,
+        1.0
+      ],
+      "rewards": [
+        0.0,
+        10.0,
+        4.0
+      ],
+      "reference": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "tau": 1.0,
+      "binary_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "rating_edge_weights": [
+        0.041324411721194235,
+        0.08107135981000307,
+        0.3906093235767513
+      ],
+      "theta_binary": 2.246254479857887,
+      "theta_rating": -0.6560934657026474,
+      "theta_value_optimum": 1.6414085771005924,
+      "J_binary": 5.371937162389794,
+      "J_rating": 3.862927742542243,
+      "endpoint_value_difference": -1.5090094198475512,
+      "classification": "overshoot_then_cross_below_binary",
+      "special_weights": {
+        "peak_lambda": 0.13529521291968816,
+        "baseline_crossing_theta": 1.1162944588296768,
+        "baseline_crossing_lambda": 0.37806978634006
+      },
+      "finite_weight_rows": [
+        {
+          "lambda": 0.0,
+          "theta": 2.246254479857887,
+          "J_minus_binary": 0.0
+        },
+        {
+          "lambda": 1e-05,
+          "theta": 2.2461871158107396,
+          "J_minus_binary": 1.334084228510335e-05
+        },
+        {
+          "lambda": 0.01,
+          "theta": 2.1816299567984148,
+          "J_minus_binary": 0.01227812251396454
+        },
+        {
+          "lambda": 0.1,
+          "theta": 1.7598909984096403,
+          "J_minus_binary": 0.06235885720793988
+        },
+        {
+          "lambda": 1.0,
+          "theta": 0.5191981531098873,
+          "J_minus_binary": -0.2697336055166799
+        },
+        {
+          "lambda": 10.0,
+          "theta": -0.4467932296969669,
+          "J_minus_binary": -1.2263014753997474
+        },
+        {
+          "lambda": 10000.0,
+          "theta": -0.6558651639208128,
+          "J_minus_binary": -1.50869003870329
+        }
+      ]
+    },
+    "nonuniform_reference_changed_temperature": {
+      "features": [
+        0.0,
+        0.7,
+        1.0
+      ],
+      "rewards": [
+        0.0,
+        10.0,
+        4.0
+      ],
+      "reference": [
+        0.2,
+        0.3,
+        0.5
+      ],
+      "tau": 1.7,
+      "binary_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "rating_edge_weights": [
+        0.3333333333333333,
+        0.3333333333333333,
+        0.3333333333333333
+      ],
+      "theta_binary": 1.3213261646222865,
+      "theta_rating": 3.425167535368578,
+      "theta_value_optimum": 0.8826213617367997,
+      "J_binary": 5.182324812920318,
+      "J_rating": 4.544683887025379,
+      "endpoint_value_difference": -0.6376409258949387,
+      "classification": "all_positive_weights_harm",
+      "special_weights": {},
+      "finite_weight_rows": [
+        {
+          "lambda": 0.0,
+          "theta": 1.3213261646222865,
+          "J_minus_binary": 0.0
+        },
+        {
+          "lambda": 1e-05,
+          "theta": 1.3215146139984997,
+          "J_minus_binary": -3.0315560565874478e-05
+        },
+        {
+          "lambda": 0.01,
+          "theta": 1.5098369973548702,
+          "J_minus_binary": -0.03515479248988118
+        },
+        {
+          "lambda": 0.1,
+          "theta": 2.6274885407148583,
+          "J_minus_binary": -0.3638945143811325
+        },
+        {
+          "lambda": 1.0,
+          "theta": 3.3304682255292937,
+          "J_minus_binary": -0.6054234766596123
+        },
+        {
+          "lambda": 10.0,
+          "theta": 3.415571838104646,
+          "J_minus_binary": -0.6343857079491446
+        },
+        {
+          "lambda": 10000.0,
+          "theta": 3.4251579260506126,
+          "J_minus_binary": -0.6376376671679882
+        }
+      ]
+    }
+  },
+  "multidimensional_checks": {
+    "features": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "rewards": [
+      0.0,
+      0.3,
+      0.4,
+      0.9
+    ],
+    "reference": [
+      0.25,
+      0.25,
+      0.25,
+      0.25
+    ],
+    "tau": 1.0,
+    "binary_theta": [
+      0.39946357198849375,
+      0.49935327287125175
+    ],
+    "rating_design": "frozen independent current-policy pairs; self pairs implicit",
+    "certified_global_path_ball_radius": 0.03267360497105265,
+    "binary_Hessian_lower_bound": 0.13436672023008916,
+    "rating_Hessian_lower_bound": 0.4700818311733056,
+    "binary_Hessian_Lipschitz_bound": 0.4023689270621825,
+    "value_Hessian_norm_bound": 1.4252789350953405,
+    "rows": [
+      {
+        "lambda": 0.0001,
+        "theta": [
+          0.3994715821265918,
+          0.4993598571710607
+        ],
+        "J_minus_binary": 7.96081880416466e-08,
+        "ridge_linearized_value_change": 7.962031301160763e-08,
+        "finite_lambda_remainder_bound": 9.45524363261185e-11,
+        "observed_absolute_remainder": 1.2124969961025905e-11,
+        "positive_transfer_certified_by_bound": true,
+        "exact_path_value_derivative": 0.0007957046385502012,
+        "moment_metric_lower_bound": 0.0007957043693180792,
+        "pair_design_chi_square_q_over_current_policy": 5.121409191668329e-11,
+        "mismatch_metric_norm": 5.471607134748114e-07,
+        "centered_chi_square_mismatch_upper_bound": 1.2559409735800363e-06
+      },
+      {
+        "lambda": 0.001,
+        "theta": [
+          0.39954344417605486,
+          0.499418926058445
+        ],
+        "J_minus_binary": 7.926995783114066e-07,
+        "ridge_linearized_value_change": 7.939051561002197e-07,
+        "finite_lambda_remainder_bound": 9.395533839001323e-09,
+        "observed_absolute_remainder": 1.2055777888130824e-09,
+        "positive_transfer_certified_by_bound": true,
+        "exact_path_value_derivative": 0.000788955720027099,
+        "moment_metric_lower_bound": 0.0007889530507099236,
+        "pair_design_chi_square_q_over_current_policy": 5.092056107498003e-09,
+        "mismatch_metric_norm": 5.4497514265061095e-06,
+        "centered_chi_square_mismatch_upper_bound": 1.2504213512176332e-05
+      },
+      {
+        "lambda": 0.01,
+        "theta": [
+          0.40024007248783133,
+          0.4999914050514069
+        ],
+        "J_minus_binary": 7.602393040540001e-06,
+        "ridge_linearized_value_change": 7.716345195684952e-06,
+        "finite_lambda_remainder_bound": 8.828312278541046e-07,
+        "observed_absolute_remainder": 1.1395215514495134e-07,
+        "positive_transfer_certified_by_bound": true,
+        "exact_path_value_derivative": 0.0007254967238126064,
+        "moment_metric_lower_bound": 0.0007254721942502053,
+        "pair_design_chi_square_q_over_current_policy": 4.811859334749098e-07,
+        "mismatch_metric_norm": 5.2388772286669986e-05,
+        "centered_chi_square_mismatch_upper_bound": 0.00011974155251395392
+      },
+      {
+        "lambda": 0.1,
+        "theta": [
+          0.40553692156690735,
+          0.5043359907444022
+        ],
+        "J_minus_binary": 5.328470887261405e-05,
+        "ridge_linearized_value_change": 6.0259520035587685e-05,
+        "finite_lambda_remainder_bound": 5.1715055443387405e-05,
+        "observed_absolute_remainder": 6.974811162973635e-06,
+        "positive_transfer_certified_by_bound": true,
+        "exact_path_value_derivative": 0.00035018809565857457,
+        "moment_metric_lower_bound": 0.00035007091343527193,
+        "pair_design_chi_square_q_over_current_policy": 2.939753121073488e-05,
+        "mismatch_metric_norm": 0.000370216977534713,
+        "centered_chi_square_mismatch_upper_bound": 0.0008240183127846233
+      },
+      {
+        "lambda": 1.0,
+        "theta": [
+          0.41853436575247505,
+          0.5149243186285167
+        ],
+        "J_minus_binary": 0.00012003521278741713,
+        "ridge_linearized_value_change": 0.00018886339050154023,
+        "finite_lambda_remainder_bound": 0.0004617928070144253,
+        "observed_absolute_remainder": 6.882817771412309e-05,
+        "positive_transfer_certified_by_bound": false,
+        "exact_path_value_derivative": 1.2107210737915106e-05,
+        "moment_metric_lower_bound": 1.2074129842885423e-05,
+        "pair_design_chi_square_q_over_current_policy": 0.00028879509855834383,
+        "mismatch_metric_norm": 0.0006846371238278475,
+        "centered_chi_square_mismatch_upper_bound": 0.0014579399758542077
+      }
+    ]
+  },
+  "generic_quadratic_endpoint_counterexample": {
+    "scope": "convex-loss/concave-value illustration, not a coupled preference-model construction",
+    "binary_optimum": [
+      0,
+      0
+    ],
+    "rating_optimum": [
+      1,
+      1
+    ],
+    "both_endpoint_values": -1,
+    "rows": [
+      {
+        "lambda": 1e-05,
+        "theta": [
+          9.99990000099999e-06,
+          0.0009990009990009992
+        ],
+        "J_minus_binary": 1.9001697007875966e-05
+      },
+      {
+        "lambda": 0.1,
+        "theta": [
+          0.09090909090909091,
+          0.9090909090909091
+        ],
+        "J_minus_binary": -0.6528925619834709
+      },
+      {
+        "lambda": 100.0,
+        "theta": [
+          0.9900990099009901,
+          0.9999000099990001
+        ],
+        "J_minus_binary": 0.0001019403990588641
+      }
+    ]
+  },
+  "assertions_passed": true
+}

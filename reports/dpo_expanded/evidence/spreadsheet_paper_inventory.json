@@ -1,0 +1,222 @@
+{
+  "source": "https://docs.google.com/spreadsheets/d/1vwuYzjRLaazjo5bUhDtF3rsvBE7CeKxykNyT8eMOW7w/edit?gid=1488308827",
+  "date": "2026-10-13",
+  "rows": [
+    {
+      "sheet": "ICLR 2026",
+      "row": 2,
+      "title": "Property-Driven Protein Inverse Folding with Multi-Objective Preference Alignment",
+      "urls": [
+        "https://openreview.net/forum?id=m826DekCpp"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 3,
+      "title": "Why DPO is a Misspecified Estimator and How to Fix It",
+      "urls": [
+        "https://openreview.net/forum?id=btEiAfnLsX"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 4,
+      "title": "Token-Importance Guided Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=cMEnMVvMw9"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 5,
+      "title": "Mitigating Mismatch within Reference-based Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=k79Un1LSXy"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 6,
+      "title": "DuPO: Enabling Reliable Self-Verification via Dual Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=SD8Z231C45"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 7,
+      "title": "Importance Sampling for Multi-Negative Multimodal Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=HEFPwoGtTj"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 8,
+      "title": "SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety",
+      "urls": [
+        "https://openreview.net/forum?id=MoJSnVZ59d"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 9,
+      "title": "Uni-DPO: A Unified Paradigm for Dynamic Preference Optimization of LLMs",
+      "urls": [
+        "https://openreview.net/forum?id=G7DBGlgjjp"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 10,
+      "title": "P^2 -DPO: Grounding Hallucination in Perceptual Processing via Calibration Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=ekOwxTn65Y"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 11,
+      "title": "Alignment-Weighted DPO: A principled reasoning approach to improve safety alignment",
+      "urls": [
+        "https://openreview.net/forum?id=OuMNJoKJBQ"
+      ]
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 12,
+      "title": "Is On-Policy Data always the Best Choice for Direct Preference Optimization-Based LM Alignment?",
+      "urls": [
+        "https://openreview.net/forum?id=tz9mJmgrdM"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 2,
+      "title": "Coverage Improvement and Fast Convergence of On-policy Preference Learning",
+      "urls": [
+        "https://arxiv.org/pdf/2601.08421"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 3,
+      "title": "Reducing Hallucinations in LLMs via Factuality-Aware Preference Learning",
+      "urls": [
+        "https://arxiv.org/abs/2601.03027"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 4,
+      "title": "MixDPO: Modeling Preference Strength for Pluralistic Alignment",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06180"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 5,
+      "title": "From RLHF to Direct Alignment: A Theoretical Unification of Preference Learning for Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06108"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 6,
+      "title": "An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift",
+      "urls": [
+        "https://arxiv.org/pdf/2601.05882"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 7,
+      "title": "SPINAL - Scaling-law and Preference Integration in Neural Alignment Layers",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06238"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 8,
+      "title": "Direct Preference Optimization with Rating Information: Practical Algorithms and Provable Gains",
+      "urls": [
+        "https://arxiv.org/pdf/2602.00603"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 9,
+      "title": "Tangent Space Fine-Tuning for Directional Preference Alignment in Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2602.01128"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 10,
+      "title": "Alignment-Weighted DPO: A principled reasoning approach to improve safety alignment",
+      "urls": [
+        "https://arxiv.org/abs/2602.21346"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 11,
+      "title": "YaPO: Learnable Sparse Activation Steering Vectors for Domain Adaptation",
+      "urls": [
+        "https://arxiv.org/abs/2601.08441"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 12,
+      "title": "SP^2DPO: An LLM-assisted Semantic Per-Pair DPO Generalization",
+      "urls": [
+        "https://arxiv.org/pdf/2601.22385"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 13,
+      "title": "ProFit: Leveraging High-Value Signals in SFT via Probability-Guided Token Selection",
+      "urls": [
+        "https://arxiv.org/pdf/2601.09195"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 14,
+      "title": "CATTO: Balancing Preferences and Confidence in Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.23096"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 15,
+      "title": "ECLIPTICA - A Framework for Switchable LLM Alignment via CITA - Contrastive Instruction-Tuned Alignment",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06157"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 16,
+      "title": "Clipping-Free Policy Optimization for Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.22801"
+      ]
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 17,
+      "title": "Towards a Theoretical Understanding to the Generalization of RLHF",
+      "urls": [
+        "https://arxiv.org/pdf/2601.16403"
+      ]
+    }
+  ]
+}

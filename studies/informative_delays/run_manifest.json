@@ -1,0 +1,306 @@
+{
+  "config": {
+    "workers": [
+      32,
+      128,
+      512
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "horizon_multiplier": 10,
+    "negative_probability": 0.0625,
+    "slow_service": 1000000000,
+    "initial_x": 0.1,
+    "conditions": [
+      "informative",
+      "independent",
+      "equal"
+    ],
+    "initial_service": 1,
+    "parallel_processes": 3,
+    "objective": "f(x)=x^2/2; g(x,e)=x+e; L=sigma=1",
+    "initial_rule": "Designated worker 0 first; other initial gradients zero",
+    "tie_rule": "Monotone job identifier"
+  },
+  "certificate": {
+    "M": 64,
+    "T": 512,
+    "beta": "1/1008",
+    "eta": "beta/100",
+    "service_negative": 1000000,
+    "cantelli_event_probability_lower": "512/527",
+    "expectation_lower_bound": 0.0019778215166249137,
+    "lemma_implied_upper_bound": 0.0009921627083343254,
+    "lower_upper_ratio": 1.9934447243490372,
+    "strict_inequality_verified_with_exact_rationals": true,
+    "scope": "Appendix A.3 lemma; not a theorem counterexample"
+  },
+  "queue_identity": {
+    "values": [
+      {
+        "workers": 32,
+        "negative_mean_attenuation": 0.37300380560893914,
+        "stationary_mean_momentum": 0.15177161368825046
+      },
+      {
+        "workers": 64,
+        "negative_mean_attenuation": 0.37041769166252225,
+        "stationary_mean_momentum": 0.15239761220361714
+      },
+      {
+        "workers": 128,
+        "negative_mean_attenuation": 0.36914267436552384,
+        "stationary_mean_momentum": 0.15270624475095473
+      },
+      {
+        "workers": 512,
+        "negative_mean_attenuation": 0.3681941544507646,
+        "stationary_mean_momentum": 0.1529358448655428
+      },
+      {
+        "workers": 4096,
+        "negative_mean_attenuation": 0.36791874060329927,
+        "stationary_mean_momentum": 0.153002511943327
+      }
+    ],
+    "limiting_mean_momentum": 0.1530120248211456,
+    "scope": "Noise-only FIFO scheduler; no full objective convergence theorem"
+  },
+  "information_lower_bound": {
+    "rows": [
+      {
+        "workers": 32,
+        "T": 1024,
+        "rare_probability": "1/132",
+        "population_mean_squared": 0.007633587786259542,
+        "initial_gap": 0.003816793893129771,
+        "event_probability_lower": "72/73",
+        "gradient_error_lower": 0.007529018090557356,
+        "worker_independent_noise_rate_shape": 0.002049906256707854,
+        "lower_over_rate_shape": 3.672859705618415
+      },
+      {
+        "workers": 128,
+        "T": 16384,
+        "rare_probability": "1/516",
+        "population_mean_squared": 0.001941747572815534,
+        "initial_gap": 0.000970873786407767,
+        "event_probability_lower": "288/289",
+        "gradient_error_lower": 0.0019350287230826082,
+        "worker_independent_noise_rate_shape": 0.00025101344866324655,
+        "lower_over_rate_shape": 7.708864737676247
+      },
+      {
+        "workers": 512,
+        "T": 262144,
+        "rare_probability": "1/2052",
+        "population_mean_squared": 0.00048756704046806434,
+        "initial_gap": 0.00024378352023403217,
+        "event_probability_lower": "1152/1153",
+        "gradient_error_lower": 0.00048714417226297495,
+        "worker_independent_noise_rate_shape": 3.097139059758562e-05,
+        "lower_over_rate_shape": 15.728844035209397
+      },
+      {
+        "workers": 4096,
+        "T": 16777216,
+        "rare_probability": "1/16388",
+        "population_mean_squared": 6.102398242509306e-05,
+        "initial_gap": 3.051199121254653e-05,
+        "event_probability_lower": "9216/9217",
+        "gradient_error_lower": 6.1017361617625874e-05,
+        "worker_independent_noise_rate_shape": 1.3560249088123994e-06,
+        "lower_over_rate_shape": 44.99722772132896
+      },
+      {
+        "workers": 65536,
+        "T": 4294967296,
+        "rare_probability": "1/262148",
+        "population_mean_squared": 3.8146536103789098e-06,
+        "initial_gap": 1.9073268051894549e-06,
+        "event_probability_lower": "147456/147457",
+        "gradient_error_lower": 3.814627740778888e-06,
+        "worker_independent_noise_rate_shape": 2.110240717077479e-08,
+        "lower_over_rate_shape": 180.76742193003716
+      }
+    ],
+    "scope": "Completion-only oracle; work-conserving immediate refill; no barrier or new oracle",
+    "status": "Original derived lower bound; not externally peer reviewed; novelty not established"
+  },
+  "aggregates": [
+    {
+      "condition": "informative",
+      "workers": 32,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.01199793123138905,
+      "ordered_mean_gradient_squared_sd": 0.0010889781010948924,
+      "ordinary_mean_gradient_squared_mean": 0.0007337038007033795,
+      "ordinary_mean_gradient_squared_sd": 0.00019674298544919105,
+      "raw_arrival_noise_mean_mean": 0.009279022600285862,
+      "raw_arrival_noise_mean_sd": 0.004492470552671782,
+      "attenuated_noise_sum_per_update_mean": 0.12297644897620373,
+      "attenuated_noise_sum_per_update_sd": 0.004101197774150805,
+      "positive_mean_attenuation_mean": 0.9937855827019589,
+      "positive_mean_attenuation_sd": 0.00042987821711900503,
+      "negative_mean_attenuation_mean": 0.5050719783782694,
+      "negative_mean_attenuation_sd": 0.007177322668818578,
+      "explicit_v1_bound": 0.0346875
+    },
+    {
+      "condition": "informative",
+      "workers": 128,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.016634262485231085,
+      "ordered_mean_gradient_squared_sd": 0.00033274793018791193,
+      "ordinary_mean_gradient_squared_mean": 0.00023245136960181695,
+      "ordinary_mean_gradient_squared_sd": 7.86956239871978e-06,
+      "raw_arrival_noise_mean_mean": 0.0042444804466982,
+      "raw_arrival_noise_mean_sd": 0.0018758023276124614,
+      "attenuated_noise_sum_per_update_mean": 0.12879729356479877,
+      "attenuated_noise_sum_per_update_sd": 0.0011348912682111962,
+      "positive_mean_attenuation_mean": 0.9966557022819126,
+      "positive_mean_attenuation_sd": 0.00023474445586880587,
+      "negative_mean_attenuation_mean": 0.4731023182942813,
+      "negative_mean_attenuation_sd": 0.0012057126742126543,
+      "explicit_v1_bound": 0.008730468750000001
+    },
+    {
+      "condition": "informative",
+      "workers": 512,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.017890852379643784,
+      "ordered_mean_gradient_squared_sd": 9.24783799799986e-05,
+      "ordinary_mean_gradient_squared_mean": 5.685373044875949e-05,
+      "ordinary_mean_gradient_squared_sd": 8.903077318261856e-07,
+      "raw_arrival_noise_mean_mean": 0.0005195286091454186,
+      "raw_arrival_noise_mean_sd": 0.0004793011021070683,
+      "attenuated_noise_sum_per_update_mean": 0.1301821050770305,
+      "attenuated_noise_sum_per_update_sd": 0.00037789210036541716,
+      "positive_mean_attenuation_mean": 0.9983469150399092,
+      "positive_mean_attenuation_sd": 1.5944256127636124e-05,
+      "negative_mean_attenuation_mean": 0.4614939438661956,
+      "negative_mean_attenuation_sd": 0.0006066447602624369,
+      "explicit_v1_bound": 0.0021862792968750005
+    },
+    {
+      "condition": "independent",
+      "workers": 32,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.0011871134906305883,
+      "ordered_mean_gradient_squared_sd": 0.00012952296333899053,
+      "ordinary_mean_gradient_squared_mean": 0.0011768606598437992,
+      "ordinary_mean_gradient_squared_sd": 0.0001329757940135435,
+      "raw_arrival_noise_mean_mean": -0.0016137430609191802,
+      "raw_arrival_noise_mean_sd": 0.0035858155162628146,
+      "attenuated_noise_sum_per_update_mean": -0.001305661203346609,
+      "attenuated_noise_sum_per_update_sd": 0.002276942671122892,
+      "positive_mean_attenuation_mean": 0.9648133759366995,
+      "positive_mean_attenuation_sd": 0.0002142475530511241,
+      "negative_mean_attenuation_mean": 0.964450985402998,
+      "negative_mean_attenuation_sd": 0.004600800589937431,
+      "explicit_v1_bound": 0.0346875
+    },
+    {
+      "condition": "independent",
+      "workers": 128,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.00037697748093264426,
+      "ordered_mean_gradient_squared_sd": 1.4945267733777233e-05,
+      "ordinary_mean_gradient_squared_mean": 0.00037186883644549606,
+      "ordinary_mean_gradient_squared_sd": 1.3970789469316473e-05,
+      "raw_arrival_noise_mean_mean": 0.0011934974721388863,
+      "raw_arrival_noise_mean_sd": 0.001809556229381296,
+      "attenuated_noise_sum_per_update_mean": 0.0013707101618052775,
+      "attenuated_noise_sum_per_update_sd": 0.0018506393911894424,
+      "positive_mean_attenuation_mean": 0.9644161225119926,
+      "positive_mean_attenuation_sd": 1.3386732150407192e-05,
+      "negative_mean_attenuation_mean": 0.9636412070973961,
+      "negative_mean_attenuation_sd": 0.000777120488156809,
+      "explicit_v1_bound": 0.008730468750000001
+    },
+    {
+      "condition": "independent",
+      "workers": 512,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 9.607969535562498e-05,
+      "ordered_mean_gradient_squared_sd": 2.7825670882238347e-07,
+      "ordinary_mean_gradient_squared_mean": 9.433525729728811e-05,
+      "ordinary_mean_gradient_squared_sd": 3.954321252823978e-07,
+      "raw_arrival_noise_mean_mean": -0.00021905301315850042,
+      "raw_arrival_noise_mean_sd": 0.0004896450071672102,
+      "attenuated_noise_sum_per_update_mean": -0.00018132436855276064,
+      "attenuated_noise_sum_per_update_sd": 0.0004648439668532595,
+      "positive_mean_attenuation_mean": 0.9648683773070883,
+      "positive_mean_attenuation_sd": 2.8926853080799405e-05,
+      "negative_mean_attenuation_mean": 0.9647364406023377,
+      "negative_mean_attenuation_sd": 0.0002703076155707203,
+      "explicit_v1_bound": 0.0021862792968750005
+    },
+    {
+      "condition": "equal",
+      "workers": 32,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.0012167945850027624,
+      "ordered_mean_gradient_squared_sd": 0.00012217182571103036,
+      "ordinary_mean_gradient_squared_mean": 0.0011827168535058401,
+      "ordinary_mean_gradient_squared_sd": 0.00013092018265774562,
+      "raw_arrival_noise_mean_mean": -0.001210307295689273,
+      "raw_arrival_noise_mean_sd": 0.003973381483909015,
+      "attenuated_noise_sum_per_update_mean": -0.0009997066104599174,
+      "attenuated_noise_sum_per_update_sd": 0.0036529676313055964,
+      "positive_mean_attenuation_mean": 0.9526857382163962,
+      "positive_mean_attenuation_sd": 4.912094705043074e-09,
+      "negative_mean_attenuation_mean": 0.9526807928162947,
+      "negative_mean_attenuation_sd": 1.3597399555105182e-16,
+      "explicit_v1_bound": 0.0346875
+    },
+    {
+      "condition": "equal",
+      "workers": 128,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 0.0003807355522446885,
+      "ordered_mean_gradient_squared_sd": 1.6054488182507676e-05,
+      "ordinary_mean_gradient_squared_mean": 0.00037175921761868294,
+      "ordinary_mean_gradient_squared_sd": 1.4996277569435456e-05,
+      "raw_arrival_noise_mean_mean": 0.0013111662369975372,
+      "raw_arrival_noise_mean_sd": 0.0019678804606716106,
+      "attenuated_noise_sum_per_update_mean": 0.0012812632060325432,
+      "attenuated_noise_sum_per_update_sd": 0.0018034484263343405,
+      "positive_mean_attenuation_mean": 0.9515921636322394,
+      "positive_mean_attenuation_sd": 1.5430802831233506e-10,
+      "negative_mean_attenuation_mean": 0.9515918483422564,
+      "negative_mean_attenuation_sd": 5.58652929490272e-15,
+      "explicit_v1_bound": 0.008730468750000001
+    },
+    {
+      "condition": "equal",
+      "workers": 512,
+      "n_seeds": 3,
+      "ordered_mean_gradient_squared_mean": 9.656990219533597e-05,
+      "ordered_mean_gradient_squared_sd": 1.0062467960524592e-06,
+      "ordinary_mean_gradient_squared_mean": 9.45102200563539e-05,
+      "ordinary_mean_gradient_squared_sd": 1.0077659255810194e-06,
+      "raw_arrival_noise_mean_mean": -0.00021957832014416335,
+      "raw_arrival_noise_mean_sd": 0.0004778168781958026,
+      "attenuated_noise_sum_per_update_mean": -0.00021078969356900447,
+      "attenuated_noise_sum_per_update_sd": 0.0004490872248592765,
+      "positive_mean_attenuation_mean": 0.9513200241925835,
+      "positive_mean_attenuation_sd": 2.4394545945765385e-12,
+      "negative_mean_attenuation_mean": 0.9513200043584603,
+      "negative_mean_attenuation_sd": 7.850462293418876e-17,
+      "explicit_v1_bound": 0.0021862792968750005
+    }
+  ],
+  "elapsed_seconds": 5.617194652557373,
+  "python": "3.11.14",
+  "numpy": "2.4.0",
+  "script_sha256": "299c605d958d3af76a1456408e3abc6c24e393728fce027d582223577803b9e3",
+  "results_sha256": "f9851021a6d01ec28d71c6b3400bb777c884492ae22c046197f59e664bcfa814",
+  "external_data_or_models": false,
+  "gradient_updates": "Paired methods share exact job events",
+  "paper_versions": "Stress schedule uses v1 parameters; v3 has changed theorem assumptions and schedules",
+  "limits": "3 seeds; synthetic scalar objective; virtual clock; not a rigorous full-theorem refutation"
+}

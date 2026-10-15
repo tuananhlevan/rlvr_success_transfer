@@ -1,0 +1,1 @@
+{"status": "FAILED", "error": "RuntimeError('seed 1 step 2 optimization failed with exit code 1; see /home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduction/worker.log')", "mode": "run"}

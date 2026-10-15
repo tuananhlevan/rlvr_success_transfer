@@ -1,0 +1,1225 @@
+{
+  "status": "finite-model theoretical verification; no LLM or real-data experiment",
+  "deployment_tau": 0.01,
+  "choice_inverse_temperatures": [
+    8,
+    16,
+    24,
+    32,
+    40,
+    48,
+    64,
+    80,
+    96,
+    128
+  ],
+  "theta_interval": [
+    -3,
+    3
+  ],
+  "policy_grid_points": 12001,
+  "utilities": [
+    [
+      0.0,
+      1.0,
+      0.25
+    ],
+    [
+      0.0,
+      1.0,
+      0.375
+    ],
+    [
+      0.0,
+      1.0,
+      0.5
+    ],
+    [
+      0.0,
+      1.0,
+      0.625
+    ],
+    [
+      0.0,
+      1.0,
+      0.75
+    ]
+  ],
+  "continuous_grid_value_error_bound": 0.00013250000000004426,
+  "unregularized_closed_form_ordinal_regret": 0.023574943387705716,
+  "unregularized_formula_checks": [
+    {
+      "c": 0.25,
+      "numerical_value": 0.43425854591066493,
+      "formula_value": 0.4342585459106649,
+      "absolute_error": 5.551115123125783e-17
+    },
+    {
+      "c": 0.375,
+      "numerical_value": 0.5,
+      "formula_value": 0.5,
+      "absolute_error": 0.0
+    },
+    {
+      "c": 0.5,
+      "numerical_value": 0.5773502691896257,
+      "formula_value": 0.5773502691896257,
+      "absolute_error": 0.0
+    },
+    {
+      "c": 0.625,
+      "numerical_value": 0.6666666666666667,
+      "formula_value": 0.6666666666666666,
+      "absolute_error": 1.1102230246251565e-16
+    },
+    {
+      "c": 0.75,
+      "numerical_value": 0.7675918792439983,
+      "formula_value": 0.7675918792439983,
+      "absolute_error": 0.0
+    }
+  ],
+  "unregularized_grid_game": {
+    "minimax_expected_regret": 0.023574943540146394,
+    "least_favorable_prior": [
+      0.4998554697759576,
+      0.0,
+      0.0,
+      0.0,
+      0.5001445302240424
+    ],
+    "dual_violation": 0.0
+  },
+  "regularized_grid_game": {
+    "minimax_expected_regret": 0.022878046648447656,
+    "least_favorable_prior": [
+      0.49907472374989914,
+      0.0,
+      0.0,
+      0.0,
+      0.5009252762501009
+    ],
+    "dual_violation": 0.0
+  },
+  "continuous_optima": [
+    {
+      "c": 0.25,
+      "theta": 0.41442897725371125,
+      "value": 0.4336916238185496,
+      "stationary_candidates_checked": 1
+    },
+    {
+      "c": 0.375,
+      "theta": 0.6683331966254961,
+      "value": 0.4986167493509602,
+      "stationary_candidates_checked": 1
+    },
+    {
+      "c": 0.5,
+      "theta": 0.9655509702636067,
+      "value": 0.5747515023444856,
+      "stationary_candidates_checked": 1
+    },
+    {
+      "c": 0.625,
+      "theta": 1.324230397614255,
+      "value": 0.6624923520010767,
+      "stationary_candidates_checked": 1
+    },
+    {
+      "c": 0.75,
+      "theta": 1.7834570851985097,
+      "value": 0.7615673119538675,
+      "stationary_candidates_checked": 1
+    }
+  ],
+  "two_hypothesis_equal_prior_bayes_gap": 0.022877965436360337,
+  "analytic_lower_bound_D_minus_tau_log3": 0.012588820501024618,
+  "information_partition_stages": [
+    {
+      "threshold": 0.0,
+      "blocks": [
+        {
+          "c_values": [
+            0.25,
+            0.375,
+            0.5,
+            0.625,
+            0.75
+          ],
+          "minimax_expected_regret": 0.022878046648447656,
+          "least_favorable_prior": [
+            0.49907472374989914,
+            0.0,
+            0.0,
+            0.0,
+            0.5009252762501009
+          ],
+          "dual_violation": 0.0
+        }
+      ],
+      "maximum_block_regret": 0.022878046648447656
+    },
+    {
+      "threshold": 0.250001,
+      "blocks": [
+        {
+          "c_values": [
+            0.25
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.375,
+            0.5,
+            0.625
+          ],
+          "minimax_expected_regret": 0.005803054681039832,
+          "least_favorable_prior": [
+            0.49969275715447586,
+            0.0,
+            0.5003072428455242
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.75
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        }
+      ],
+      "maximum_block_regret": 0.005803054681039832
+    },
+    {
+      "threshold": 0.375001,
+      "blocks": [
+        {
+          "c_values": [
+            0.25
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.375
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.5
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.625
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.75
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        }
+      ],
+      "maximum_block_regret": -0.0
+    },
+    {
+      "threshold": 0.500001,
+      "blocks": [
+        {
+          "c_values": [
+            0.25
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.375
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.5
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.625
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        },
+        {
+          "c_values": [
+            0.75
+          ],
+          "minimax_expected_regret": -0.0,
+          "least_favorable_prior": [
+            1.0
+          ],
+          "dual_violation": 0.0
+        }
+      ],
+      "maximum_block_regret": -0.0
+    }
+  ],
+  "continuous_utility_ambiguity_curve": [
+    {
+      "threshold": 0.25,
+      "ambiguity": 0.022878046648372785
+    },
+    {
+      "threshold": 0.2525,
+      "ambiguity": 0.022431245791416754
+    },
+    {
+      "threshold": 0.255,
+      "ambiguity": 0.02198860897108157
+    },
+    {
+      "threshold": 0.2575,
+      "ambiguity": 0.021550142981102582
+    },
+    {
+      "threshold": 0.26,
+      "ambiguity": 0.02111585930060711
+    },
+    {
+      "threshold": 0.2625,
+      "ambiguity": 0.020685763950444858
+    },
+    {
+      "threshold": 0.265,
+      "ambiguity": 0.02025987033357657
+    },
+    {
+      "threshold": 0.2675,
+      "ambiguity": 0.01983818196178344
+    },
+    {
+      "threshold": 0.27,
+      "ambiguity": 0.01942071353111363
+    },
+    {
+      "threshold": 0.2725,
+      "ambiguity": 0.019007470735353804
+    },
+    {
+      "threshold": 0.275,
+      "ambiguity": 0.018598460969204478
+    },
+    {
+      "threshold": 0.2775,
+      "ambiguity": 0.018193697257010033
+    },
+    {
+      "threshold": 0.28,
+      "ambiguity": 0.017793187640659958
+    },
+    {
+      "threshold": 0.2825,
+      "ambiguity": 0.01739693815048804
+    },
+    {
+      "threshold": 0.28500000000000003,
+      "ambiguity": 0.01700495679852798
+    },
+    {
+      "threshold": 0.2875,
+      "ambiguity": 0.016617254484517896
+    },
+    {
+      "threshold": 0.29,
+      "ambiguity": 0.01623384081289503
+    },
+    {
+      "threshold": 0.2925,
+      "ambiguity": 0.015854721296795216
+    },
+    {
+      "threshold": 0.295,
+      "ambiguity": 0.015479904734634897
+    },
+    {
+      "threshold": 0.2975,
+      "ambiguity": 0.015109399558092429
+    },
+    {
+      "threshold": 0.3,
+      "ambiguity": 0.014743213824691015
+    },
+    {
+      "threshold": 0.3025,
+      "ambiguity": 0.014381355212864766
+    },
+    {
+      "threshold": 0.305,
+      "ambiguity": 0.014023831771831197
+    },
+    {
+      "threshold": 0.3075,
+      "ambiguity": 0.013670652232509739
+    },
+    {
+      "threshold": 0.31,
+      "ambiguity": 0.01332182298933915
+    },
+    {
+      "threshold": 0.3125,
+      "ambiguity": 0.012977351671817128
+    },
+    {
+      "threshold": 0.315,
+      "ambiguity": 0.012637248788984201
+    },
+    {
+      "threshold": 0.3175,
+      "ambiguity": 0.012301520835230395
+    },
+    {
+      "threshold": 0.32,
+      "ambiguity": 0.011970173442015453
+    },
+    {
+      "threshold": 0.3225,
+      "ambiguity": 0.011643213510513006
+    },
+    {
+      "threshold": 0.325,
+      "ambiguity": 0.01132064879253214
+    },
+    {
+      "threshold": 0.3275,
+      "ambiguity": 0.011002491781923252
+    },
+    {
+      "threshold": 0.33,
+      "ambiguity": 0.010688742147448416
+    },
+    {
+      "threshold": 0.3325,
+      "ambiguity": 0.01037940903129786
+    },
+    {
+      "threshold": 0.335,
+      "ambiguity": 0.010074503627114928
+    },
+    {
+      "threshold": 0.3375,
+      "ambiguity": 0.009774027027580234
+    },
+    {
+      "threshold": 0.33999999999999997,
+      "ambiguity": 0.00947799044949138
+    },
+    {
+      "threshold": 0.3425,
+      "ambiguity": 0.009186397155668602
+    },
+    {
+      "threshold": 0.345,
+      "ambiguity": 0.008899256284343626
+    },
+    {
+      "threshold": 0.34750000000000003,
+      "ambiguity": 0.008616571653906502
+    },
+    {
+      "threshold": 0.35,
+      "ambiguity": 0.008338353713079227
+    },
+    {
+      "threshold": 0.35250000000000004,
+      "ambiguity": 0.008064603343769794
+    },
+    {
+      "threshold": 0.355,
+      "ambiguity": 0.007795334509912766
+    },
+    {
+      "threshold": 0.3575,
+      "ambiguity": 0.007530547260342968
+    },
+    {
+      "threshold": 0.36,
+      "ambiguity": 0.0072702475457513405
+    },
+    {
+      "threshold": 0.3625,
+      "ambiguity": 0.007014443524676173
+    },
+    {
+      "threshold": 0.365,
+      "ambiguity": 0.006763142705742076
+    },
+    {
+      "threshold": 0.3675,
+      "ambiguity": 0.006516346992766153
+    },
+    {
+      "threshold": 0.37,
+      "ambiguity": 0.006274062928116164
+    },
+    {
+      "threshold": 0.3725,
+      "ambiguity": 0.006036296937315222
+    },
+    {
+      "threshold": 0.375,
+      "ambiguity": 0.005803054681004616
+    },
+    {
+      "threshold": 0.3775,
+      "ambiguity": 0.005574341294049878
+    },
+    {
+      "threshold": 0.38,
+      "ambiguity": 0.005350162888464904
+    },
+    {
+      "threshold": 0.3825,
+      "ambiguity": 0.0051305240500656435
+    },
+    {
+      "threshold": 0.385,
+      "ambiguity": 0.0049154293843255426
+    },
+    {
+      "threshold": 0.3875,
+      "ambiguity": 0.0047048833013646485
+    },
+    {
+      "threshold": 0.39,
+      "ambiguity": 0.004498893577372209
+    },
+    {
+      "threshold": 0.3925,
+      "ambiguity": 0.004297460615998672
+    },
+    {
+      "threshold": 0.395,
+      "ambiguity": 0.004100592804558101
+    },
+    {
+      "threshold": 0.39749999999999996,
+      "ambiguity": 0.0039082911475305515
+    },
+    {
+      "threshold": 0.4,
+      "ambiguity": 0.003720565913151175
+    },
+    {
+      "threshold": 0.40249999999999997,
+      "ambiguity": 0.0035374174811328984
+    },
+    {
+      "threshold": 0.405,
+      "ambiguity": 0.003358848301371453
+    },
+    {
+      "threshold": 0.4075,
+      "ambiguity": 0.0031848677729242603
+    },
+    {
+      "threshold": 0.41000000000000003,
+      "ambiguity": 0.0030154756191969057
+    },
+    {
+      "threshold": 0.4125,
+      "ambiguity": 0.0028506772156512428
+    },
+    {
+      "threshold": 0.41500000000000004,
+      "ambiguity": 0.002690477440071559
+    },
+    {
+      "threshold": 0.4175,
+      "ambiguity": 0.0025348779033601554
+    },
+    {
+      "threshold": 0.42000000000000004,
+      "ambiguity": 0.002383883814813914
+    },
+    {
+      "threshold": 0.4225,
+      "ambiguity": 0.002237500694303618
+    },
+    {
+      "threshold": 0.42500000000000004,
+      "ambiguity": 0.0020957263419107974
+    },
+    {
+      "threshold": 0.4275,
+      "ambiguity": 0.0019585706959569515
+    },
+    {
+      "threshold": 0.43,
+      "ambiguity": 0.001826033532393967
+    },
+    {
+      "threshold": 0.4325,
+      "ambiguity": 0.0016981165919103258
+    },
+    {
+      "threshold": 0.435,
+      "ambiguity": 0.0015748240945279157
+    },
+    {
+      "threshold": 0.4375,
+      "ambiguity": 0.0014561629134656195
+    },
+    {
+      "threshold": 0.44,
+      "ambiguity": 0.0013421309718263386
+    },
+    {
+      "threshold": 0.4425,
+      "ambiguity": 0.0012327317277444072
+    },
+    {
+      "threshold": 0.445,
+      "ambiguity": 0.0011279691237052747
+    },
+    {
+      "threshold": 0.4475,
+      "ambiguity": 0.0010278454399703651
+    },
+    {
+      "threshold": 0.45,
+      "ambiguity": 0.0009323623591807051
+    },
+    {
+      "threshold": 0.4525,
+      "ambiguity": 0.0008415221219950642
+    },
+    {
+      "threshold": 0.455,
+      "ambiguity": 0.0007553266646935786
+    },
+    {
+      "threshold": 0.4575,
+      "ambiguity": 0.0006737790174387026
+    },
+    {
+      "threshold": 0.45999999999999996,
+      "ambiguity": 0.0005968834080893881
+    },
+    {
+      "threshold": 0.4625,
+      "ambiguity": 0.0005246378866740065
+    },
+    {
+      "threshold": 0.46499999999999997,
+      "ambiguity": 0.00045704316652961374
+    },
+    {
+      "threshold": 0.4675,
+      "ambiguity": 0.0003941040675359275
+    },
+    {
+      "threshold": 0.47,
+      "ambiguity": 0.0003358229030744342
+    },
+    {
+      "threshold": 0.47250000000000003,
+      "ambiguity": 0.00028219527693407187
+    },
+    {
+      "threshold": 0.475,
+      "ambiguity": 0.00023323113858109146
+    },
+    {
+      "threshold": 0.47750000000000004,
+      "ambiguity": 0.00018892280932925054
+    },
+    {
+      "threshold": 0.48,
+      "ambiguity": 0.00014927860542057747
+    },
+    {
+      "threshold": 0.48250000000000004,
+      "ambiguity": 0.00011429432205711798
+    },
+    {
+      "threshold": 0.485,
+      "ambiguity": 8.397384521452445e-05
+    },
+    {
+      "threshold": 0.48750000000000004,
+      "ambiguity": 5.8315917765727754e-05
+    },
+    {
+      "threshold": 0.49,
+      "ambiguity": 3.732290666058624e-05
+    },
+    {
+      "threshold": 0.4925,
+      "ambiguity": 2.0994112086780703e-05
+    },
+    {
+      "threshold": 0.495,
+      "ambiguity": 9.331601459106054e-06
+    },
+    {
+      "threshold": 0.4975,
+      "ambiguity": 2.3337878458651318e-06
+    },
+    {
+      "threshold": 0.5,
+      "ambiguity": 0.0
+    }
+  ],
+  "continuous_utility_predicted_exponents": [
+    {
+      "target_expected_regret": 0.02,
+      "predicted_optimal_label_exponent": 0.2665377029298853
+    },
+    {
+      "target_expected_regret": 0.01,
+      "predicted_optimal_label_exponent": 0.33561643693139304
+    },
+    {
+      "target_expected_regret": 0.005,
+      "predicted_optimal_label_exponent": 0.3840107300974246
+    },
+    {
+      "target_expected_regret": 0.002,
+      "predicted_optimal_label_exponent": 0.4267359211559604
+    },
+    {
+      "target_expected_regret": 0.0005,
+      "predicted_optimal_label_exponent": 0.46339146572587325
+    }
+  ],
+  "target_expected_regret": 0.005,
+  "two_hypothesis_label_bounds": [
+    {
+      "kappa": 8,
+      "per_label_tv": 0.11673029886548278,
+      "squared_hellinger": 0.09096999860025409,
+      "necessary_label_lower_bound": 12.251683004144931,
+      "sufficient_label_upper_bound": 62.10909789875346,
+      "regret_lower_bound_at_1000_labels": 2.8362888417897043e-56
+    },
+    {
+      "kappa": 16,
+      "per_label_tv": 0.017980065787489345,
+      "squared_hellinger": 0.017409048049212283,
+      "necessary_label_lower_bound": 83.81635159458854,
+      "sufficient_label_upper_bound": 330.71259704352053,
+      "regret_lower_bound_at_1000_labels": 3.01801298236835e-10
+    },
+    {
+      "kappa": 24,
+      "per_label_tv": 0.0024726079266552616,
+      "squared_hellinger": 0.0024618955037897044,
+      "necessary_label_lower_bound": 614.272664265923,
+      "sufficient_label_upper_bound": 2347.3927950010725,
+      "regret_lower_bound_at_1000_labels": 0.001924188594101546
+    },
+    {
+      "kappa": 32,
+      "per_label_tv": 0.00033535009271513266,
+      "squared_hellinger": 0.0003351532552465704,
+      "necessary_label_lower_bound": 4534.011935970721,
+      "sufficient_label_upper_bound": 17252.140376873816,
+      "regret_lower_bound_at_1000_labels": 0.016358831496262684
+    },
+    {
+      "kappa": 40,
+      "per_label_tv": 4.5397868608858165e-05,
+      "squared_hellinger": 4.539426183565311e-05,
+      "necessary_label_lower_bound": 33497.207118567276,
+      "sufficient_label_upper_bound": 127384.60053091658,
+      "regret_lower_bound_at_1000_labels": 0.021862554653119565
+    },
+    {
+      "kappa": 48,
+      "per_label_tv": 6.144174601982766e-06,
+      "squared_hellinger": 6.144108537737115e-06,
+      "necessary_label_lower_bound": 247507.88406262087,
+      "sufficient_label_upper_bound": 941159.5867810368,
+      "regret_lower_bound_at_1000_labels": 0.022737829741614837
+    },
+    {
+      "kappa": 64,
+      "per_label_tv": 1.1253516205509356e-07,
+      "squared_hellinger": 1.1253513989280758e-07,
+      "necessary_label_lower_bound": 13513431.833642652,
+      "sufficient_label_upper_bound": 51384797.473611,
+      "regret_lower_bound_at_1000_labels": 0.02287539100552732
+    },
+    {
+      "kappa": 80,
+      "per_label_tv": 2.0611536181902037e-09,
+      "squared_hellinger": 2.0611536107555842e-09,
+      "necessary_label_lower_bound": 737808337.9615535,
+      "sufficient_label_upper_bound": 2805514107.045711,
+      "regret_lower_bound_at_1000_labels": 0.022877918281407648
+    },
+    {
+      "kappa": 96,
+      "per_label_tv": 3.7751345441365816e-11,
+      "squared_hellinger": 3.7751345438871776e-11,
+      "necessary_label_lower_bound": 40282970290.97536,
+      "sufficient_label_upper_bound": 153175879361.7434,
+      "regret_lower_bound_at_1000_labels": 0.022877964572686378
+    },
+    {
+      "kappa": 128,
+      "per_label_tv": 1.2664165549094016e-14,
+      "squared_hellinger": 1.2664165549093734e-14,
+      "necessary_label_lower_bound": 120081842028381.78,
+      "sufficient_label_upper_bound": 456610860962449.56,
+      "regret_lower_bound_at_1000_labels": 0.022877965436070607
+    }
+  ],
+  "known_hypothesis_bayes_oracle_checks": [
+    {
+      "labels": 1,
+      "expected_regret": 0.022671290034086453,
+      "omitted_probability": 0.0,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 0.02246661811273067
+    },
+    {
+      "labels": 10,
+      "expected_regret": 0.02081330896230602,
+      "omitted_probability": 7.771561172376096e-16,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 0.01908184819774219
+    },
+    {
+      "labels": 100,
+      "expected_regret": 0.006386535645727603,
+      "omitted_probability": 1.8096635301390052e-14,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 0.0037277585067466736
+    },
+    {
+      "labels": 1000,
+      "expected_regret": 1.0225073113172332e-07,
+      "omitted_probability": 0.0,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 3.01801298236835e-10
+    },
+    {
+      "labels": 10000,
+      "expected_regret": 4.626626189522149e-68,
+      "omitted_probability": 0.0,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 3.6513582069950707e-81
+    },
+    {
+      "labels": 100000,
+      "expected_regret": 0.0,
+      "omitted_probability": 4.587064061922774e-11,
+      "kappa": 16,
+      "all_algorithm_lower_bound": 0.0
+    },
+    {
+      "labels": 1,
+      "expected_regret": 0.02287414428440592,
+      "omitted_probability": 0.0,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 0.02287029330853012
+    },
+    {
+      "labels": 10,
+      "expected_regret": 0.022839740788844536,
+      "omitted_probability": 5.551115123125783e-16,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 0.022801359832777358
+    },
+    {
+      "labels": 100,
+      "expected_regret": 0.02249561209360459,
+      "omitted_probability": 3.774758283725532e-15,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 0.022123349866522268
+    },
+    {
+      "labels": 1000,
+      "expected_regret": 0.019078264550501895,
+      "omitted_probability": 0.0,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 0.016358831496262684
+    },
+    {
+      "labels": 10000,
+      "expected_regret": 0.0015241124396537862,
+      "omitted_probability": 0.0,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 0.0007994037737436935
+    },
+    {
+      "labels": 100000,
+      "expected_regret": 6.143866802753579e-14,
+      "omitted_probability": 1.4773182677174646e-11,
+      "kappa": 32,
+      "all_algorithm_lower_bound": 6.207337301460483e-17
+    },
+    {
+      "labels": 1,
+      "expected_regret": 0.022877895426450155,
+      "omitted_probability": 0.0,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.022877824870146158
+    },
+    {
+      "labels": 10,
+      "expected_regret": 0.022877265356615484,
+      "omitted_probability": 1.3988810110276972e-14,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.022876559813082762
+    },
+    {
+      "labels": 100,
+      "expected_regret": 0.022870966574177445,
+      "omitted_probability": 2.9976021664879227e-15,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.022863913089218136
+    },
+    {
+      "labels": 1000,
+      "expected_regret": 0.022807939169420564,
+      "omitted_probability": 3.2862601528904634e-14,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.022737829741614837
+    },
+    {
+      "labels": 10000,
+      "expected_regret": 0.022177479871777466,
+      "omitted_probability": 0.0,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.02151461140508981
+    },
+    {
+      "labels": 100000,
+      "expected_regret": 0.016052435424052103,
+      "omitted_probability": 1.3022471989643236e-11,
+      "kappa": 48,
+      "all_algorithm_lower_bound": 0.01237594775236151
+    }
+  ],
+  "rich_full_simplex_regrets": [
+    1.586745596027228e-07,
+    1.446076658417894e-07,
+    1.3054077219187832e-07,
+    1.1647387854196722e-07,
+    1.0240712378095651e-07
+  ],
+  "rich_analytic_regret_bound_given_correct_top_action": 2.2507062719739554e-07,
+  "rich_two_label_tournament_regret_bound_at_kappa32": 0.0003393731321965385,
+  "contextual_example": {
+    "prompt_probability": [
+      0.5,
+      0.5
+    ],
+    "utility_x1": [
+      0,
+      "c"
+    ],
+    "utility_x2": [
+      0.5,
+      0
+    ],
+    "small_shared_logit_interval": [
+      -16,
+      16
+    ],
+    "rich_independent_logit_intervals": [
+      [
+        -16,
+        16
+      ],
+      [
+        -16,
+        16
+      ]
+    ],
+    "small_optimal_logits_at_endpoint_rewards": [
+      -12.5,
+      12.5
+    ],
+    "rich_optimal_logits_for_every_c": [
+      16,
+      -16
+    ],
+    "equal_prior_exact_bayes_gap": 0.05556856546086283,
+    "label_bounds": [
+      {
+        "kappa": 8,
+        "necessary_label_lower_bound": 19.401295615241935,
+        "sufficient_known_hypothesis_label_upper_bound": 69.14577013432155,
+        "small_class_risk_lower_bound_at_1000_labels": 6.889096087207832e-56,
+        "rich_class_worst_case_risk_using_two_labels": 0.01939691337761702
+      },
+      {
+        "kappa": 16,
+        "necessary_label_lower_bound": 132.72836181996522,
+        "sufficient_known_hypothesis_label_upper_bound": 368.1807978111807,
+        "small_class_risk_lower_bound_at_1000_labels": 7.330488038325754e-10,
+        "rich_class_worst_case_risk_using_two_labels": 0.0023321132529884603
+      },
+      {
+        "kappa": 24,
+        "necessary_label_lower_bound": 972.7386469070004,
+        "sufficient_known_hypothesis_label_upper_bound": 2613.3414927825634,
+        "small_class_risk_lower_bound_at_1000_labels": 0.004673684823408318,
+        "rich_class_worst_case_risk_using_two_labels": 0.0003106138683199207
+      },
+      {
+        "kappa": 32,
+        "necessary_label_lower_bound": 7179.887519375356,
+        "sufficient_known_hypothesis_label_upper_bound": 19206.727728826125,
+        "small_class_risk_lower_bound_at_1000_labels": 0.03973416261126743,
+        "rich_class_worst_case_risk_using_two_labels": 4.194689065782114e-05
+      },
+      {
+        "kappa": 40,
+        "necessary_label_lower_bound": 53044.89329118643,
+        "sufficient_known_hypothesis_label_upper_bound": 141816.68394735953,
+        "small_class_risk_lower_bound_at_1000_labels": 0.053102221994476444,
+        "rich_class_worst_case_risk_using_two_labels": 5.675247598878743e-06
+      },
+      {
+        "kappa": 48,
+        "necessary_label_lower_bound": 391943.99856553215,
+        "sufficient_known_hypothesis_label_upper_bound": 1047788.595373895,
+        "small_class_risk_lower_bound_at_1000_labels": 0.05522818818612088,
+        "rich_class_worst_case_risk_using_two_labels": 7.680310902521547e-07
+      },
+      {
+        "kappa": 64,
+        "necessary_label_lower_bound": 21399352.70054107,
+        "sufficient_known_hypothesis_label_upper_bound": 57206456.29567714,
+        "small_class_risk_lower_bound_at_1000_labels": 0.055562312394843175,
+        "rich_class_worst_case_risk_using_two_labels": 1.4066895256886874e-08
+      },
+      {
+        "kappa": 80,
+        "necessary_label_lower_bound": 1168365004.819308,
+        "sufficient_known_hypothesis_label_upper_bound": 3123365821.0687437,
+        "small_class_risk_lower_bound_at_1000_labels": 0.05556845092563099,
+        "rich_class_worst_case_risk_using_two_labels": 2.576441453477997e-10
+      },
+      {
+        "kappa": 96,
+        "necessary_label_lower_bound": 63790567762.06288,
+        "sufficient_known_hypothesis_label_upper_bound": 170529994844.47913,
+        "small_class_risk_lower_bound_at_1000_labels": 0.05556856336307476,
+        "rich_class_worst_case_risk_using_two_labels": 4.718917118438573e-12
+      },
+      {
+        "kappa": 128,
+        "necessary_label_lower_bound": 190157002464659.8,
+        "sufficient_known_hypothesis_label_upper_bound": 508342750113874.4,
+        "small_class_risk_lower_bound_at_1000_labels": 0.0555685654601591,
+        "rich_class_worst_case_risk_using_two_labels": 1.5830203373458114e-15
+      }
+    ],
+    "known_hypothesis_bayes_oracle_checks": [
+      {
+        "labels": 1,
+        "expected_regret": 0.05505312475368665,
+        "omitted_probability": 0.0,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 0.05456943899816011
+      },
+      {
+        "labels": 10,
+        "expected_regret": 0.0495651634707517,
+        "omitted_probability": 7.771561172376096e-16,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 0.046348130634258695
+      },
+      {
+        "labels": 100,
+        "expected_regret": 0.010215134335840504,
+        "omitted_probability": 1.8096635301390052e-14,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 0.009054397480434158
+      },
+      {
+        "labels": 1000,
+        "expected_regret": 1.55511159739733e-07,
+        "omitted_probability": 0.0,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 7.330488038325754e-10
+      },
+      {
+        "labels": 10000,
+        "expected_regret": 2.5930576710638154e-68,
+        "omitted_probability": 0.0,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 8.868827873303399e-81
+      },
+      {
+        "labels": 100000,
+        "expected_regret": 0.0,
+        "omitted_probability": 4.587064061922774e-11,
+        "kappa": 16,
+        "all_algorithm_lower_bound": 0.0
+      },
+      {
+        "labels": 1,
+        "expected_regret": 0.05555924250721937,
+        "omitted_probability": 0.0,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 0.05554993053728348
+      },
+      {
+        "labels": 10,
+        "expected_regret": 0.05547498295444039,
+        "omitted_probability": 5.551115123125783e-16,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 0.055382497188786316
+      },
+      {
+        "labels": 100,
+        "expected_regret": 0.05459820234090745,
+        "omitted_probability": 3.774758283725532e-15,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 0.05373567062556911
+      },
+      {
+        "labels": 1000,
+        "expected_regret": 0.04367801615788892,
+        "omitted_probability": 0.0,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 0.03973416261126743
+      },
+      {
+        "labels": 10000,
+        "expected_regret": 0.002183877408414512,
+        "omitted_probability": 0.0,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 0.0019416814425437072
+      },
+      {
+        "labels": 100000,
+        "expected_regret": 1.0125508232237614e-13,
+        "omitted_probability": 1.4773182677174646e-11,
+        "kappa": 32,
+        "all_algorithm_lower_bound": 1.5077076243224623e-16
+      },
+      {
+        "labels": 1,
+        "expected_regret": 0.05556839474753528,
+        "omitted_probability": 0.0,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.05556822403789426
+      },
+      {
+        "labels": 10,
+        "expected_regret": 0.05556685820889295,
+        "omitted_probability": 1.3988810110276972e-14,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.05556515132557486
+      },
+      {
+        "labels": 100,
+        "expected_regret": 0.055551481075866854,
+        "omitted_probability": 2.9976021664879227e-15,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.055534433545845203
+      },
+      {
+        "labels": 1000,
+        "expected_regret": 0.05539653927735269,
+        "omitted_probability": 3.2862601528904634e-14,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.05522818818612088
+      },
+      {
+        "labels": 10000,
+        "expected_regret": 0.05373519200994595,
+        "omitted_probability": 0.0,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.052257098453723214
+      },
+      {
+        "labels": 100000,
+        "expected_regret": 0.0336258943784477,
+        "omitted_probability": 1.3022471989643236e-11,
+        "kappa": 48,
+        "all_algorithm_lower_bound": 0.030060088373257347
+      }
+    ]
+  },
+  "practical_escape_audit": {
+    "same_parameter_count_prompt_aware_policy": "p(1|x1)=sigmoid(theta); p(1|x2)=sigmoid(-theta)",
+    "free_parameters": 1,
+    "theta_bounds": [
+      -16,
+      16
+    ],
+    "unconstrained_optimal_theta_range": [
+      37.5,
+      62.5
+    ],
+    "constrained_optimal_theta_for_all_c": 16,
+    "max_policy_difference_from_rich_optimum_on_1001_c_values": 0.0,
+    "changes_deployment_class": true,
+    "not_a_LoRA_experiment": true,
+    "calibrated_log_probability_gap_identity_max_error": 0.0,
+    "original_tv_at_kappa32": 0.00033535009271501437,
+    "posthoc_flip_probability": 0.1,
+    "posthoc_flipped_label_tv": 0.0002682800741720115,
+    "true_oracle_temperature_T_equal_kappa_tv": 0.1170021982895949,
+    "oracle_note": "Log probability access or true temperature control changes the feedback experiment; label flips cannot add information."
+  },
+  "bayes_oracle_note": "Knows both hypotheses; uses fixed most informative pair; not claimed optimal adaptive design.",
+  "partition_game_note": "LP exact for the documented finite grid, up to solver tolerance; continuous claims have separate arguments."
+}

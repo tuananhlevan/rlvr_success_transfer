@@ -1,0 +1,26 @@
+{
+  "stage_at_declaration": "Initial-policy baseline sampling; no intervention outcome inspected",
+  "primary_pilot": "gpu_pilot.py: three full-parameter fixed-data interventions, independent baseline evaluation",
+  "additional_baseline": "Fresh-rollout on-policy group-relative policy gradient, one optimization step per sampled group; no replay, KL or multiple PPO epochs",
+  "additional_baseline_reason": "Measure whether refreshing trajectories removes a failure caused by stale replay",
+  "additional_baseline_settings": {
+    "learning_rate": 5e-06,
+    "passes_over_selected_prompts": 4,
+    "responses_per_group": 8,
+    "max_response_tokens": 1024,
+    "optimizer": "AdamW; same settings as the fixed-data arms",
+    "zero_variance_groups": "Log and skip reward-driven parameter update; no replacement sampling",
+    "evaluation": "Same frozen panel and baseline sampling seed as the original arms"
+  },
+  "exploratory_stratification": "Report selected prompts with 1-2/8 selection successes separately from those with 3-7/8; these are observed-rate strata, not latent difficulty or unlearnability labels",
+  "interpretation_boundary": "One training seed and a short horizon; insufficient for persistent unlearnability, feature necessity, or a publication-ready repair claim. Methods see different token budgets and supervision.",
+  "declaration_timestamp": "2026-10-15T20:04:06.508619+07:00",
+  "source_rate_control_amendment": {
+    "timestamp": "2026-10-15T20:12:13.989118+07:00",
+    "stage": "First replay arm completed; other interventions pending",
+    "learning_rate": 5e-07,
+    "arm": "fresh-rollout policy gradient; same protocol at the source learning rate",
+    "reason": "Resolve update-size sensitivity before attributing failure to a learning barrier",
+    "status": "Exploratory post-replay addition; not a preregistered confirmatory test"
+  }
+}

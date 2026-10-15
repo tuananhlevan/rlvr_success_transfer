@@ -1,0 +1,32 @@
+{
+  "scope": "analytical preflight only; no pretrained model, no NLP experiment",
+  "seed": 20261015,
+  "coordinate_change": {
+    "raw_cosine_before": 0.3846153846153846,
+    "raw_cosine_after": -0.503871025524086,
+    "natural_inner_product_before": 0.15078534031413615,
+    "natural_inner_product_after": 0.15078534031413682
+  },
+  "empirical_fisher_interpolation": {
+    "n": 64,
+    "dimension": 96,
+    "positive_count": 4,
+    "empirical_chi": 0.9999999999999994,
+    "population_chi": 0.0,
+    "heldout_linear_gain_estimate": -7.856569388116748e-05,
+    "population_linear_gain": 0.0,
+    "centered_design_rank": 63
+  },
+  "classical_tangent_duality": {
+    "kl_quadratic_budget": 0.05,
+    "dual_prediction": 0.10657012286332093,
+    "minimum_linear_gain": 0.10657011816845263,
+    "used_quadratic_kl": 0.04999999999999999,
+    "absolute_duality_gap": 4.694868299681687e-09
+  },
+  "orthogonal_but_learnable": {
+    "initial_success": 0.04742587317756678,
+    "final_success": 0.9978423134314943,
+    "cross_prompt_gradient_cosine": 0.0
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "seed": 2026101407,
+  "paired_draws": 4096,
+  "epsilons": [
+    0.2,
+    0.4,
+    0.8
+  ],
+  "sample_factors": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0
+  ],
+  "lambda": 0.1,
+  "rating_noise_variance": 0.0,
+  "features": [
+    0.0,
+    0.7,
+    1.0
+  ],
+  "reward_direction": [
+    0.0,
+    1.0,
+    0.4
+  ],
+  "pair_design": "uniform over three fixed-orientation unordered edges",
+  "reference": "uniform",
+  "tau": 1.0,
+  "parameter_interval": [
+    -2.0,
+    2.0
+  ],
+  "sample_rule": "round(factor * t_star / epsilon**5)",
+  "estimators": "same pair counts and BT bits for binary and fused estimators",
+  "confidence_interval": "paired standard-error normal interval (Monte Carlo only)"
+}

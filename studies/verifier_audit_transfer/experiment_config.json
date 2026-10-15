@@ -1,0 +1,13 @@
+{
+  "seed": 20261014,
+  "replications": 200,
+  "budgets": [16, 64, 256, 1024],
+  "nuisance_amplitudes": [0, 1, 3, 10],
+  "winner_fractions": [0, 0.25, 0.5, 0.75, 0.9, 1],
+  "tests_per_audit": [2, 8, "full"],
+  "unique_program_tasks": 80,
+  "adaptive_rounds": 24,
+  "base_slope": 0.1,
+  "ridge": 1e-10,
+  "description": "Controlled generated executable-program mechanism experiment; not MBPP, Aletheia, or pretrained language-model replication."
+}

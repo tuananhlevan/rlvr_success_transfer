@@ -1,0 +1,31 @@
+{
+  "expression_counts": {
+    "reports/dpo_expanded/01_expanded_literature_analysis.md": 343,
+    "reports/dpo_expanded/02_theoretical_research_proposals.md": 191,
+    "reports/dpo_expanded/03_openreview_discussion_audit.md": 0,
+    "reports/dpo_expanded/04_source_grounded_problem_screen.md": 16,
+    "reports/dpo_expanded/05_failure_grounded_research_screen.md": 23,
+    "reports/dpo_expanded/README.md": 0,
+    "resources/README.md": 0,
+    "studies/informative_delays/README.md": 0,
+    "studies/informative_delays/research_report.md": 92,
+    "studies/policy_capacity_feedback/README.md": 0,
+    "studies/policy_capacity_feedback/research_report.md": 102,
+    "studies/ranking_rating_fusion/README.md": 0,
+    "studies/ranking_rating_fusion/evidence/fusion_statistical_theory.md": 256,
+    "studies/ranking_rating_fusion/evidence/fusion_structural_theorems.md": 234,
+    "studies/ranking_rating_fusion/evidence/fusion_theorem_novelty_matrix.md": 30,
+    "studies/ranking_rating_fusion/proposal.md": 38,
+    "studies/ranking_rating_fusion/research_report.md": 68,
+    "studies/rlvr_success_transfer/README.md": 0,
+    "studies/rlvr_success_transfer/reproduction_report.md": 0,
+    "studies/rlvr_success_transfer/research_report.md": 25,
+    "studies/verifier_audit_transfer/README.md": 0,
+    "studies/verifier_audit_transfer/research_report.md": 100
+  },
+  "total_expressions": 1518,
+  "latex_exit_code": 0,
+  "broken_local_links": [],
+  "temporary_build_files_retained": false,
+  "html_generated": false
+}

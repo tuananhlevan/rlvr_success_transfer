@@ -1,0 +1,26 @@
+2026-10-15 21:33:31 seed 1 step 0 validation: PID 58991
+2026-10-15 21:35:11 seed 1 step 0 validation: PID 59624
+2026-10-15 21:37:11 seed 1 step 1 sampling batch 1: PID 60511
+2026-10-15 21:54:12 seed 1: 449/1024 contributing prompts collected
+2026-10-15 21:54:12 seed 1 step 1 sampling batch 2: PID 63236
+2026-10-15 22:13:12 seed 1: 878/1024 contributing prompts collected
+2026-10-15 22:13:12 seed 1 step 1 sampling batch 3: PID 63926
+2026-10-15 22:31:43 seed 1: 1308/1024 contributing prompts collected
+2026-10-15 22:31:43 seed 1 step 1 optimization: PID 68833
+2026-10-15 23:23:45 seed 1 step 2 sampling batch 4: PID 89531
+2026-10-15 23:39:45 seed 1: 814/1024 contributing prompts collected
+2026-10-15 23:39:45 seed 1 step 2 sampling batch 5: PID 97117
+2026-10-15 23:56:46 seed 1: 1314/1024 contributing prompts collected
+2026-10-15 23:56:47 seed 1 step 2 optimization: PID 104595
+Traceback (most recent call last):
+  File "/home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduce_failure.py", line 718, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduce_failure.py", line 711, in main
+    else:driver(args.mode=='benchmark',args.seed)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduce_failure.py", line 677, in driver
+    subprocess_phase(TRAIN_PYTHON,['update','--request',str(request),'--output',str(receipt)],
+  File "/home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduce_failure.py", line 474, in subprocess_phase
+    raise RuntimeError(f'{phase} failed with exit code {process.returncode}; see {path}')
+RuntimeError: seed 1 step 2 optimization failed with exit code 1; see /home/levantuananh/HUST/human_ai_align/studies/rlvr_success_transfer/reproduction/worker.log

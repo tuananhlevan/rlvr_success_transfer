@@ -1,0 +1,10 @@
+.venv/
+runs/
+.cache/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+.DS_Store
+artifacts/.checkpoint.tar.gz

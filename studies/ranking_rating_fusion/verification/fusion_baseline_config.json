@@ -1,0 +1,10 @@
+{
+  "experiment_id": "fusion_sprint1_reward_reconstruction_control",
+  "scope": "follow-up baseline audit after initial feasibility sweep; same synthetic observations regenerated from the recorded seed",
+  "baseline": "weighted least-squares reward reconstruction on observed pair graph; optimize fixed-reference restricted policy value using reconstructed rewards",
+  "rank_feedback": "not needed by this baseline; every method has the same recorded rating channel available",
+  "disconnected_graph": "minimum-norm reward imputation with action 0 anchored; report disconnected fraction",
+  "policy_optimization": "2401-point parameter grid on [-12,12], then 35 golden-section refinements around best grid point",
+  "reproducibility_check": "paired fusion-versus-binary sample means must reproduce the first sweep to 1e-10 before comparing reconstruction",
+  "claim_boundary": "fully covered exact gaps make this straightforward baseline possible; it is existing reward estimation plus policy optimization, not a proposed new method"
+}

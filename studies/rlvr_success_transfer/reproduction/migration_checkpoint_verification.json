@@ -1,0 +1,16 @@
+{
+  "restored_checkpoint_step": 1,
+  "optimizer_steps": [
+    16
+  ],
+  "optimizer_state_tensors": 290,
+  "optimizer_moments": "FP32",
+  "model_tensor_count": 290,
+  "model_dtypes": [
+    "F32"
+  ],
+  "pending_groups": 1314,
+  "pending_outer_step": 2,
+  "restored_files_sha256_verified": true,
+  "optimizer_restricted_load_success": true
+}

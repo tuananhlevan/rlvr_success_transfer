@@ -1,0 +1,9 @@
+# Third-party materials
+
+- The reproduction draws on Yulin Chen and collaborators' [unlearnability-rlvr](https://github.com/yulinchen99/unlearnability-rlvr), pinned at commit `1dce7fec92e7685929a5efbe73ff2091e7d474a1`. Retained source files and their original hashes are listed in [the source manifest](resources/rlvr_success_transfer/source/manifest.json). Its [Apache 2.0 license](resources/rlvr_success_transfer/source/LICENSE) is retained. The portable driver is an adapted implementation; retained source files are unmodified.
+- Model weights in the migration checkpoint derive from [Qwen/Qwen2.5-0.5B](https://huggingface.co/Qwen/Qwen2.5-0.5B), revision `060db6499f32faf8b98477b0a26969ef7d8b9987`, licensed under Apache 2.0 by the Qwen authors. The checkpoint contains one local GRPO training step. The upstream model license is retained in [resources/rlvr_success_transfer/QWEN_LICENSE](resources/rlvr_success_transfer/QWEN_LICENSE).
+- Input prompts derive from [hkust-nlp/SimpleRL-Zoo-Data](https://huggingface.co/datasets/hkust-nlp/SimpleRL-Zoo-Data), revision `50ec8f09045e785fd20c13a508820e77cccb4211`, including MATH-derived problems. Dataset provenance is preserved in the protocol and inputs; upstream terms and underlying problem rights apply.
+- Paper PDFs are author/publisher materials retained for this research collection. See [the resource catalog](resources/README.md) and its download manifests for sources. Their copyrights remain with their respective holders; this repository does not relicense them.
+- Generated research notes, intermediate hypotheses, code adaptations, and empirical receipts are distinguished from the source papers in the reports. The presence of a paper or earlier proposal does not imply endorsement or a verified result.
+
+No blanket license in this repository changes third-party rights.

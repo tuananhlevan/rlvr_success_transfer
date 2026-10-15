@@ -1,0 +1,415 @@
+{
+  "spreadsheet": "https://docs.google.com/spreadsheets/d/1vwuYzjRLaazjo5bUhDtF3rsvBE7CeKxykNyT8eMOW7w/edit?gid=1488308827",
+  "verified_on": "2026-10-14",
+  "listed_entries": 27,
+  "distinct_paper_titles": 26,
+  "downloaded_pdf_files": 16,
+  "existing_pdf_files_reused": 11,
+  "records": [
+    {
+      "sheet": "ICLR 2026",
+      "row": 2,
+      "title": "Property-Driven Protein Inverse Folding with Multi-Objective Preference Alignment",
+      "urls": [
+        "https://openreview.net/forum?id=m826DekCpp"
+      ],
+      "identifier": "m826DekCpp",
+      "file": "resources/4249_Property_Driven_Protein_I.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 24,
+      "bytes": 612277,
+      "sha256": "dd605d0a6fc72ad6dc37e59bb862c435390047d9117878baa42e0ecd791c8481",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 3,
+      "title": "Why DPO is a Misspecified Estimator and How to Fix It",
+      "urls": [
+        "https://openreview.net/forum?id=btEiAfnLsX"
+      ],
+      "identifier": "btEiAfnLsX",
+      "file": "resources/24413_Why_DPO_is_a_Misspecifie.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 11,
+      "bytes": 404980,
+      "sha256": "e40c66d8791c3029991bb762a51ba28186d695ff7c1b0073a56c1586829b5a87",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 4,
+      "title": "Token-Importance Guided Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=cMEnMVvMw9"
+      ],
+      "identifier": "cMEnMVvMw9",
+      "file": "resources/6576_Token_Importance_Guided_D.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 23,
+      "bytes": 813685,
+      "sha256": "4d013e1bd0e8ede7722165380a6681f6e2f0df55af21e1ff07e1c2500ac07b20",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 5,
+      "title": "Mitigating Mismatch within Reference-based Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=k79Un1LSXy"
+      ],
+      "identifier": "k79Un1LSXy",
+      "file": "resources/362_Mitigating_Mismatch_within.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 26,
+      "bytes": 1507586,
+      "sha256": "3bd39ddcb6a88e3d4edd1157bba70295025563dbacca70d215a25789b8896743",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 6,
+      "title": "DuPO: Enabling Reliable Self-Verification via Dual Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=SD8Z231C45"
+      ],
+      "identifier": "SD8Z231C45",
+      "file": "resources/6741_DuPO_Enabling_Reliable_Se.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 18,
+      "bytes": 520675,
+      "sha256": "8d3473c1b51f537a5de530674f69b661ca601ff7d0538d9cebcc557a8353ab95",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 7,
+      "title": "Importance Sampling for Multi-Negative Multimodal Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=HEFPwoGtTj"
+      ],
+      "identifier": "HEFPwoGtTj",
+      "file": "resources/24535_Importance_Sampling_for_.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 17,
+      "bytes": 2686358,
+      "sha256": "2c99f2668b0ff040b1230cafdc1f1aaef6f281e91c020b4cc3bca2034a2aed0a",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 8,
+      "title": "SafeDPO: A Simple Approach to Direct Preference Optimization with Enhanced Safety",
+      "urls": [
+        "https://openreview.net/forum?id=MoJSnVZ59d"
+      ],
+      "identifier": "MoJSnVZ59d",
+      "file": "resources/5041_SafeDPO_A_Simple_Approach.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 33,
+      "bytes": 1542249,
+      "sha256": "e32cc138433614d7d6335cb54e9f0328cb86888d4cf87918312d0e87f8e793a4",
+      "version_note": "Spreadsheet links the ICLR 2025 submission although the tab is named ICLR 2026; existing local SafeDPO manuscript is preserved. See discussion audit for separate rounds."
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 9,
+      "title": "Uni-DPO: A Unified Paradigm for Dynamic Preference Optimization of LLMs",
+      "urls": [
+        "https://openreview.net/forum?id=G7DBGlgjjp"
+      ],
+      "identifier": "G7DBGlgjjp",
+      "file": "resources/11934_Uni_DPO_A_Unified_Paradi.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 49,
+      "bytes": 10013684,
+      "sha256": "cb395df839ac8ef299e145402344a0c5b46347c72b46ec063057c565077e5f5d",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 10,
+      "title": "P^2 -DPO: Grounding Hallucination in Perceptual Processing via Calibration Direct Preference Optimization",
+      "urls": [
+        "https://openreview.net/forum?id=ekOwxTn65Y"
+      ],
+      "identifier": "ekOwxTn65Y",
+      "file": "resources/8851_P_2_DPO_Grounding_Halluci.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 27,
+      "bytes": 2465139,
+      "sha256": "1d5fb7e14d1f90cc23cd5a98e0bb1cd6abdbded16ca9d5fbf7537abb4031e3ae",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 11,
+      "title": "Alignment-Weighted DPO: A principled reasoning approach to improve safety alignment",
+      "urls": [
+        "https://openreview.net/forum?id=OuMNJoKJBQ"
+      ],
+      "identifier": "OuMNJoKJBQ",
+      "file": "resources/15113_Alignment_Weighted_DPO_A.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 24,
+      "bytes": 6234150,
+      "sha256": "a45cfc9d0c3912435d68f550ba8dfa499ccb494381d5d0e18f757175b91f4f5f",
+      "version_note": null
+    },
+    {
+      "sheet": "ICLR 2026",
+      "row": 12,
+      "title": "Is On-Policy Data always the Best Choice for Direct Preference Optimization-Based LM Alignment?",
+      "urls": [
+        "https://openreview.net/forum?id=tz9mJmgrdM"
+      ],
+      "identifier": "tz9mJmgrdM",
+      "file": "resources/24230_Is_On_Policy_Data_always.pdf",
+      "status": "existing_pdf_reused",
+      "pages": 27,
+      "bytes": 575656,
+      "sha256": "10f0bfafacd9857d4bf62772946055943d4ab462956a8df5d1a13772b41ed6ff",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 2,
+      "title": "Coverage Improvement and Fast Convergence of On-policy Preference Learning",
+      "urls": [
+        "https://arxiv.org/pdf/2601.08421"
+      ],
+      "identifier": "2601.08421",
+      "file": "resources/2601.08421v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 46,
+      "bytes": 1196513,
+      "sha256": "0e1812ac08dd167ef2be70f0af06e9c7f1cb4e064f71a77c06e1b43d13468abd",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 3,
+      "title": "Reducing Hallucinations in LLMs via Factuality-Aware Preference Learning",
+      "urls": [
+        "https://arxiv.org/abs/2601.03027"
+      ],
+      "identifier": "2601.03027",
+      "file": "resources/2601.03027v3.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 17,
+      "bytes": 732832,
+      "sha256": "a7dbf2f06733faafd4ade8bcef9fe06185c65c739fff3c49b8fff7d05f677239",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 4,
+      "title": "MixDPO: Modeling Preference Strength for Pluralistic Alignment",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06180"
+      ],
+      "identifier": "2601.06180",
+      "file": "resources/2601.06180v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 16,
+      "bytes": 1839787,
+      "sha256": "dccae0dfe087f5046633bfb5401edd74c91a87b50d31085e891b11b3e6f68405",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 5,
+      "title": "From RLHF to Direct Alignment: A Theoretical Unification of Preference Learning for Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06108"
+      ],
+      "identifier": "2601.06108",
+      "file": "resources/2601.06108v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 11,
+      "bytes": 594044,
+      "sha256": "e85419d8b6e3fa6f1be1610729957b203f8073ff633434784898fa51704b019e",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 6,
+      "title": "An Empirical Study on Preference Tuning Generalization and Diversity Under Domain Shift",
+      "urls": [
+        "https://arxiv.org/pdf/2601.05882"
+      ],
+      "identifier": "2601.05882",
+      "file": "resources/2601.05882v2.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 21,
+      "bytes": 451564,
+      "sha256": "e9c00e960906516ee54ddd5fa4be3d5b1f95210cbfde1fd3c39d5a125510ff5f",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 7,
+      "title": "SPINAL - Scaling-law and Preference Integration in Neural Alignment Layers",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06238"
+      ],
+      "identifier": "2601.06238",
+      "file": "resources/2601.06238v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 83,
+      "bytes": 7665013,
+      "sha256": "f9b8c95d0e6e3add69ff5b672d3da97355126576188f8e3a6a81e6ecbc5fe31b",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 8,
+      "title": "Direct Preference Optimization with Rating Information: Practical Algorithms and Provable Gains",
+      "urls": [
+        "https://arxiv.org/pdf/2602.00603"
+      ],
+      "identifier": "2602.00603",
+      "file": "resources/2602.00603v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 42,
+      "bytes": 1454921,
+      "sha256": "978b55971003435f1aaa06ed21ea280176aca73c708a3e00edf2611fbcfa2844",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 9,
+      "title": "Tangent Space Fine-Tuning for Directional Preference Alignment in Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2602.01128"
+      ],
+      "identifier": "2602.01128",
+      "file": "resources/2602.01128v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 12,
+      "bytes": 1235649,
+      "sha256": "01872715d1173475ab4198a38e9e1de3f65472be722adf58c1e0219e917f30dd",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 10,
+      "title": "Alignment-Weighted DPO: A principled reasoning approach to improve safety alignment",
+      "urls": [
+        "https://arxiv.org/abs/2602.21346"
+      ],
+      "identifier": "2602.21346",
+      "file": "resources/2602.21346v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 22,
+      "bytes": 6361073,
+      "sha256": "5a5256b66712b9bfa291d531a36ae7c8ae6337aa5bfd709010f57516a3f4f647",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 11,
+      "title": "YaPO: Learnable Sparse Activation Steering Vectors for Domain Adaptation",
+      "urls": [
+        "https://arxiv.org/abs/2601.08441"
+      ],
+      "identifier": "2601.08441",
+      "file": "resources/2601.08441v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 20,
+      "bytes": 1006569,
+      "sha256": "27a654343e86c7b3896b584ba85123c2389d893ffb91603c6e53638f8b925669",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 12,
+      "title": "SP^2DPO: An LLM-assisted Semantic Per-Pair DPO Generalization",
+      "urls": [
+        "https://arxiv.org/pdf/2601.22385"
+      ],
+      "identifier": "2601.22385",
+      "file": "resources/2601.22385v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 39,
+      "bytes": 3651755,
+      "sha256": "7c37b1411195cdd6a114b83fe89e5a81ce703b8b20b386573fb93c3ba4c037e5",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 13,
+      "title": "ProFit: Leveraging High-Value Signals in SFT via Probability-Guided Token Selection",
+      "urls": [
+        "https://arxiv.org/pdf/2601.09195"
+      ],
+      "identifier": "2601.09195",
+      "file": "resources/2601.09195v3.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 19,
+      "bytes": 868349,
+      "sha256": "71f151e049f547c953272eea979e0b503cd8403883fb9124b3f4aa05bd12aaae",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 14,
+      "title": "CATTO: Balancing Preferences and Confidence in Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.23096"
+      ],
+      "identifier": "2601.23096",
+      "file": "resources/2601.23096v2.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 36,
+      "bytes": 633168,
+      "sha256": "164fefc848b113a91bea3ec9a6f1607044d7aca91cec3b7fe7d4c627a339f717",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 15,
+      "title": "ECLIPTICA - A Framework for Switchable LLM Alignment via CITA - Contrastive Instruction-Tuned Alignment",
+      "urls": [
+        "https://arxiv.org/pdf/2601.06157"
+      ],
+      "identifier": "2601.06157",
+      "file": "resources/2601.06157v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 77,
+      "bytes": 9967699,
+      "sha256": "e3adfa157ab19693c70f06775559082837266ef36f7f61e48f00b6a37ea2f336",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 16,
+      "title": "Clipping-Free Policy Optimization for Large Language Models",
+      "urls": [
+        "https://arxiv.org/pdf/2601.22801"
+      ],
+      "identifier": "2601.22801",
+      "file": "resources/2601.22801v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 23,
+      "bytes": 723478,
+      "sha256": "3498aac651ded75e77f8f2f608a7aaea39810b38f91450153fb7a3f44152e34c",
+      "version_note": null
+    },
+    {
+      "sheet": "ARXIV 2026",
+      "row": 17,
+      "title": "Towards a Theoretical Understanding to the Generalization of RLHF",
+      "urls": [
+        "https://arxiv.org/pdf/2601.16403"
+      ],
+      "identifier": "2601.16403",
+      "file": "resources/2601.16403v1.pdf",
+      "status": "downloaded_through_connected_browser",
+      "pages": 31,
+      "bytes": 906760,
+      "sha256": "6496f6f8988a35f3833693d774f303d7c7830253b267a548765cc48508ee3957",
+      "version_note": null
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+# Preserve evidence/source bytes and their recorded SHA-256 values.
+* -text
+*.pdf binary
+*.png binary
+*.gz binary
+*.csv whitespace=cr-at-eol
+artifacts/*.part* filter=lfs diff=lfs merge=lfs -text

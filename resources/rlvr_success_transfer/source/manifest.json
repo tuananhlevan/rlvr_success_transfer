@@ -1,0 +1,29 @@
+{
+  "repo": "https://github.com/yulinchen99/unlearnability-rlvr",
+  "commit": "1dce7fec92e7685929a5efbe73ff2091e7d474a1",
+  "files": {
+    "train.sh": "bcb321a415efde97b53a6b1d16a12899b934e4580e2c8c9d78021c421c9e9b55",
+    "train_baseline.sh": "6fad255afb56e508cf48538c5bee17090ab65f070d495d4af2ec9df94c4b56fb",
+    "classification/finalize_unlearnable_example_id.py": "868e7c1bb2244daa6110869870ceaebaba58ce2a3156ffe6352172891d3e5459",
+    "verl/utils/reward_score/qwen_math_eval_toolkit/parser.py": "ed2e5b5d368771e4016440ecc51f3ad7705cfbbec792c8a5a3f95aaeb5e13fcb",
+    "verl/utils/reward_score/qwen_math_eval_toolkit/utils.py": "718e3a036bb4ba2fde638987e968934a59bb7e8dbed624c4508d1d6752dad859",
+    "verl/utils/reward_score/qwen_math_eval_toolkit/examples.py": "07aacef0144e11d7c9210beef2f4d1a9bf935d440bbb394e65a588eef861ce7b",
+    "verl/utils/reward_score/hf_math_verify.py": "0d32ce248b6807995ac6717a3e683561168ee768239f3eb8c2bd55d02b3a1f4b",
+    "verl/utils/reward_score/__init__.py": "e65abd77db034b4f29eb1268c24867f84919dbce22e28d1997e563ed1d94179c",
+    "verl/utils/torch_functional.py": "9648bcff2ae1e9ff576faba934d8b55440d23d012541d7c71804d6851447b587",
+    "verl/trainer/ppo/core_algos.py": "d823aad810a2966a18aab6b7c14dd27ff16cadbfab987ddda6a2db69fe288ce3",
+    "verl/workers/actor/dp_actor.py": "5231a5241a5445663e5b49bb2d05fa6876e5ac62538a1c36cfc28a8a8e4f4dc0",
+    "verl/utils/dataset/rl_dataset.py": "fcac94d5276bdd6bf55e2a97ba5723a0e25223c8bab6e13d1ba75360a2fb72e0",
+    "verl/trainer/config/ppo_trainer.yaml": "4f865ae942400438d4b1b8f00ead7d64a878b522e862c89a7f5bfe78c38a0a4d",
+    "inference/test.sh": "a1d96667a1d28b8be0777083e7dbad6ecd9bad904083f9ced797799866924531",
+    "inference/config.py": "e34304b4a0b4c378f57da1a90db4b585653659a2b1d841516d373dcd75db2906",
+    "inference/gen_utils_sglang.py": "f423c9b849406b358468013eb8a41b709a9cfdc2c5b179305f3c1b597890eaf0",
+    "all_decomposed_data_qwen_0.5b_math_level1to4_unlearnable_filtered.json": "52d993ff50d47816b13d2632c8c72d8169d74b7d72cfcdc801a604bd6e9c70b7",
+    "all_decomposed_data_qwen_0.5b_math_level1to4_learnable_filtered.json": "f3d0fbc48e16311a1b75245275dc2bfe44629a1ea1d8e694d08cdc9ddad6ffb2",
+    "verl/trainer/main_ppo.py": "d4f47b506fe1762ad6d7dd4230db7a680684cb3805ba5d6d20de954dca00e0f0",
+    "verl/trainer/ppo/ray_trainer.py": "0f11fd4cabf8f0de5b2286252d1c3a510b9bcce6c64b4d6e2e1c0adf1cf9afee",
+    "verl/workers/fsdp_workers.py": "66901890377de3d1be5dda45654430b2cb4793171fa0e55ef2017ba4c2a4fe8c",
+    "inference/math_verifier.py": "02accad672e37a4905e767508cb954385930f62e7cf2e89dfbf72786fd3ebf00",
+    "verl/utils/seqlen_balancing.py": "836a381b88a7c2185aea684b8e8c26e7eb0c25c6183e8f2f4d1686c85636fefb"
+  }
+}

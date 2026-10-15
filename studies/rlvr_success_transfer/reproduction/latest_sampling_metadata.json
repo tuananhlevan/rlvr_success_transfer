@@ -1,0 +1,10 @@
+{
+  "request_sha256": "850c5229292ccbfb1ce89ba47eb53797009a6fd0d470b58969ad9db561c3cdc1",
+  "completed_prompts": 1024,
+  "committed_group_bytes": 62627592,
+  "engine_seconds": 5.4119730689999415,
+  "elapsed_seconds": 991.7153516130056,
+  "file": "latest_sampling_groups.jsonl.gz",
+  "sha256": "5d40512e6b0ead45f0f0f82d3f39853e3ca546cbc008982bc76d6d196dc4eb1b",
+  "scope": "Last completed sampling batch only; not a full raw archive of all batches."
+}

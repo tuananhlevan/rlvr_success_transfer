@@ -1,0 +1,113 @@
+{
+  "format_version": 1,
+  "seed": 1,
+  "committed_state": {
+    "step": 1,
+    "epoch": 0,
+    "cursor": 3072,
+    "generation_batches": 3
+  },
+  "trust": "Only restore artifacts from a repository and commit you trust. Optimizer loading uses torch pickle.",
+  "checkpoint_files": {
+    "added_tokens.json": {
+      "bytes": 605,
+      "sha256": "58b54bbe36fc752f79a24a271ef66a0a0830054b4dfad94bde757d851968060b"
+    },
+    "carry.json": {
+      "bytes": 57792949,
+      "sha256": "6dcb9e166ca753f79a80b3c0f96c62a1cacc29de8877f57d7822506f493541bb"
+    },
+    "chat_template.jinja": {
+      "bytes": 2427,
+      "sha256": "44d5f08f3f72b837eaad09f13a54c1f9f4eb58d75240334548b7fd52a5437fa5"
+    },
+    "commit.json": {
+      "bytes": 65,
+      "sha256": "858376943ec8e680fbd2ff9e24eab08482cd1834115b9ec37853c3dffea042d6"
+    },
+    "config.json": {
+      "bytes": 1248,
+      "sha256": "6e60a006e99eb958e35b4edec54fc82d600016cf4e68515f3946382e56e5edf8"
+    },
+    "generation_config.json": {
+      "bytes": 117,
+      "sha256": "572b47acfde467f61dc18438b2faf85d1db1ad116c63d93afc23a30634ace770"
+    },
+    "merges.txt": {
+      "bytes": 1671853,
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    "model.safetensors": {
+      "bytes": 1976163472,
+      "sha256": "d7982048610009af838480092283dbe71fefc1917d472b77e85add3ea77b5a64"
+    },
+    "optimizer.pt": {
+      "bytes": 3952505547,
+      "sha256": "266fbb3cfcea1212a9a23e40af9244a7630e5bebac6396c7b4589388ca7ea91c"
+    },
+    "special_tokens_map.json": {
+      "bytes": 616,
+      "sha256": "6676f091c8bc4d1b50146427cfde92073402866b87b6e39223227931b70083e9"
+    },
+    "tokenizer.json": {
+      "bytes": 11421896,
+      "sha256": "9c5ae00e602b8860cbd784ba82a8aa14e8feecec692e7076590d014d7b7fdafa"
+    },
+    "tokenizer_config.json": {
+      "bytes": 4689,
+      "sha256": "60f6e7bc948cedd377a20f01d022ef664d026fbc93d72e0a9bdac233f8632181"
+    },
+    "vocab.json": {
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "parts": [
+    {
+      "name": "checkpoint_step_0001.tar.gz.part000",
+      "bytes": 1073741824,
+      "sha256": "04659e558c0ead78d19f6997ab39bc570aa74714cb8f5c0eadc9daf59b7f2e05"
+    },
+    {
+      "name": "checkpoint_step_0001.tar.gz.part001",
+      "bytes": 1073741824,
+      "sha256": "2721d645d5a0550434e328ad96486f6147adf1787f181ba1b863a3d52a5bd3e3"
+    },
+    {
+      "name": "checkpoint_step_0001.tar.gz.part002",
+      "bytes": 1073741824,
+      "sha256": "fad68cf686333a3de5726d850aafef4e93c17dadad86582572f54a80c7a814fc"
+    },
+    {
+      "name": "checkpoint_step_0001.tar.gz.part003",
+      "bytes": 1073741824,
+      "sha256": "baaed69cae9dcca801dff8369957758a857d1cd7f8ee7bdceacfbabf2571bbee"
+    },
+    {
+      "name": "checkpoint_step_0001.tar.gz.part004",
+      "bytes": 1073741824,
+      "sha256": "c9f5e9beec597759f5e65e0c1b29e4dbf71c1a5799c7e56df4c43f3755150479"
+    },
+    {
+      "name": "checkpoint_step_0001.tar.gz.part005",
+      "bytes": 115222999,
+      "sha256": "489a48e65a30d0084e71df5a72c49d6d92696af09c17d45f79c9b2e15ead6afd"
+    }
+  ],
+  "archive_root": "latest_checkpoint",
+  "archive_sha256": "31bd9c6824fa205cfa6de6f5fdb6c386dcb0808d518d94ee3fa558d8ad10e02e",
+  "pending_update": {
+    "name": "pending_update_buffer.json.gz",
+    "bytes": 46666173,
+    "sha256": "cbeb41d145420acaba2e30c2531f9e44029bd21822bbd548c18fc7345fd6a18f",
+    "buffer_sha256": "e657f4b094bc4d620a38a21b541861ba579f563a59e135eaf6f3fec07ac59a5e",
+    "seed": 2,
+    "next_state": {
+      "step": 2,
+      "epoch": 0,
+      "cursor": 5120,
+      "generation_batches": 5
+    },
+    "prepared_from_step": 1
+  }
+}

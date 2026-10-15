@@ -1,0 +1,29 @@
+{
+  "experiment_id": "fusion_cpu_sprint1_20261014",
+  "seed": 20261014,
+  "scope": "synthetic finite-action population and paired Monte Carlo; not language-model evidence",
+  "population": {
+    "actions": [3, 8, 32],
+    "ranks": "unique(1, min(3,K-1), K-1)",
+    "references": ["uniform", "tilted"],
+    "pair_sources": ["uniform", "reference"],
+    "reward_ranges": [2.0, 10.0],
+    "reward_modes": ["random", "nonmonotone", "realizable"],
+    "temperature": 1.0,
+    "rating_weights": [0.0, 0.001, 0.01, 0.1, 1.0, 10.0],
+    "small_weight": 0.00001,
+    "gradient_tolerance": 1e-9
+  },
+  "finite_sample": {
+    "instances": ["original_negative", "rescaled_negative", "realizable_moderate", "realizable_saturated"],
+    "sample_sizes": [8, 16, 32, 64, 128, 256, 1024, 4096, 16384],
+    "rating_noise_sd": [0.0, 1.0],
+    "rating_weights": [0.0, 0.001, 0.01, 0.1, 1.0, 10.0],
+    "replicates": 1024,
+    "parameter_bounds": [-12.0, 12.0],
+    "ranking_bits": "BT; conditionally independent of Gaussian rating noise",
+    "sampling": "uniform unordered distinct pairs; shared observations across weights",
+    "confidence_intervals": "paired differences mean +/- 1.96 Monte Carlo standard errors; descriptive, no multiplicity-adjusted discovery claim"
+  },
+  "preexecution_note": "Written before running this sweep. Grid is a feasibility design, not registered externally. All configured instances and weights will be reported, including null/beneficial results. Changes require a separate recorded run."
+}

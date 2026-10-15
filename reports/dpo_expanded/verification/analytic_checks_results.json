@@ -1,0 +1,106 @@
+{
+  "scope": "deterministic finite-action analytical checks; not LLM experiments",
+  "maximum_direct_gradient_error": 5.551115123125783e-17,
+  "feedback": {
+    "a": 2.0,
+    "gamma": 0.55,
+    "R": 3.0,
+    "local_threshold": 0.5077294373038432,
+    "global_threshold_grid_lower_bound": 0.5726340242032302,
+    "grid_argmax": 2.03,
+    "cycles": [
+      {
+        "magnitude": 1.261849168280357,
+        "one_step_abs_derivative": 1.1135851834233195,
+        "two_step_multiplier": 1.240071960739948,
+        "true_regularized_regret": 0.4593432889398259
+      },
+      {
+        "magnitude": 2.77036707664774,
+        "one_step_abs_derivative": 0.7173745273286734,
+        "two_step_multiplier": 0.5146262124600375,
+        "true_regularized_regret": 1.017303863501549
+      }
+    ],
+    "inner_depth": [
+      {
+        "steps": 1,
+        "finite_difference": 0.9192270562747991,
+        "formula": 0.9192270562696152
+      },
+      {
+        "steps": 5,
+        "finite_difference": 0.6196510469159123,
+        "formula": 0.619651046894939
+      },
+      {
+        "steps": 15,
+        "finite_difference": 0.012553964612091207,
+        "formula": 0.012553964565349851
+      },
+      {
+        "steps": 30,
+        "finite_difference": -0.6127474115224874,
+        "formula": -0.6127474115820499
+      },
+      {
+        "steps": 50,
+        "finite_difference": -1.1053053812112832,
+        "formula": -1.1053053812634355
+      }
+    ]
+  },
+  "endpoint_compression": {
+    "h": [
+      1.0,
+      0.0,
+      0.5018520570113494
+    ],
+    "component_optimum": 1.0,
+    "mixed_optimum": -0.025546857147197705,
+    "midpoint_regret": 0.00021209037117492918,
+    "grid_component_optimum": 1.0
+  },
+  "unknown_link": {
+    "policy_u": [
+      0.04201006613406605,
+      0.11419519938459448,
+      0.8437947344813395
+    ],
+    "policy_v": [
+      0.01714782554552039,
+      0.04661262257797389,
+      0.9362395518765056
+    ],
+    "regret_lower_bound": 0.011450857376901751
+  },
+  "formula_audits": {
+    "mix_logit_cycle_defect": -0.4278162728218813,
+    "catto_loss_at_target": 0.42000000000000004,
+    "catto_loss_at_boundary": 0.30000000000000004,
+    "cita_unbounded_sequence": [
+      {
+        "epsilon": 0.1,
+        "dpo_loss": 0.6931471805599453,
+        "offline_anchor": -1.203972804325936
+      },
+      {
+        "epsilon": 0.01,
+        "dpo_loss": 0.6931471805599453,
+        "offline_anchor": -3.506557897319982
+      },
+      {
+        "epsilon": 0.001,
+        "dpo_loss": 0.6931471805599453,
+        "offline_anchor": -5.809142990314028
+      },
+      {
+        "epsilon": 1e-06,
+        "dpo_loss": 0.6931471805599453,
+        "offline_anchor": -12.716898269296165
+      }
+    ],
+    "spinal_gram_invariant_to_row_permutation": true
+  },
+  "all_assertions_passed": true
+}
