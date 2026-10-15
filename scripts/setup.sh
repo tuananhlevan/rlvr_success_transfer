@@ -4,9 +4,14 @@ project_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$project_dir"
 python_bin="${PYTHON_BIN:-python3.11}"
 "$python_bin" - <<'PY'
-import platform, sys
+import platform, sys, sysconfig, shutil
+from pathlib import Path
 assert sys.version_info[:2] == (3,11), 'Use Python 3.11; set PYTHON_BIN=/path/to/python3.11'
 assert platform.system() == 'Linux' and platform.machine() == 'x86_64', 'This recipe targets Linux x86_64 with an NVIDIA GPU'
+assert shutil.which('c++'), 'Install a C++ compiler (e.g. build-essential on Ubuntu) for runtime kernels'
+assert (Path(sysconfig.get_path('include'))/'Python.h').exists(), 'Install development headers for this Python 3.11 interpreter'
+if not shutil.which('nvcc'):
+    print('CUDA compiler not on PATH. Install CUDA Toolkit 12.8 or matching FlashInfer prebuilt caches before the GPU doctor.')
 PY
 for phase in train infer; do
   "$python_bin" -m venv ".venv/$phase"

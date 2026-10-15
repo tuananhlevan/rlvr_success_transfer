@@ -42,6 +42,12 @@ def gpu_check(infer=False):
         torch.cuda.synchronize()
         assert bool(torch.isfinite(y).all())
         print('vLLM native CUDA RMSNorm executed')
+        # A fresh host may compile this kernel; allow several minutes.
+        from flashinfer.norm import rmsnorm
+        z=rmsnorm(x,torch.ones(16,device='cuda',dtype=x.dtype),eps=1e-6)
+        torch.cuda.synchronize()
+        assert bool(torch.isfinite(z).all())
+        print('FlashInfer RMSNorm executed (JIT/cache path verified)')
     else:
         from torch.nn.utils.stateless import _reparametrize_module
         assert callable(_reparametrize_module)

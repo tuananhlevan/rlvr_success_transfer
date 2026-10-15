@@ -13,6 +13,7 @@ The export includes the step 1 model, full optimizer state, carry groups, exact 
 - Linux x86_64, Python **3.11** with `venv`, Git and Git LFS.
 - One NVIDIA GPU supporting BF16. The original run used an RTX 5060 Ti **16 GB**. Training and inference execute in separate processes to release VRAM between phases.
 - An NVIDIA driver compatible with CUDA 12.8 wheels. Check `nvidia-smi`; a working desktop GPU alone does not establish Torch CUDA access.
+- A C++ compiler and the selected Python 3.11 interpreter's development headers. For first-use kernel compilation, install **CUDA Toolkit 12.8** and expose `nvcc` through `CUDA_HOME`/`PATH`. The Torch wheels supply runtime libraries; FlashInfer can compile kernels at runtime. Matching prebuilt FlashInfer caches are an alternative, described in its [version 0.5.2 installation guide](https://github.com/flashinfer-ai/flashinfer/blob/v0.5.2/docs/installation.rst).
 - At least **32 GB host RAM** and approximately **50 GB free disk**, allowing for both environments, wheel caches, downloaded base weights, LFS objects, and the restored checkpoint.
 - Internet access to PyPI, the PyTorch wheel index, Hugging Face, and GitHub. The pinned model/dataset are public. You can set `HF_HOME` to choose a cache location.
 
@@ -83,7 +84,7 @@ bash scripts/run.sh benchmark --run-dir runs/benchmark
 bash scripts/run.sh run --seed 1 --run-dir runs/fresh_seed1 --max-hours 240
 ```
 
-Seeds 42 and 37 require separate fresh directories and full runs. Run them sequentially on one 16 GB GPU. `--steps` can shorten an engineering check, but a shortened run cannot establish the paper's persistent-failure claim. The doctor checks a real BF16 matmul and native vLLM CUDA operation when `--gpu` is supplied; only a successful benchmark/run validates the complete generation stack on a new host.
+Seeds 42 and 37 require separate fresh directories and full runs. Run them sequentially on one 16 GB GPU. `--steps` can shorten an engineering check, but a shortened run cannot establish the paper's persistent-failure claim. The doctor checks a real BF16 matmul, native vLLM CUDA operation and FlashInfer kernel when `--gpu` is supplied. First-use kernel compilation can take several minutes. Only a successful benchmark/run validates the complete generation stack on a new host.
 
 For a model already downloaded elsewhere, set `RLVR_MODEL_PATH` to its directory. Preserve the pinned model revision. Advanced overrides are `RLVR_SOURCE_DIR`, `RLVR_SCRATCH_DIR`, `RLVR_TRAIN_PYTHON`, and `RLVR_INFER_PYTHON`; `scripts/run.sh` selects the two project environments. `--scratch-dir` can move temporary generation files to another disk. Avoid sharing a run directory between concurrent processes.
 
