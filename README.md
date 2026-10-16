@@ -12,7 +12,7 @@ The [16 October research investment review](studies/rlvr_success_transfer/resear
 
 ## Latest direction screen
 
-The [shared-policy exploration theory lead](studies/conditional_design_limits/README.md) records an exact conditional-design limit, a scoped adaptive information lower bound, prior-art checks and remaining commitment gates. Its practical LLM value is unestablished. The [synthetic-error context study](studies/error_context_transfer/README.md) is retired after the direct prior-art check.
+The [exploration theory sprint](studies/conditional_design_limits/README.md) records exact design limits, matching sparse-family resource rates, and a correction distinguishing generated pairs from queried labels. Ordinary screening repairs its label bottleneck; practical LLM value and full-paper novelty remain unestablished. The [synthetic-error context study](studies/error_context_transfer/README.md) is retired after the direct prior-art check.
 
 ## Quick start: Colab or Kaggle
 

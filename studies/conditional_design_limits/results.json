@@ -1,7 +1,15 @@
 {
   "date": "2026-10-16",
-  "status": "theory lead; practical value unestablished",
-  "meaning": "Deterministic covariance calculations and numerical prompt-design optimization. No LLM training, human labels, or deployment outcomes.",
+  "status": "scoped theory sprint complete; no full methods project justified",
+  "meaning": "Exact geometry, enumeration and exact-distribution finite-model simulation. Generated pairs and queried labels are distinct resources. No LLM or human-data experiment.",
+  "seed": 20261016,
+  "tournament_error_budget": 0.05,
+  "script_sha256": "d3c85ce9757aed5cce0f85daa792a45f05173b13268122749520435c7597b65a",
+  "versions": {
+    "python": "3.11.14",
+    "numpy": "2.4.0",
+    "scipy": "1.16.3"
+  },
   "rows": [
     {
       "dimension": 2,
@@ -48,5 +56,601 @@
       "ratio": 31.059715639810427,
       "optimizer_success": true
     }
-  ]
+  ],
+  "retained_coin_enumeration": [
+    {
+      "dimension": 16,
+      "eta": 0.0625,
+      "acceptance": 0.1171875,
+      "target_coin_mean": 0.7310585786300051,
+      "other_coin_max_error_from_half": 0.0
+    },
+    {
+      "dimension": 16,
+      "eta": 0.5,
+      "acceptance": 0.1171875,
+      "target_coin_mean": 0.7310585786300051,
+      "other_coin_max_error_from_half": 0.0
+    },
+    {
+      "dimension": 16,
+      "eta": 1.0,
+      "acceptance": 0.1171875,
+      "target_coin_mean": 0.7310585786300051,
+      "other_coin_max_error_from_half": 0.0
+    }
+  ],
+  "overlap_sweep": [
+    {
+      "dimension": 32,
+      "eta": 1.0,
+      "conditional_design_leverage": 32.0,
+      "optimized_prompt_leverage": 32.0,
+      "joint_design_leverage": 32.0,
+      "ratio": 1.0,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 32,
+      "eta": 0.5,
+      "conditional_design_leverage": 117.02857142857142,
+      "optimized_prompt_leverage": 117.02857142857145,
+      "joint_design_leverage": 32.0,
+      "ratio": 3.657142857142857,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 32,
+      "eta": 0.17677669529663687,
+      "conditional_design_leverage": 520.1269841269841,
+      "optimized_prompt_leverage": 520.1269841269844,
+      "joint_design_leverage": 32.0,
+      "ratio": 16.253968253968253,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 32,
+      "eta": 0.03125,
+      "conditional_design_leverage": 993.9109004739337,
+      "optimized_prompt_leverage": 993.9109004739345,
+      "joint_design_leverage": 32.0,
+      "ratio": 31.059715639810427,
+      "optimizer_success": true
+    }
+  ],
+  "simulations": [
+    {
+      "dimension": 16,
+      "method": "fixed_conditional_label_every_pair",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 47152.419,
+      "mean_labels": 47152.419,
+      "mean_retained_comparisons": 5522.0,
+      "paired_information_with": "fixed_conditional_screen_before_label"
+    },
+    {
+      "dimension": 16,
+      "method": "fixed_conditional_screen_before_label",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 47152.419,
+      "mean_labels": 5522.0,
+      "mean_retained_comparisons": 5522.0,
+      "paired_information_with": "fixed_conditional_label_every_pair"
+    },
+    {
+      "dimension": 16,
+      "method": "coordinated_direct_pairs",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 2036.0,
+      "mean_labels": 2036.0,
+      "mean_retained_comparisons": 2036.0,
+      "paired_information_with": "prompt_conditioned_bounded_policy_screen"
+    },
+    {
+      "dimension": 16,
+      "method": "prompt_conditioned_bounded_policy_screen",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 33517.445,
+      "mean_labels": 2036.0,
+      "mean_retained_comparisons": 2036.0,
+      "paired_information_with": "coordinated_direct_pairs"
+    },
+    {
+      "dimension": 16,
+      "method": "cached_pair_recombination_repeated_labels",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 65.103,
+      "mean_labels": 301260.0,
+      "mean_retained_comparisons": 301260.0,
+      "paired_information_with": null
+    },
+    {
+      "dimension": 32,
+      "method": "fixed_conditional_label_every_pair",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 191305.474,
+      "mean_labels": 191305.474,
+      "mean_retained_comparisons": 11582.0,
+      "paired_information_with": "fixed_conditional_screen_before_label"
+    },
+    {
+      "dimension": 32,
+      "method": "fixed_conditional_screen_before_label",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 191305.474,
+      "mean_labels": 11582.0,
+      "mean_retained_comparisons": 11582.0,
+      "paired_information_with": "fixed_conditional_label_every_pair"
+    },
+    {
+      "dimension": 32,
+      "method": "coordinated_direct_pairs",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 4270.0,
+      "mean_labels": 4270.0,
+      "mean_retained_comparisons": 4270.0,
+      "paired_information_with": "prompt_conditioned_bounded_policy_screen"
+    },
+    {
+      "dimension": 32,
+      "method": "prompt_conditioned_bounded_policy_screen",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 73580.485,
+      "mean_labels": 4270.0,
+      "mean_retained_comparisons": 4270.0,
+      "paired_information_with": "coordinated_direct_pairs"
+    },
+    {
+      "dimension": 32,
+      "method": "cached_pair_recombination_repeated_labels",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 153.363,
+      "mean_labels": 2522566.0,
+      "mean_retained_comparisons": 2522566.0,
+      "paired_information_with": null
+    },
+    {
+      "dimension": 64,
+      "method": "fixed_conditional_label_every_pair",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 772009.79,
+      "mean_labels": 772009.79,
+      "mean_retained_comparisons": 23752.0,
+      "paired_information_with": "fixed_conditional_screen_before_label"
+    },
+    {
+      "dimension": 64,
+      "method": "fixed_conditional_screen_before_label",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 772009.79,
+      "mean_labels": 23752.0,
+      "mean_retained_comparisons": 23752.0,
+      "paired_information_with": "fixed_conditional_label_every_pair"
+    },
+    {
+      "dimension": 64,
+      "method": "coordinated_direct_pairs",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 8758.0,
+      "mean_labels": 8758.0,
+      "mean_retained_comparisons": 8758.0,
+      "paired_information_with": "prompt_conditioned_bounded_policy_screen"
+    },
+    {
+      "dimension": 64,
+      "method": "prompt_conditioned_bounded_policy_screen",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 154342.779,
+      "mean_labels": 8758.0,
+      "mean_retained_comparisons": 8758.0,
+      "paired_information_with": "coordinated_direct_pairs"
+    },
+    {
+      "dimension": 64,
+      "method": "cached_pair_recombination_repeated_labels",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 347.463,
+      "mean_labels": 20685088.0,
+      "mean_retained_comparisons": 20685088.0,
+      "paired_information_with": null
+    },
+    {
+      "dimension": 128,
+      "method": "fixed_conditional_label_every_pair",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 3105576.91,
+      "mean_labels": 3105576.91,
+      "mean_retained_comparisons": 48144.0,
+      "paired_information_with": "fixed_conditional_screen_before_label"
+    },
+    {
+      "dimension": 128,
+      "method": "fixed_conditional_screen_before_label",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 3105576.91,
+      "mean_labels": 48144.0,
+      "mean_retained_comparisons": 48144.0,
+      "paired_information_with": "fixed_conditional_label_every_pair"
+    },
+    {
+      "dimension": 128,
+      "method": "coordinated_direct_pairs",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 17752.0,
+      "mean_labels": 17752.0,
+      "mean_retained_comparisons": 17752.0,
+      "paired_information_with": "prompt_conditioned_bounded_policy_screen"
+    },
+    {
+      "dimension": 128,
+      "method": "prompt_conditioned_bounded_policy_screen",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 316308.716,
+      "mean_labels": 17752.0,
+      "mean_retained_comparisons": 17752.0,
+      "paired_information_with": "coordinated_direct_pairs"
+    },
+    {
+      "dimension": 128,
+      "method": "cached_pair_recombination_repeated_labels",
+      "trials": 1000,
+      "successes": 1000,
+      "success_fraction": 1.0,
+      "success_wilson95": [
+        0.996173241514445,
+        1.0
+      ],
+      "mean_generated_pairs": 785.023,
+      "mean_labels": 167699216.0,
+      "mean_retained_comparisons": 167699216.0,
+      "paired_information_with": null
+    }
+  ],
+  "temperature_controls": [
+    {
+      "dimension": 16,
+      "temperature": 1.0,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 1.0,
+      "main_axis_probability": 0.07685649331249712,
+      "pair_feature_energy": 0.15667123049976073,
+      "null_label_kl_summed_over_targets": 0.018765314405627093
+    },
+    {
+      "dimension": 16,
+      "temperature": 1.0,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 1.0,
+      "main_axis_probability": 0.07685649331249712,
+      "pair_feature_energy": 0.16092504527099036,
+      "null_label_kl_summed_over_targets": 0.019226633937045108
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.25,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 4.0,
+      "main_axis_probability": 0.34532574523097304,
+      "pair_feature_energy": 0.46095743562414204,
+      "null_label_kl_summed_over_targets": 0.055349364883109695
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.25,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 4.0,
+      "main_axis_probability": 0.3453257452309731,
+      "pair_feature_energy": 0.6957661330773293,
+      "null_label_kl_summed_over_targets": 0.08081335108068845
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.125,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 8.0,
+      "main_axis_probability": 0.8894468944262964,
+      "pair_feature_energy": 0.19762179049285789,
+      "null_label_kl_summed_over_targets": 0.023740315267104264
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.125,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 8.0,
+      "main_axis_probability": 0.8894468944262964,
+      "pair_feature_energy": 1.7797574849898874,
+      "null_label_kl_summed_over_targets": 0.19531536079260156
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.0625,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 16.0,
+      "main_axis_probability": 0.999428122641139,
+      "pair_feature_energy": 0.0011475702213559202,
+      "null_label_kl_summed_over_targets": 0.0001378615458145262
+    },
+    {
+      "dimension": 16,
+      "temperature": 0.0625,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 16.0,
+      "main_axis_probability": 0.999428122641139,
+      "pair_feature_energy": 1.9988607130741443,
+      "null_label_kl_summed_over_targets": 0.21678027809021008
+    },
+    {
+      "dimension": 64,
+      "temperature": 1.0,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 1.0,
+      "main_axis_probability": 0.01774545191685892,
+      "pair_feature_energy": 0.035826865507395646,
+      "null_label_kl_summed_over_targets": 0.00429999580407809
+    },
+    {
+      "dimension": 64,
+      "temperature": 1.0,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 1.0,
+      "main_axis_probability": 0.01774545191685892,
+      "pair_feature_energy": 0.03597052031227407,
+      "null_label_kl_summed_over_targets": 0.004315574487383964
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.125,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 8.0,
+      "main_axis_probability": 0.3364254572955339,
+      "pair_feature_energy": 0.44703168546133576,
+      "null_label_kl_summed_over_targets": 0.05369399461048467
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.125,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 8.0,
+      "main_axis_probability": 0.33642545729553397,
+      "pair_feature_energy": 0.6731749255982478,
+      "null_label_kl_summed_over_targets": 0.07821814547699547
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.0625,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 16.0,
+      "main_axis_probability": 0.9699115214118442,
+      "pair_feature_energy": 0.05838146418573564,
+      "null_label_kl_summed_over_targets": 0.0070125273082502874
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.0625,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 16.0,
+      "main_axis_probability": 0.9699115214118446,
+      "pair_feature_energy": 1.9398377344636248,
+      "null_label_kl_summed_over_targets": 0.21104744316984966
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.03125,
+      "sampler": "single",
+      "effective_parameter_norm_over_R": 32.0,
+      "main_axis_probability": 0.9999922347354131,
+      "pair_feature_energy": 1.5534200236810847e-05,
+      "null_label_kl_summed_over_targets": 1.865901321385738e-06
+    },
+    {
+      "dimension": 64,
+      "temperature": 0.03125,
+      "sampler": "sign_symmetric_mixture",
+      "effective_parameter_norm_over_R": 32.0,
+      "main_axis_probability": 0.999992234735413,
+      "pair_feature_energy": 1.9999844732624592,
+      "null_label_kl_summed_over_targets": 0.21688891273298877
+    }
+  ],
+  "kl_budget_frontier": [
+    {
+      "dimension": 16,
+      "kl_budget": 0.0,
+      "attained_kl": 0.0,
+      "main_axis_mass": 0.0625,
+      "optimal_leverage": 241.83025830258302
+    },
+    {
+      "dimension": 16,
+      "kl_budget": 0.1,
+      "attained_kl": 0.1,
+      "main_axis_mass": 0.19560676259064502,
+      "optimal_leverage": 80.50358061924402
+    },
+    {
+      "dimension": 16,
+      "kl_budget": 0.17328679513998632,
+      "attained_kl": 0.17328679513996476,
+      "main_axis_mass": 0.2462931811521873,
+      "optimal_leverage": 64.19583622542449
+    },
+    {
+      "dimension": 16,
+      "kl_budget": 1.0,
+      "attained_kl": 0.9999999999999993,
+      "main_axis_mass": 0.5947278891468798,
+      "optimal_leverage": 26.83163726190877
+    },
+    {
+      "dimension": 16,
+      "kl_budget": 1.3862943611198906,
+      "attained_kl": 1.386294361119891,
+      "main_axis_mass": 0.7103306884758451,
+      "optimal_leverage": 22.488896518413405
+    },
+    {
+      "dimension": 16,
+      "kl_budget": 2.772588722239781,
+      "attained_kl": 2.772588722239781,
+      "main_axis_mass": 1.0,
+      "optimal_leverage": 16.0
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 0.0,
+      "attained_kl": 0.0,
+      "main_axis_mass": 0.015625,
+      "optimal_leverage": 4033.954315941332
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 0.06498254817749487,
+      "attained_kl": 0.06498254817748035,
+      "main_axis_mass": 0.07795635188614083,
+      "optimal_leverage": 818.6083994513301
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 0.1,
+      "attained_kl": 0.09999999999999988,
+      "main_axis_mass": 0.0974222564935826,
+      "optimal_leverage": 655.4515332474838
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 1.0,
+      "attained_kl": 1.0000000000000007,
+      "main_axis_mass": 0.400002520145501,
+      "optimal_leverage": 159.9404206318039
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 2.0794415416798357,
+      "attained_kl": 2.0794415416798353,
+      "main_axis_mass": 0.6537946014639707,
+      "optimal_leverage": 97.87741743828876
+    },
+    {
+      "dimension": 64,
+      "kl_budget": 4.1588830833596715,
+      "attained_kl": 4.1588830833596715,
+      "main_axis_mass": 1.0,
+      "optimal_leverage": 64.0
+    }
+  ],
+  "runtime_seconds": 0.9471584799975972
 }

@@ -1,6 +1,6 @@
 # Research lead: the statistical cost of shared-policy preference exploration
 
-**Date:** 16 October 2026. **Status:** scoped theoretical lead with an exact geometry result and a derived adaptive lower bound; practical LLM value and full-paper novelty remain unestablished.
+**Date:** 16 October 2026. **Status:** bounded theory sprint completed. Exact geometry, matching constant-confidence resource rates on the sparse family, and an exact KL-constrained design curve are derived. The earlier interpretation of a universal quadratic *label* requirement is corrected. A full methods project is not justified.
 
 ## 1. Decision and research question
 
@@ -12,7 +12,7 @@ The starting point is an explicit open question in an original corpus paper. [Ki
 
 Our exact construction answers that particular question negatively. A further information argument shows that, under a specified shared-policy sampling protocol, adaptation need not remove a quadratic discovery cost. These are derived mathematical results, not measurements of language-model failures.
 
-**Recommendation:** retain for a bounded theory sprint. Do not start another RL training campaign. A joint sampler is already an established remedy; a methods proposal claiming to invent that remedy would fail the novelty check. This direction must earn its contribution through sharp limits and an explicit distinction between permitted information protocols.
+**Sprint decision:** retain the mathematical results as a scoped theoretical note. Do not start an RL training campaign. Screening before labeling is an ordinary repair of the label-cost bottleneck, and changing the policy constraint or conditioning on the prompt can also remove the generation bottleneck. A full paper still needs broader novelty and a consequential use case beyond this constructed family. See Sections 6–10 for completed work and remaining gaps.
 
 ## 2. Intuition
 
@@ -29,7 +29,7 @@ The interesting question is the **necessary information cost under each protocol
 | [Coverage Improvement, ICML 2026](https://proceedings.mlr.press/v306/kim26bz.html); local §§2–4 and final Remark 4.3/Algorithm 2 | Coverage improvement, two-round hybrid exploration, conditional and global experimental design. | A sharp negative answer to its fixed-conditional design question; a statistical lower bound for its shared-policy query restriction. |
 | [Federated Linear Contextual Bandits, 2021](https://arxiv.org/html/2110.14177); §4.3 and relevant Appendix G passages checked in the literature screen | Joint multi-client information design for shared parameters. | No verified exact result matching the centered construction or the bounded shared-softmax discovery theorem below. |
 | [FedConPE, 2024](https://arxiv.org/html/2405.02881); §§3.1–3.2 | Explicitly identifies deficiencies of aggregating locally optimal designs and augments missing global directions. | Its linear-reward feedback and extra key-term queries differ from this logistic-feedback protocol. The broad mechanism is nevertheless already known. |
-| [Foster et al., 2025](https://arxiv.org/abs/2503.07453); abstract and §4 contract checked | Computational limits of proper exploration, and efficient improper exploration. | The result below is a statistical limit under a shared-before-prompt policy restriction. It is not a replacement for their computational hardness theorem. |
+| [Foster et al., 2025](https://arxiv.org/abs/2503.07453); §§3.1/4 and Appendix A.1 checked | Computational limits of proper exploration, and efficient improper exploration. | Already separates generation from feedback, including screening before an oracle query. Our narrow construction does not establish a new general separation principle. |
 
 Searches used the source title/identifier, preferential and conditional G-optimal design, shared-policy/proper exploration, and federated joint design. No checked source explicitly supplied the exact results below. **This is a bounded novelty check, not proof of priority.** No new OpenReview reviews or rebuttals were accessed.
 
@@ -83,135 +83,313 @@ $$
 
 By contrast, drawing prompt $i$ uniformly and only responses $\pm i$ gives covariance $I/d$ and maximum leverage $d$. This coordinated design is a comparison baseline, **not a claimed new algorithm**.
 
-## 5. A scoped adaptive discovery lower bound
+## 5. Audited lower bound: generated pairs and labels are different resources
 
-This extends the geometry into a statistical question. The proof below has been checked within the session, including a separate worker check; it has not received external peer review.
+### Model, loss and fresh-pair query contract
 
-### Model and permitted queries
-
-Take $d\geq16$, $R=\log d$, $\eta=1/d$, and a uniform reference over responses. Policies have the form
+Take $d\geq16$, $R=\log d$, $\eta=1/d$, uniform response reference, and
 
 $$
-\pi_\theta(a\mid x)\propto
-\exp(\theta^\top\phi(x,a)),\qquad \|\theta\|_2\leq R.
+\pi_\theta(a\mid x)\propto\exp(\theta^\top\phi(x,a)),
+\qquad \|\theta\|_2\leq R.
 $$
 
-The unknown target is one of $d$ representable policies with parameters $\theta_J^*=Re_J$. A comparison of two responses at the same prompt returns an independent label with probability
+The unknown target belongs to the **finite, known-amplitude** family $\theta_J^*=Re_J$, $J\in[d]$. A same-prompt pair receives an independent label with probability
 
 $$
-P_J(a\succ b\mid x)
-=\sigma\!\left(\frac{(\theta_J^*)^\top[\phi(x,a)-\phi(x,b)]}{R}\right).
+P_J(a\succ b\mid x)=\sigma\!\left(
+\frac{(\theta_J^*)^\top[\phi(x,a)-\phi(x,b)]}{R}\right).
 $$
 
-Before each prompt is drawn, a learner may adaptively mix:
+Before a raw prompt/pair draw, the learner can adaptively mix:
 
-1. A globally shared policy $\pi_{\theta_t}$, with prompts uniform and $\|\theta_t\|_2\leq R$.
-2. Any prompt marginal $\mu_t$ paired with the fixed conditional design $\pi^{cg}$.
+1. Shared policies with $\|\theta_t\|_2\leq R$, selected **before** a uniform prompt is drawn.
+2. Any prompt marginal $\mu_t$ with the fixed within-prompt distribution $\pi^{cg}$.
 
-Mixtures of globally shared policies are allowed. Pair sampling is from the resulting conditional response distribution at the same prompt. The output also satisfies $\|\widehat\theta\|_2\leq R$. There is no free reward oracle or additional target-dependent side information.
+The resulting conditional response distribution supplies both action marginals at the same prompt. Mixtures of shared policies are allowed. After observing prompt, responses and their known features, the learner **may decide whether to request the label**. Each raw pair can receive at most one label in this theorem. Denote by $G$ the hard budget of generated raw pairs, and by $L$ the hard budget of requested labels. Unlabeled rejected pairs count toward $G$ but not $L$. Labels are the only target-dependent external information; the feature map and response collection kernel are known. The output obeys $\|\widehat\theta\|_2\leq R$. Section 7 separately allows cached-pair recombination and repeated labels; the quadratic $G$ bound must not be extended to that protocol.
 
-**The ordering of decisions is essential:** choosing a separate parameter vector after observing each prompt is outside this protocol.
+This explicit screening permission is a correction to the earlier discussion, which treated a drawn pair and a queried label as one resource. The original bound remains valid if every pair must be labeled, but that convention cannot establish a universal human-feedback requirement.
 
-### Information bound
+### Adaptive information bound
 
-Use the null target $\theta^*=0$ as a change-of-measure reference, with transcript law $P_0^n$. A globally shared query parameter obeys
+Use the null target $\theta^*=0$ as a change-of-measure reference. For every allowed shared parameter,
 
 $$
-\sum_i\cosh(\theta_{t,i})
-\leq d+\cosh R-1\leq\frac32d.
+\sum_i\cosh(\theta_{t,i})\leq d+\cosh R-1\leq\tfrac32d.
 $$
 
-The first inequality follows from
-$\cosh u-1\leq(\cosh R-1)u^2/R^2$ for $|u|\leq R$.
-Each prompt's response normalizer is at least $2d$. Thus the probability of drawing that prompt's strongly exposed axis is at most $3/(2d)$ under the shared-policy component. Under $\mu_t\times\pi^{cg}$ it is exactly $1/d$, regardless of $\mu_t$.
+Indeed $\cosh u-1\leq(\cosh R-1)u^2/R^2$ for $|u|\leq R$. Each response normalizer is at least $2d$. Thus the average probability of the prompt's strong axis is at most $3/(2d)$ under a shared policy and exactly $1/d$ under $\mu_t\times\pi^{cg}$. This implies $\mathbb E_0\|\phi\|_2^2\leq5/(2d)$.
 
-For either component, $\mathbb E\|\phi\|_2^2\leq5/(2d)$. For a particular query, write $z_J=\phi(x,a)_J-\phi(x,b)_J$. The label divergence is
+For $z_J=\phi(x,a)_J-\phi(x,b)_J$,
 
 $$
 \operatorname{kl}(1/2,\sigma(z_J))
 =\log\cosh(z_J/2)\leq z_J^2/8.
 $$
 
-Summing across alternatives, using the two action marginals and the adaptive KL chain rule, gives
+An unqueried label contributes zero information. A queried pair contributes at most $\|\phi(x,a)-\phi(x,b)\|_2^2/8$ after summing alternatives. The adaptive KL chain rule therefore gives
 
 $$
-\sum_{J=1}^d D_{\mathrm{KL}}(P_0^n\|P_J^n)
-\leq\frac{5n}{4d}.
+\boxed{\sum_{J=1}^d D_{\rm KL}(P_0\|P_J)
+\leq\min\!\left\{\frac{5G}{4d},\frac L2\right\}.}
 $$
 
-This bound permits arbitrary adaptive update/fitting rules within the query protocol. It is not a claim about a particular optimizer getting stuck.
+The first bound uses raw-pair second moments, even when the learner screens them. The second uses $\|\phi(x,a)-\phi(x,b)\|_2\leq2$. All choices of prompts, policies and label requests can depend on previously observed information under this contract.
 
-### Required information for successful estimation
+### Required information
 
-The target covariance $V(\pi_J^*)$ is diagonal, and its $J$th diagonal entry is at least $1/(9d)$. At prompt $J$, set $Z=d+d^{-1}+2d-2\leq3d$. The variance on this axis equals
-
-$$
-\frac{(d+d^{-1})(2d-2)+4}{Z^2}\geq\frac19;
-$$
-
-averaging prompts supplies the factor $1/d$.
-
-Therefore target-weighted squared error less than $R^2/(36d)$ implies $\widehat\theta_J>R/2$. Let $A_J$ denote this event. The output norm constraint implies $\sum_JP_0(A_J)\leq4$. For at least half the indices, $P_0(A_J)\leq8/d\leq1/2$.
-
-If estimation succeeds with probability at least $0.9$ for every alternative, then $P_J(A_J)\geq0.9$. Binary data processing yields
+The target covariance is diagonal and $V(\pi_J^*)_{JJ}\geq1/(9d)$. At prompt $J$, the normalizer is $Z=d+d^{-1}+2d-2\leq3d$, and the axis variance equals
 
 $$
-\frac d2\operatorname{kl}(1/2,0.9)
-\leq\sum_J D_{\mathrm{KL}}(P_0^n\|P_J^n)
-\leq\frac{5n}{4d}.
+\frac{(d+d^{-1})(2d-2)+4}{Z^2}\geq\frac19.
 $$
 
-Hence
+Thus target-weighted squared error below $R^2/(36d)$ implies $A_J=\{\widehat\theta_J>R/2\}$. The output norm ensures $\sum_JP_0(A_J)\leq4$. At least half the indices have $P_0(A_J)\leq8/d\leq1/2$. Uniform success probability $0.9$ implies $P_J(A_J)\geq0.9$ and, by binary data processing,
 
 $$
-\boxed{n\geq\frac25\operatorname{kl}(1/2,0.9)d^2
->0.204d^2.}
+\sum_JD_{\rm KL}(P_0\|P_J)
+\geq\frac d2\operatorname{kl}(1/2,0.9).
 $$
 
-For the **same finite known-amplitude family**, coordinated queries comparing $+e_i$ and $-e_i$ distinguish a Bernoulli mean $\sigma(2)$ at the unknown prompt $J$ from $1/2$ elsewhere. Hoeffding's inequality and a union bound give identification using $O(d\log(d/\delta))$ labels. This is not an upper bound for estimating arbitrary vectors in the parameter ball.
+Writing $k=\operatorname{kl}(1/2,0.9)=0.5108256\ldots$, we obtain
 
-### What this theorem does not imply
+$$
+\boxed{G\geq\tfrac25kd^2>0.204d^2,
+\qquad L\geq kd>0.510d.}
+$$
 
-- It does not refute the source's convergence theorem or improve its general small-error sample bound.
-- Its accuracy threshold shrinks with dimension. One important prompt out of $d$ drives the construction; constant population-wide LLM improvement is not established.
-- It does not cover every proper exploration policy. Prompt-conditioned parameters, some temperature transformations and unrestricted coordinated queries leave the restricted class and can remove the obstruction.
-- It does not establish a universal cost for full LLM finetuning, prompt engineering, or active learning.
+If every raw pair must be labeled, $L=G$ and the quadratic label bound applies. **With screening, the valid lower bound on labels is linear.**
 
-## 6. Numerical checks actually completed
+### Connection to policy quality
 
-[geometry_check.py](geometry_check.py) constructs the finite feature matrices directly, calculates covariance/leverage, and independently optimizes the prompt marginal using a linear program. The LP is valid because covariance is diagonal and the feature union contains every unit axis. The canonical output is [results.json](results.json).
+This need not remain a covariance-error statement. If $\widehat\theta_J\leq R/2$, then at prompt $J$,
 
-| Dimension | Best prompt allocation with fixed conditional design | Coordinated design | Ratio |
-|---|---:|---:|---:|
-| 2 | 3.200 | 2 | 1.600 |
-| 4 | 13.474 | 4 | 3.368 |
-| 8 | 57.690 | 8 | 7.211 |
-| 16 | 241.830 | 16 | 15.114 |
-| 32 | 993.911 | 32 | 31.060 |
+$$
+\pi_J^*(+J\mid J)\geq\tfrac13,
+\qquad\pi_{\widehat\theta}(+J\mid J)\leq\frac1{2\sqrt d}\leq\tfrac18.
+$$
 
-These are **maximum feature-leverage values**, not accuracy percentages, training-speed gains or measured human-label savings. They check the exact geometry; the proof supplies the asymptotic conclusion. No GPU, model training, new rollouts or human annotation were used. Numerical checking is not an independent proof of the adaptive theorem.
+Data processing to this binary event and Pinsker's inequality imply, in **either KL direction**, average prompt KL at least $25/(288d)$. Hence the same resource lower bounds apply to achieving a smaller KL error with probability $0.9$ for every target.
+
+For reward $r_J(x,a)=(\theta_J^*)^\top\phi(x,a)/R$ and KL coefficient $\tau=1/R$, define $J_\tau(\pi)=\mathbb E_\pi r_J-\tau\mathbb E_xD_{\rm KL}(\pi\|\pi_0)$. The variational identity gives
+
+$$
+J_\tau(\pi_J^*)-J_\tau(\pi)
+=\tau\,\mathbb E_xD_{\rm KL}(\pi\|\pi_J^*).
+$$
+
+Consequently regret below $25/(288Rd)$ also forces the identification event used above. **The thresholds still shrink with dimension**; this does not demonstrate a constant population-wide LLM benefit.
+
+## 6. Matching upper bounds and a simple repair
+
+### Exact reduction to identifying one biased coin
+
+Choose prompt $i$ using the allowed auxiliary prompt marginal, and draw two uniform conditional responses. Retain a pair only when **exactly one** response lies on its strong axis $\pm e_i$. Its acceptance probability is
+
+$$
+\rho_d=2\frac1d\left(1-\frac1d\right)=\frac{2(d-1)}{d^2}.
+$$
+
+Let $Y$ indicate preference for the strong-axis response. If that response is positive, set $B=Y$; if negative, set $B=1-Y$. Direct averaging over response signs gives
+
+$$
+B\sim\begin{cases}
+\operatorname{Bernoulli}(\sigma(1)),&i=J,\\
+\operatorname{Bernoulli}(1/2),&i\ne J.
+\end{cases}
+$$
+
+For $i\ne J$, the strong-axis sign is independent of the other response and cancels its nuisance effect exactly. This holds for any $\eta$, not only $1/d$. The script verifies it by enumerating ordered response pairs, rather than assuming the reduced coin model.
+
+### Removing the previous logarithmic gap
+
+A known-gap knockout tournament identifies the unique biased coin using $K=O(d\log(1/\delta))$ retained observations. For powers of two, round $r$ has $d/2^{r-1}$ active coins. Compare consecutive pairs using
+
+$$
+m_r=\left\lceil\frac{2}{\Delta^2}\log\frac{2^{r+1}}\delta\right\rceil
+$$
+
+observations per coin, where $\Delta=\sigma(1)-1/2$. The true coin loses its round with probability at most $\delta/2^r$ by Hoeffding's inequality. Only its own path needs a union bound. Moreover,
+
+$$
+K\leq d\left[\frac4{\Delta^2}\log\frac1\delta
++\frac{12\log2}{\Delta^2}+2\right].
+$$
+
+Thus the earlier $\log d$ factor was unnecessary. General $d$ can be padded to the next power of two with internally simulated, known fair dummy coins.
+
+For screened acquisition, query only retained labels. Then
+
+$$
+L=K=O(d\log(1/\delta)),\qquad
+\mathbb E G=K/\rho_d=O(d^2\log(1/\delta)).
+$$
+
+A hard cap $G_{\max}=\lceil(2K+8\log(2/\delta))/\rho_d\rceil$, with tournament error budget $\delta/2$, bounds generation overflow by $\delta/2$ using a binomial lower-tail bound. Hence **at fixed confidence**, the generation and label rates match their respective lower bounds: $G=\Theta(d^2)$ and $L=\Theta(d)$. We do not claim matching dependence on arbitrarily small $\delta$.
+
+If all generated pairs are obligatorily labeled, the same algorithm has $L=G=\Theta(d^2)$ at fixed confidence. Screening changes label cost without changing its generator.
+
+For direct coordinated pairs $(+e_i,-e_i)$, the biased mean becomes $\sigma(2)$. The same tournament needs $G=L=O(d\log(1/\delta))$, thus $\Theta(d)$ at fixed confidence. These are rates for the finite known-amplitude sparse family, **not** arbitrary parameter vectors or final fine-precision DPO learning.
+
+### Prior-art implication
+
+Screening is not a proposed invention. [Foster et al. (2025), §§3.1 and 4](https://arxiv.org/pdf/2503.07453), already distinguish generated candidates from oracle queries and explicitly select whether to request feedback. This source now receives a deeper method-level check than in the initial screen. Our result cannot be advertised as discovering that generation and human-feedback efficiency differ.
+
+## 7. Which restrictions actually cause the gap?
+
+### Cache reuse changes the generation–label tradeoff
+
+Now retain the same raw generation restrictions but permit arbitrary recombination of responses **within their original prompt**, with independent repeated noisy labels. Reusing an answer at a different prompt is not covered by this cache protocol.
+
+A simple counterexample to an unconditional generation lower bound is to collect all $2d$ signed responses at prompt 1. Uniform collection takes $O(d\log(d/\delta))$ raw pairs with high probability by the coupon-collector bound. Querying cached antipodal pairs gives one coin per coordinate: its biased mean is $\sigma(2)$ if $J=1$, $\sigma(2\eta)$ if $J\ne1$, and $1/2$ at non-target coordinates. A tournament with known minimum gap $\sigma(2\eta)-1/2=\Theta(\eta)$ uses $O(d\eta^{-2}\log(1/\delta))$ independent labels. For $\eta=1/d$, this gives
+
+$$
+G=O(d\log(d/\delta)),\qquad L=O(d^3\log(1/\delta)).
+$$
+
+It is expensive in labels, but it invalidates any universal claim that quadratically many *new generations* are necessary when repeated cached labels are unrestricted.
+
+**A lower tradeoff still holds.** Let $S_J$ mean that a strong-axis response at prompt $J$ has ever been generated. Under the null, $\sum_JP_0(S_J)\leq3G/d$, since a raw pair contains at most $3/d$ strong-axis responses on average. Stop the transcript for alternative $J$ when $S_J$ first occurs. Before that time, every cached response's $J$th coordinate has magnitude at most $\eta$. Summing KL across these separately stopped experiments gives
+
+$$
+\sum_J D_{\rm KL}(P_0^{\rm stop,J}\|P_J^{\rm stop,J})
+\leq\frac{\eta^2 L}{2}.
+$$
+
+To see the summed bound, at each label query project its response difference onto coordinates whose strong response has not appeared: both projected responses have norm at most $\eta$, so their squared difference is at most $4\eta^2$.
+
+Set $B_J=S_J\cup(A_J\cap S_J^c)$, observable in the stopped experiment. Uniform estimation success gives $P_J(B_J)\geq0.9$, while $\sum_JP_0(B_J)\leq3G/d+4$. Pinsker and Cauchy–Schwarz therefore yield
+
+$$
+0.9d\leq\frac{3G}{d}+4+\frac\eta2\sqrt{dL}.
+$$
+
+For $\eta=1/d$,
+
+$$
+\boxed{\frac{3G}{d^2}+\frac12\sqrt{\frac L{d^3}}
+\geq0.9-\frac4d.}
+$$
+
+Thus a subquadratic generation budget forces a cubic label budget asymptotically under this within-prompt cache protocol. The fresh-screening and weak-cache constructions match these two polynomial endpoint scales. This is not a complete Pareto frontier with sharp constants/logarithms, nor a statement about cross-prompt answer reuse or correlated repeated ratings. The always-valid linear label lower bound from the output-identification argument also remains necessary.
+
+### Prompt-conditioned bounded policies
+
+After observing prompt $i$, choose a sign-symmetric mixture of $\pi_{Re_i}$ and $\pi_{-Re_i}$. Each component still has norm $R$. The strong-axis mass is
+
+$$
+p_{\rm main}=\frac{\cosh R}{\cosh R+d-1}\geq\frac13.
+$$
+
+Two independent responses are opposite strong-axis responses with probability $p_{\rm main}^2/2\geq1/18$. Filtering to those pairs yields the $\sigma(2)$ coin. Generation and labels are both linear in $d$ at fixed confidence. The only protocol change is permitting the parameter choice to depend on the current prompt. This is an ordinary escape, not a new method claim.
+
+### Temperature and the norm budget
+
+For a flat shared vector $\theta_i=R/\sqrt d$, temperature $T=1/\sqrt d$ makes the effective logit on every strong axis equal to $R$. Its strong-axis mass approaches $1/3$ as $d$ grows. Both responses still use a shared policy, so **sharing alone does not force the obstruction**. The effective parameter norm has increased from $R$ to $R\sqrt d$.
+
+That scale is also necessary for constant average strong-axis mass within this feature family. If its average is at least a fixed $c>0$, at least $cd/2$ prompts have strong-axis mass at least $c/2$. Since all other axes contribute at least $d-1$ to the cosh normalizer, those coordinates satisfy
+
+$$
+|\theta_i|\geq\operatorname{arcosh}\!\left(\frac{c(d-1)}{2-c}\right).
+$$
+
+Their Euclidean norm is therefore $\Omega(\sqrt d\log d)$. Mixtures cannot exceed the largest component's average mass. This necessity/sufficiency concerns **coverage mass**, not a general minimax learning rate for all temperatures.
+
+Extremely low temperature can instead produce two identical responses and destroy pairwise information. The numerical controls include both a single cooled policy and a sign-symmetric mixture. Replacing the Euclidean ball by an $\ell_\infty$ ball also admits the dense exploratory vector at radius $R$. A theorem advertised as a consequence of policy sharing alone would be incorrect.
+
+### Exact KL-budget design frontier
+
+A parameter norm need not represent a real pipeline constraint. We therefore also solve a distinct, operationally interpretable design problem: keep prompts uniform, allow arbitrary response laws $q_i$, and impose average KL to the uniform response reference at most $\kappa$.
+
+Use the original, zero-centered feature vectors in the leverage criterion and the average within-prompt covariance $V(q)$. Define $p_\kappa\in[1/d,1]$ as the largest $p$ with
+
+$$
+\operatorname{kl}(p,1/d)\leq\kappa,
+$$
+
+with $p_\kappa=1$ when $\kappa\geq\log d$. Then
+
+$$
+\boxed{\inf_{q:\,\mathbb E_xD_{\rm KL}(q_x\|\pi_0)\leq\kappa}
+\max_{i,a}\phi(i,a)^\top V(q)^{-1}\phi(i,a)
+=\frac{d}{\eta^2+(1-\eta^2)p_\kappa}.}
+$$
+
+**Lower bound:** if $\bar p$ is average strong-axis mass, binary data processing and Jensen give $\operatorname{kl}(\bar p,1/d)\leq\kappa$, hence $\bar p\leq p_\kappa$. Also $\operatorname{tr}V(q)\leq\eta^2+(1-\eta^2)\bar p$. Since every unit axis is available,
+
+$$
+\max_j e_j^\top V(q)^{-1}e_j
+\geq\frac1d\operatorname{tr}V(q)^{-1}
+\geq\frac d{\operatorname{tr}V(q)}.
+$$
+
+**Attainment:** assign total mass $p_\kappa$ equally to $\pm e_i$ at prompt $i$, and distribute the remaining mass equally over its other signed axes. Its mean is zero, average covariance is isotropic, and KL equals $\operatorname{kl}(p_\kappa,1/d)$. This attains the bound.
+
+At $\kappa=0$ it recovers the earlier quadratic expression. For fixed positive $\kappa$ and $\eta=1/d$, $p_\kappa\sim\kappa/\log d$ and leverage is $\Theta(d\log d/\kappa)$. Linear leverage requires $\kappa=\Theta(\log d)$. This is an **exact design-criterion frontier**, not a new general learning-rate theorem, and its broader priority remains unchecked.
+
+## 8. Completed numerical sprint
+
+The canonical [runner](geometry_check.py) and [results](results.json) contain:
+
+- Original matrix construction and independent LP optimization of prompt allocation.
+- Complete response-pair enumeration validating the retained-coin reduction at three overlap levels.
+- Known-gap tournament simulations at $d=16,32,64,128$, 1,000 trials per dimension and five accounting/protocol controls.
+- Temperature controls with exact pairwise label information under the null.
+- KL-frontier root solving and explicit covariance/KL checks of its attaining distributions.
+
+### Resource accounting at $d=64$
+
+| Acquisition protocol | Mean generated pairs $G$ | Mean requested labels $L$ |
+|---|---:|---:|
+| Fixed conditional sampler, label every pair | 772,009.8 | 772,009.8 |
+| Same sampler, screen before labeling | 772,009.8 | 23,752 |
+| Direct coordinated pairs | 8,758 | 8,758 |
+| Prompt-conditioned bounded policies, then screen | 154,342.8 | 8,758 |
+| Within-prompt cache, recombination and repeated noisy labels | 347.5 | 20,685,088 |
+
+All five controls identified the target in 1,000/1,000 simulated trials; the Wilson 95% interval for each simulated success probability is approximately [0.9962, 1]. The Hoeffding schedule is deliberately conservative. **These success fractions are not LLM accuracies.**
+
+The first two rows use exactly the same retained observations and therefore the same decisions. Their label reduction is a change in what is queried/billed, not an independent empirical discovery. The direct and prompt-conditioned controls likewise share their retained coin observations. Different coin gaps account for their different tournament sample constants. The table does not isolate acceptance probability at a common retained-label budget across all methods. The cache control trades many more independent labels for far fewer generated pairs; it does not dominate screening.
+
+Raw rejections are counted by negative-binomial sampling, an exact distributional shortcut for this mathematical model; cache collection uses geometric coupon waiting times and labeled observations use binomial counts. We do not materialize millions of responses or oracle calls. Consequently the run time, about one second locally, is not a claim about real rollout speed. The simulation uses uncapped stopping counts; the hard-cap theorem is proved separately above.
+
+### Temperature control at $d=64$
+
+The scalar below is $\sum_J\mathbb E_0\operatorname{kl}(1/2,P_J(Y=1\mid x,a,b))$, computed by enumerating the action pairs; it measures information across sparse alternatives per raw labeled pair.
+
+| Temperature | Single shared policy | Sign-symmetric shared mixture |
+|---|---:|---:|
+| 1 | 0.004300 | 0.004316 |
+| 0.125 | 0.053694 | 0.078218 |
+| 0.0625 | 0.007013 | 0.211047 |
+| 0.03125 | 0.000002 | 0.216889 |
+
+Cooling moderately increases information in this construction; cooling a single policy too aggressively destroys it. All cooled samplers have effective parameters outside the original radius-$R$ Euclidean ball. This is an explicit limit of the earlier lower bound.
+
+### Reproduction and integrity
 
 ```bash
 python studies/conditional_design_limits/geometry_check.py
 ```
 
-Dependencies: Python, NumPy, SciPy. The recorded execution used NumPy 2.4.0 and SciPy 1.16.3.
+The command overwrites the single canonical result file. Dependencies are Python, NumPy and SciPy; versions, seeds and trial counts are recorded in JSON. No GPU, LLM training, human annotations or external datasets were used. Enumeration checks and Monte Carlo support implementation consistency; the written arguments establish the mathematical claims. All extracted mathematical expressions were also compiled with LaTeX in a temporary directory; this checks syntax, not proof validity or a particular Markdown renderer. The current sprint was performed inline in the same model context, without external peer review.
 
-## 7. Work required before treating this as a full research project
+## 9. What is still missing?
 
-1. **Proof and priority audit.** Verify the exact centered-design question and adaptive query lower bound against broader experimental-design and exploration literature. Obtain external mathematical review. A previously published implication would close the corresponding novelty claim.
-2. **Matching statistical characterization.** Prove upper/lower bounds in the same protocol, distinguish discovery from final precision, and characterize regimes where the quadratic penalty disappears. A single worst-case family alone may support only a short note.
-3. **Test ordinary escapes explicitly.** Include prompt-conditioned sampling, temperature changes, mixed policies, pairwise active design and source-relevant exploration methods. Treat their success as an explained change of protocol, never hide them to advertise a new method.
-4. **Establish practical relevance separately.** Reuse a real response bank to ask whether conditional feature designs actually waste globally informative directions. Evaluate held-out selection or policy outcomes, including generation costs and feature approximation. Frozen candidate-bank replay cannot measure new generation throughput or unseen-response discovery.
-5. **Commitment gate.** A theoretical paper needs a substantial characterization beyond the exact open-question counterexample; an NLP methods paper additionally needs a consequential residual after ordinary escapes. Neither package is complete here. If the only useful takeaway is a standard coordinated sampler, close the methods direction.
+| Gap | Current status | Why it matters / concrete next requirement |
+|---|---|---|
+| External proof and priority review | Missing | The exact counterexample appears to answer the checked source question, but absence in a bounded search does not establish publication novelty. The KL-frontier and strengthened resource accounting need their own close-literature audit. |
+| Full parameter classes and unknown reward strength | Missing | Matching rates above solve a finite sparse known-amplitude family. They do not characterize arbitrary linear rewards, neural policies or fine-precision estimation. A substantial theory paper needs a result beyond a single construction and elementary coin reduction. |
+| Complete cache/resource frontier | Partial | A stopped-transcript tradeoff and two endpoint constructions are available. Intermediate regimes, sharp logarithms and cross-prompt recontextualization are not characterized; repeated labels require the specified independent-noise oracle. |
+| Realistic collection constraints | Missing | Establish why real collection must use the norm-constrained, shared-before-prompt protocol, or develop a verified result under an operational constraint. Known-feature screening and temperature changes already repair parts of this fixture. |
+| Consequential deployment failure after ordinary repairs | Missing; methods commitment gate fails | No real response bank or LLM experiment establishes a residual after selective labeling, prompt-conditioned acquisition, current active design and appropriate temperature. Without this, a new alignment method is unjustified. |
+| Population-scale effect | Missing | Our utility threshold shrinks as $1/(d\log d)$ and one important prompt drives the construction. A constant-average benefit, realistic tail-risk metric or another explicitly consequential target must be demonstrated rather than inferred. |
+| Practical acquisition cost | Missing | The mathematical model reveals features freely. Real generation, embedding extraction, controller overhead and rejected-candidate storage need to be counted. Frozen-bank replay cannot measure unseen candidate discovery. |
 
-## 8. Other branches rejected in this search
+**No further optimizer or loss proposal follows from this sprint.** A bounded next step could be external theory review or an already available candidate-bank replay with the listed ordinary controls. Another long RL run is not warranted by these results.
 
-- Cross-image DPO partition cancellation and shared-context distillation: direct remedies already exist in [SymMPO](https://arxiv.org/abs/2506.11712) and [IC-VCO](https://arxiv.org/abs/2605.31312).
-- MixDPO heterogeneity as a measurement target: scale confounding is classical; see [Hess and Train, 2017](https://eml.berkeley.edu/~train/papers/scale.pdf). An immediate normalization fix is insufficient to create a new research program.
-- Generated-test selection under false premises: [Verification Trap](https://arxiv.org/html/2610.05170) already tests substantive auditor remedies; its inserted input guarantees also require care in defining the authoritative task contract. Do not recycle this as a new auditor/router method.
-- Generic proper-versus-improper exploration: already directly studied by Foster et al. above.
+## 10. Sprint conclusion
 
-## 9. Self-review
+Completed: sharp fixed-conditional geometry; corrected adaptive generation/label lower bounds; a cache-aware stopped-transcript tradeoff; matching constant-confidence upper bounds on the same sparse family; connection to KL/regularized reward; a sharp coverage-radius scale; an exact KL-budget design frontier; and reproducible numerical controls.
 
-This lead has a firmer theoretical starting point than the retired synthetic-error proposal: an explicit unresolved mathematical question, an exact answer for that question, and a statistical argument applying to every estimator under an explicit collection protocol. Its **broad intuition and the available coordinated fixes are already known**. Its practical impact, broader priority and sufficiency for a full paper remain open. Retaining a scoped theory lead is not a claim that a top-conference-ready research program has been found.
+The sprint also weakens the earlier project pitch: quadratic feedback cost is not fundamental when screening is permitted, shared policies alone are not the cause, and standard acquisition changes can remove the constructed obstruction. The retained output is **a scoped theoretical note and a clear account of missing evidence**, not a validated new LLM method or a publication-ready paper.
