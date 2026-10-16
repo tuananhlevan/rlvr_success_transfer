@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-16",
+  "status": "theory lead; practical value unestablished",
+  "meaning": "Deterministic covariance calculations and numerical prompt-design optimization. No LLM training, human labels, or deployment outcomes.",
+  "rows": [
+    {
+      "dimension": 2,
+      "eta": 0.5,
+      "conditional_design_leverage": 3.2,
+      "optimized_prompt_leverage": 3.2,
+      "joint_design_leverage": 2.0,
+      "ratio": 1.6,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 4,
+      "eta": 0.25,
+      "conditional_design_leverage": 13.473684210526315,
+      "optimized_prompt_leverage": 13.473684210526315,
+      "joint_design_leverage": 4.0,
+      "ratio": 3.3684210526315788,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 8,
+      "eta": 0.125,
+      "conditional_design_leverage": 57.690140845070424,
+      "optimized_prompt_leverage": 57.690140845070424,
+      "joint_design_leverage": 8.0,
+      "ratio": 7.211267605633803,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 16,
+      "eta": 0.0625,
+      "conditional_design_leverage": 241.83025830258302,
+      "optimized_prompt_leverage": 241.83025830258302,
+      "joint_design_leverage": 16.0,
+      "ratio": 15.114391143911439,
+      "optimizer_success": true
+    },
+    {
+      "dimension": 32,
+      "eta": 0.03125,
+      "conditional_design_leverage": 993.9109004739337,
+      "optimized_prompt_leverage": 993.9109004739345,
+      "joint_design_leverage": 32.0,
+      "ratio": 31.059715639810427,
+      "optimizer_success": true
+    }
+  ]
+}

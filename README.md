@@ -10,6 +10,10 @@ The export includes the step 1 model, full optimizer state, carry groups, exact 
 
 The [16 October research investment review](studies/rlvr_success_transfer/research_review.md) recommends a bounded feasibility gate before additional multi-session training. The current evidence does not justify a multi-day methods/theory campaign. This recommendation does not stop an active run or change its saved protocol.
 
+## Latest direction screen
+
+The [shared-policy exploration theory lead](studies/conditional_design_limits/README.md) records an exact conditional-design limit, a scoped adaptive information lower bound, prior-art checks and remaining commitment gates. Its practical LLM value is unestablished. The [synthetic-error context study](studies/error_context_transfer/README.md) is retired after the direct prior-art check.
+
 ## Quick start: Colab or Kaggle
 
 Select a GPU runtime, then run:
