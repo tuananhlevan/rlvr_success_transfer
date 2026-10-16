@@ -93,6 +93,12 @@ def read_json(path):
     return json.loads(Path(path).read_text())
 
 
+def worker_python(command):
+    """Keep venv executable symlinks: resolving them selects the base Python."""
+    expanded=os.path.expanduser(command)
+    return os.path.abspath(shutil.which(expanded) or expanded)
+
+
 def base_path():
     from huggingface_hub import snapshot_download
     override=os.environ.get('RLVR_MODEL_PATH')
@@ -567,7 +573,7 @@ def subprocess_phase(python,args,phase,timeout):
         process=subprocess.Popen([python,'-u',str(Path(__file__).resolve()),*args],
             stdout=log_file,stderr=subprocess.STDOUT,env=env,start_new_session=True)
         started=time.monotonic()
-        log(f'{phase}: PID {process.pid}')
+        log(f'{phase}: PID {process.pid}; Python {python}')
         while process.poll() is None:
             if time.monotonic()-started>timeout:
                 os.killpg(process.pid,signal.SIGTERM)
@@ -936,8 +942,8 @@ def main():
     args=parser.parse_args()
     RUN=args.run_dir.expanduser().resolve();RUN.mkdir(parents=True,exist_ok=True)
     SCRATCH=(args.scratch_dir or RUN/'scratch').expanduser().resolve();SCRATCH.mkdir(parents=True,exist_ok=True)
-    TRAIN_PYTHON=str(Path(shutil.which(args.train_python) or args.train_python).expanduser().resolve())
-    INFER_PYTHON=str(Path(shutil.which(args.infer_python) or args.infer_python).expanduser().resolve())
+    TRAIN_PYTHON=worker_python(args.train_python)
+    INFER_PYTHON=worker_python(args.infer_python)
     if args.max_hours<=0 or args.steps<1:parser.error('--max-hours and --steps must be positive')
     CONFIG['hard_timeout_hours_per_seed']=args.max_hours;CONFIG['final_step']=args.steps
     for key in ['precision','physical_batch_size','generation_chunk_responses','max_num_seqs',
