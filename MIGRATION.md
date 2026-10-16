@@ -47,4 +47,6 @@ Historical receipts retain their original paths, PIDs, environment and source ha
 
 ## Scientific boundary
 
+The subsequent [cloud notebook adaptation](CLOUD_RUN.md) adds bounded sessions, snapshot persistence and an optional FP16/T4 numerical variant. Its tests and limits are reported separately; it does not turn the original BF16 checkpoint into a completed GPU reproduction.
+
 The export enables continuation. It does not complete the reproduction, validate a new method, or establish a representation barrier. The required next evidence remains validation convergence, independent population evaluations, positive-reward exposure accounting, independent cohort confirmation, ordinary-repair controls, and eventual three-seed robustness.

@@ -28,11 +28,12 @@ def package_check(requirements):
     subprocess.run([sys.executable,'-m','pip','check'],check=True)
 
 
-def gpu_check(infer=False):
+def gpu_check(infer=False,precision='bfloat16'):
     import torch
     if not torch.cuda.is_available():raise RuntimeError('CUDA unavailable. Check driver, CUDA_VISIBLE_DEVICES and container GPU passthrough.')
-    if not torch.cuda.is_bf16_supported():raise RuntimeError('BF16 support required.')
-    x=torch.ones((16,16),device='cuda',dtype=torch.bfloat16)
+    if precision=='bfloat16' and torch.cuda.get_device_capability(0)[0]<8:
+        raise RuntimeError('Native BF16 needs Ampere or newer. T4 requires --precision float16 (a numerical variant).')
+    x=torch.ones((16,16),device='cuda',dtype=getattr(torch,precision))
     assert bool(torch.isfinite(x@x).all())
     print(f'GPU: {torch.cuda.get_device_name(0)}, CUDA {torch.version.cuda}, Torch {torch.__version__}')
     if infer:
@@ -42,12 +43,17 @@ def gpu_check(infer=False):
         torch.cuda.synchronize()
         assert bool(torch.isfinite(y).all())
         print('vLLM native CUDA RMSNorm executed')
-        # A fresh host may compile this kernel; allow several minutes.
-        from flashinfer.norm import rmsnorm
-        z=rmsnorm(x,torch.ones(16,device='cuda',dtype=x.dtype),eps=1e-6)
+        if torch.cuda.get_device_capability(0)[0]<8:
+            from xformers.ops import memory_efficient_attention
+            q=torch.randn((1,16,2,64),device='cuda',dtype=x.dtype)
+            z=memory_efficient_attention(q,q,q)
+            print('T4 xFormers attention executed; FlashInfer is not used on this path')
+        else:
+            from flashinfer.norm import rmsnorm
+            z=rmsnorm(x,torch.ones(16,device='cuda',dtype=x.dtype),eps=1e-6)
         torch.cuda.synchronize()
         assert bool(torch.isfinite(z).all())
-        print('FlashInfer RMSNorm executed (JIT/cache path verified)')
+        print('Attention/kernel backend check passed')
     else:
         from torch.nn.utils.stateless import _reparametrize_module
         assert callable(_reparametrize_module)
@@ -58,15 +64,16 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--gpu',action='store_true')
     p.add_argument('--source-only',action='store_true')
+    p.add_argument('--precision',choices=['bfloat16','float16'],default='bfloat16')
     p.add_argument('--infer-worker',action='store_true',help=argparse.SUPPRESS)
     args=p.parse_args()
     source_check()
     if args.source_only:return
     phase='infer' if args.infer_worker else 'train'
     package_check(PROJECT/f'requirements/{phase}.txt')
-    if args.gpu:gpu_check(args.infer_worker)
+    if args.gpu:gpu_check(args.infer_worker,args.precision)
     if not args.infer_worker:
-        command=[str(PROJECT/'.venv/infer/bin/python'),str(Path(__file__).resolve()),'--infer-worker']
+        command=[str(PROJECT/'.venv/infer/bin/python'),str(Path(__file__).resolve()),'--infer-worker','--precision',args.precision]
         if args.gpu:command.append('--gpu')
         subprocess.run(command,check=True)
     print(f'{phase} checks passed; no model training started')

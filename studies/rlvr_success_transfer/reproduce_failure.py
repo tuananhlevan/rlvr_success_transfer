@@ -10,6 +10,7 @@ import argparse
 import collections
 from contextlib import contextmanager
 import csv
+import gzip
 import hashlib
 import importlib.metadata
 import json
@@ -45,7 +46,35 @@ CONFIG = dict(model="Qwen/Qwen2.5-0.5B",
     evaluation_samples=32, validation_every=5, final_step=120,
     inference_execution='CUDA graphs for decode; no torch.compile',
     training_epochs=50, seeds=[1,42,37], threshold=.1,
-    hard_timeout_hours_per_seed=96, initial_evaluation_seed=20261016)
+    hard_timeout_hours_per_seed=96, initial_evaluation_seed=20261016,
+    precision='bfloat16', physical_batch_size=4, generation_chunk_responses=8192,
+    max_num_seqs=128, max_num_batched_tokens=8192, grading_workers=8,
+    enforce_eager=False, pause_margin_minutes=0)
+CONFIG.update(json.loads(os.environ.get('RLVR_EXECUTION_CONFIG','{}')))
+PERSIST_DIR=os.environ.get('RLVR_PERSIST_DIR')
+SESSION_END_EPOCH=float(os.environ.get('RLVR_SESSION_END_EPOCH','0'))
+
+
+class SessionPause(Exception):
+    """A bounded notebook slice ended; scientific work remains incomplete."""
+
+
+def compute_dtype():
+    import torch
+    return getattr(torch,CONFIG['precision'])
+
+
+def backup_session():
+    if PERSIST_DIR:
+        sys.path.insert(0,str(PROJECT/'scripts'))
+        from session_store import publish
+        publish(RUN,PERSIST_DIR)
+
+
+def check_session_margin(margin=None):
+    if SESSION_END_EPOCH and time.time() >= SESSION_END_EPOCH-(CONFIG['pause_margin_minutes']*60 if margin is None else margin):
+        raise SessionPause('Notebook time budget reached; resume this same run in another session.')
+
 
 
 def log(s):
@@ -179,32 +208,49 @@ def generation_worker(request_path, output_path):
     req = read_json(request_path)
     tok = AutoTokenizer.from_pretrained(base_path())
     t0 = time.monotonic()
-    llm = LLM(model=req['model_path'], tokenizer=base_path(), dtype='bfloat16',
+    llm = LLM(model=req['model_path'], tokenizer=base_path(), dtype=CONFIG['precision'],
         tensor_parallel_size=1, max_model_len=6144, gpu_memory_utilization=.8,
-        max_num_seqs=128, max_num_batched_tokens=8192, enforce_eager=False,
-        compilation_config=dict(mode=0,cudagraph_mode='FULL_DECODE_ONLY',
+        max_num_seqs=CONFIG['max_num_seqs'], max_num_batched_tokens=CONFIG['max_num_batched_tokens'], enforce_eager=CONFIG['enforce_eager'],
+        compilation_config=dict(mode=0,cudagraph_mode='NONE' if CONFIG['enforce_eager'] else 'FULL_DECODE_ONLY',
             cudagraph_capture_sizes=[1,2,4,8,16,32,64,128]),
         enable_prefix_caching=True, generation_config='vllm', seed=req['seed'],
         disable_log_stats=False)
     engine_seconds = time.monotonic()-t0
     completed=0
-    groups_path=Path(output_path).with_suffix('.groups.jsonl')
-    request_hash=hashlib.sha256(Path(request_path).read_bytes()).hexdigest()
-    # Save each chunk atomically. A failed phase can resume without erasing
-    # finished independent responses or regenerating them after inspecting them.
+    groups_dir=Path(output_path).with_suffix('.groups')
+    # Paths change across notebook hosts. Identity is pinned model + committed
+    # training state and the sampling request, rather than a machine path.
+    identity=dict(req)
+    identity.pop('model_path')
+    commit=Path(req['model_path'])/'commit.json'
+    identity['model_state']=read_json(commit) if commit.exists() else CONFIG['model_revision']
+    identity['execution']={k:CONFIG[k] for k in ['precision','generation_chunk_responses','max_num_seqs','enforce_eager']}
+    request_hash=hashlib.sha256(json.dumps(identity,sort_keys=True).encode()).hexdigest()
+    chunks=[];prior_elapsed=0.;prior_engine=0.
     if Path(output_path).exists():
         prior=read_json(output_path)
-        if prior.get('request_sha256') == request_hash and groups_path.exists():
-            completed=prior['completed_prompts']
-            with groups_path.open('r+b') as f:f.truncate(prior['committed_group_bytes'])
-    if not completed:groups_path.write_text('')
-    request_chunk=max(1,8192//req['n'])
-    with mp.get_context('spawn').Pool(8) as pool:
-        for start in range(completed, len(req['rows']), request_chunk):
-            rows = req['rows'][start:start+request_chunk]
-            params=SamplingParams(n=req['n'], temperature=req['temperature'],
-                top_p=1., top_k=-1, max_tokens=5120, seed=req['seed']+start,
-                detokenize=True, skip_special_tokens=False)
+        if prior.get('request_sha256')==request_hash and groups_dir.exists():
+            completed=prior['completed_prompts'];chunks=prior['chunks']
+            prior_elapsed=prior['elapsed_seconds'];prior_engine=prior['engine_seconds']
+            for chunk in chunks:
+                path=groups_dir/chunk['name']
+                if path.stat().st_size!=chunk['bytes'] or hashlib.sha256(path.read_bytes()).hexdigest()!=chunk['sha256']:
+                    raise ValueError('Committed generation chunk is missing or corrupt')
+    if not completed and groups_dir.exists():shutil.rmtree(groups_dir)
+    groups_dir.mkdir(exist_ok=True)
+    request_chunk=max(1,CONFIG['generation_chunk_responses']//req['n'])
+    receipt=dict(request_sha256=request_hash,groups_dir=str(groups_dir),chunks=chunks,
+        completed_prompts=completed,engine_seconds=engine_seconds,elapsed_seconds=0)
+    if completed==len(req['rows']):
+        write_json(output_path,dict(prior,groups_dir=str(groups_dir)))
+        return
+    with mp.get_context('spawn').Pool(CONFIG['grading_workers']) as pool:
+        for start in range(completed,len(req['rows']),request_chunk):
+            check_session_margin(60)
+            rows=req['rows'][start:start+request_chunk]
+            params=SamplingParams(n=req['n'],temperature=req['temperature'],
+                top_p=1.,top_k=-1,max_tokens=5120,seed=req['seed']+start,
+                detokenize=True,skip_special_tokens=False)
             t1=time.monotonic()
             generated=llm.generate([dict(prompt_token_ids=r[req['prompt_key']]) for r in rows], params, use_tqdm=True)
             grade_inputs=[]
@@ -226,28 +272,43 @@ def generation_worker(request_path, output_path):
             grades=pool.map(grade_one, grade_inputs)
             for rollout, grade in zip((x for g in groups for x in g['rollouts']), grades):
                 rollout.update(grade)
-            with groups_path.open('a') as f:
-                for group in groups:f.write(json.dumps(group,ensure_ascii=False)+'\n')
-                f.flush();os.fsync(f.fileno())
+            chunk_name=f'{start:08d}.jsonl.gz'
+            chunk_path=groups_dir/chunk_name
+            temp=chunk_path.with_suffix('.tmp')
+            with gzip.open(temp,'wt') as stream:
+                for group in groups:stream.write(json.dumps(group,ensure_ascii=False)+'\n')
+            temp.replace(chunk_path)
+            chunks.append(dict(name=chunk_name,bytes=chunk_path.stat().st_size,
+                sha256=hashlib.sha256(chunk_path.read_bytes()).hexdigest()))
             completed+=len(groups)
-            receipt=dict(request_sha256=request_hash,
-                groups_path=str(groups_path),completed_prompts=completed,
-                committed_group_bytes=groups_path.stat().st_size,
-                engine_seconds=engine_seconds, elapsed_seconds=time.monotonic()-t0)
+            receipt=dict(request_sha256=request_hash,groups_dir=str(groups_dir),chunks=chunks,
+                completed_prompts=completed,engine_seconds=prior_engine+engine_seconds,elapsed_seconds=prior_elapsed+time.monotonic()-t0)
             write_json(output_path,receipt)
+            backup_session()
             log(f"generation {completed}/{len(req['rows'])} prompts; chunk {time.monotonic()-t1:.1f}s")
 
 
 def iter_groups(receipt):
-    with Path(receipt['groups_path']).open() as f:
-        for line in f:yield json.loads(line)
+    if 'chunks' in receipt:
+        for chunk in receipt['chunks']:
+            with gzip.open(Path(receipt['groups_dir'])/chunk['name'],'rt') as stream:
+                for line in stream:yield json.loads(line)
+    else:
+        with Path(receipt['groups_path']).open() as stream:
+            for line in stream:yield json.loads(line)
+
+
+def clear_generation(receipt,path):
+    Path(path).unlink(missing_ok=True)
+    if 'groups_dir' in receipt:shutil.rmtree(receipt['groups_dir'],ignore_errors=True)
+    elif 'groups_path' in receipt:Path(receipt['groups_path']).unlink(missing_ok=True)
 
 
 def head_values(model, hidden, targets):
-    """FP32 softmax of BF16 logits, matching the released actor forward."""
+    """FP32 softmax after the selected BF16/FP16 vocabulary projection."""
     import torch
     import torch.nn.functional as F
-    with torch.autocast('cuda',dtype=torch.bfloat16):
+    with torch.autocast('cuda',dtype=compute_dtype()):
         logits=model.lm_head(hidden)
     logits=logits.float()
     logp=F.log_softmax(logits,dim=-1)
@@ -259,7 +320,7 @@ def head_values(model, hidden, targets):
 def hidden_for(model, group, rollout):
     import torch
     ids=torch.tensor([group['prompt_tokens']+rollout['tokens']],device='cuda')
-    with torch.autocast('cuda',dtype=torch.bfloat16):
+    with torch.autocast('cuda',dtype=compute_dtype()):
         hidden=model.model(input_ids=ids[:,:-1],use_cache=False).last_hidden_state[0]
     n=len(rollout['tokens'])
     return hidden[-n:],ids[0,-n:]
@@ -267,16 +328,16 @@ def hidden_for(model, group, rollout):
 
 @contextmanager
 def source_precision(model):
-    """BF16 forward parameters, FP32 master weights/gradients and optimizer.
+    """Selected forward precision, FP32 master weights/gradients and optimizer.
 
     Autocast alone leaves embeddings, residuals and RMSNorm weights in FP32.
     The original FSDP actor instead casts *all parameters* during its forward.
     Keep this context through backward so checkpoint recomputation sees the
-    same BF16 parameters. torch 2.9's tied-parameter context preserves aliases.
+    same forward parameters. torch 2.9's tied-parameter context preserves aliases.
     """
     import torch
     from torch.nn.utils.stateless import _reparametrize_module
-    parameters={name:p.to(torch.bfloat16) for name,p in model.named_parameters()}
+    parameters={name:p.to(compute_dtype()) for name,p in model.named_parameters()}
     with _reparametrize_module(model,parameters,tie_weights=True):
         yield
 
@@ -288,8 +349,8 @@ def record_logps(model, groups, key):
     with torch.no_grad():
         flat=sorted([(g,r) for g in groups for r in g['rollouts']],
             key=lambda pair:len(pair[0]['prompt_tokens'])+len(pair[1]['tokens']))
-        for start in range(0,len(flat),4):
-            items=flat[start:start+4]
+        for start in range(0,len(flat),CONFIG['physical_batch_size']):
+            items=flat[start:start+CONFIG['physical_batch_size']]
             with source_precision(model):
                 hidden,targets=batched_hidden_for(model,items)
                 values=[]
@@ -301,7 +362,7 @@ def record_logps(model, groups, key):
             if start%256==0:log(f'{key} {start+len(items)}/{len(flat)} responses')
 
 
-def _policy_backward(model, group, rollout, scale):
+def _policy_backward(model, group, rollout, scale, scaler=None):
     """Chunk the vocabulary projection without changing its gradient.
 
     Accumulate dL/dhidden in chunks, then backpropagate through the transformer
@@ -321,15 +382,15 @@ def _policy_backward(model, group, rollout, scale):
         delta=ref-p
         kl=(delta.exp()-delta-1).clamp(-10,10)
         loss=(policy-CONFIG['entropy_coef']*entropy+CONFIG['kl_coef']*kl).sum()*scale
-        loss.backward()
+        (scaler.scale(loss) if scaler else loss).backward()
         loss_value+=loss.detach().item()
     hidden.backward(proxy.grad)
     return loss_value
 
 
-def policy_backward(model,group,rollout,scale):
+def policy_backward(model,group,rollout,scale,scaler=None):
     with source_precision(model):
-        return _policy_backward(model,group,rollout,scale)
+        return _policy_backward(model,group,rollout,scale,scaler)
 
 
 def batched_hidden_for(model,items):
@@ -341,14 +402,14 @@ def batched_hidden_for(model,items):
     for i,(g,r) in enumerate(items):
         ids[i,:lengths[i]]=torch.tensor(g['prompt_tokens']+r['tokens'],device='cuda')
         mask[i,:lengths[i]]=1
-    with torch.autocast('cuda',dtype=torch.bfloat16):
+    with torch.autocast('cuda',dtype=compute_dtype()):
         full=model.model(input_ids=ids[:,:-1],attention_mask=mask[:,:-1],use_cache=False).last_hidden_state
     hidden=torch.cat([full[i,len(g['prompt_tokens'])-1:lengths[i]-1] for i,(g,r) in enumerate(items)])
     targets=torch.cat([ids[i,len(g['prompt_tokens']):lengths[i]] for i,(g,r) in enumerate(items)])
     return hidden,targets
 
 
-def _batched_policy_backward(model, items, scale):
+def _batched_policy_backward(model, items, scale, scaler=None):
     """Padded transformer batches; exact response-only microbatch denominator."""
     import torch
     hidden,targets=batched_hidden_for(model,items)
@@ -364,14 +425,26 @@ def _batched_policy_backward(model, items, scale):
         delta=ref[i:i+256]-p
         loss=(torch.maximum(-a*ratio,-a*ratio.clamp(.8,1.2))
             -.001*entropy+.0001*(delta.exp()-delta-1).clamp(-10,10)).sum()*scale
-        loss.backward();value+=loss.detach().item()
+        (scaler.scale(loss) if scaler else loss).backward();value+=loss.detach().item()
     hidden.backward(proxy.grad)
     return value
 
 
-def batched_policy_backward(model,items,scale):
+def batched_policy_backward(model,items,scale,scaler=None):
     with source_precision(model):
-        return _batched_policy_backward(model,items,scale)
+        return _batched_policy_backward(model,items,scale,scaler)
+
+
+def finish_scaled_update(model,optimizer,scaler):
+    import torch
+    scaler.unscale_(optimizer)
+    norm=torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
+    if not bool(torch.isfinite(norm)):
+        if not scaler.is_enabled():raise FloatingPointError(f'nonfinite gradient norm {norm}')
+        scaler.update(new_scale=scaler.get_scale()*.5)
+        return norm,False
+    scaler.step(optimizer);scaler.update()
+    return norm,True
 
 
 def update_worker(request_path, output_path):
@@ -397,7 +470,7 @@ def update_worker(request_path, output_path):
     fresh=[g for g in all_groups if 'old_logp' not in g['rollouts'][0]]
     record_logps(model,fresh,'old_logp')
     write_json(req['carry_output'],all_groups[contributing_prompts:])
-    reference=AutoModelForCausalLM.from_pretrained(base_path(),dtype=torch.bfloat16,
+    reference=AutoModelForCausalLM.from_pretrained(base_path(),dtype=compute_dtype(),
         attn_implementation='sdpa').to('cuda')
     reference.requires_grad_(False)
     record_logps(reference,groups,'ref_logp')
@@ -418,24 +491,30 @@ def update_worker(request_path, output_path):
     optimizer_steps=rank_responses//128
     model.train()
     model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={'use_reentrant':False})
+    scaler=torch.amp.GradScaler('cuda',enabled=CONFIG['precision']=='float16',init_scale=128.)
+    scaler_path=Path(req['model_path'])/'amp_scaler.pt'
+    if scaler.is_enabled() and scaler_path.exists():scaler.load_state_dict(torch.load(scaler_path,map_location='cpu',weights_only=True))
     updates=[]
     for mini in range(optimizer_steps):
-        optimizer.zero_grad(set_to_none=True)
-        value=0.
-        for rank in ranks:
-            local=rank[mini*128:(mini+1)*128]
-            for start in range(0,128,32):
-                micro=local[start:start+32]
-                denom=sum(len(r['tokens']) for _,r in micro)
-                # DDP mean across 4 ranks, then 4 accumulated microbatches/rank.
-                # Reordering within a logical microbatch preserves its loss.
-                micro=sorted(micro,key=lambda pair:len(pair[0]['prompt_tokens'])+len(pair[1]['tokens']))
-                for offset in range(0,len(micro),4):
-                    value+=batched_policy_backward(model,micro[offset:offset+4],1./(16*denom))
-        norm=torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
-        if not torch.isfinite(norm):raise FloatingPointError(f'nonfinite gradient norm {norm}')
-        optimizer.step()
-        updates.append(dict(loss=value,gradient_norm=norm.item()))
+        for attempt in range(9):
+            optimizer.zero_grad(set_to_none=True)
+            value=0.
+            for rank in ranks:
+                local=rank[mini*128:(mini+1)*128]
+                for start in range(0,128,32):
+                    micro=local[start:start+32]
+                    denom=sum(len(r['tokens']) for _,r in micro)
+                    micro=sorted(micro,key=lambda pair:len(pair[0]['prompt_tokens'])+len(pair[1]['tokens']))
+                    physical=CONFIG['physical_batch_size']
+                    for offset in range(0,len(micro),physical):
+                        value+=batched_policy_backward(model,micro[offset:offset+physical],1./(16*denom),scaler)
+            # An FP16 overflow skips the optimizer step, lowers the scale and
+            # replays this same minibatch, preserving 16 actual AdamW updates.
+            norm,applied=finish_scaled_update(model,optimizer,scaler)
+            if applied:break
+            log(f'FP16 overflow at update {mini+1}; replay {attempt+1}, scale={scaler.get_scale()}')
+        else:raise FloatingPointError('FP16 gradients stayed nonfinite after 9 attempts; use BF16 hardware.')
+        updates.append(dict(loss=value,gradient_norm=norm.item(),loss_scale=scaler.get_scale(),overflow_retries=attempt))
         log(f'GRPO update {mini+1}/{optimizer_steps} loss={value:.6f} norm={norm.item():.5f}')
     optimizer.zero_grad(set_to_none=True)
     checkpoint=Path(req['checkpoint_path'])
@@ -446,6 +525,7 @@ def update_worker(request_path, output_path):
     optimizer_file=staging/'optimizer.pt'
     torch.save(optimizer.state_dict(),optimizer_file.with_suffix('.tmp'))
     optimizer_file.with_suffix('.tmp').replace(optimizer_file)
+    if scaler.is_enabled():torch.save(scaler.state_dict(),staging/'amp_scaler.pt')
     write_json(staging/'commit.json',req['next_state'])
     write_json(staging/'carry.json',all_groups[contributing_prompts:])
     receipt=dict(updates=updates,elapsed_seconds=time.monotonic()-t0,
@@ -461,13 +541,17 @@ def update_worker(request_path, output_path):
 
 
 def subprocess_phase(python,args,phase,timeout):
+    check_session_margin()
     if RUN_DEADLINE is not None:
         timeout=min(timeout,max(0,RUN_DEADLINE-time.monotonic()))
     env=os.environ.copy()
     env.update(HF_HUB_DISABLE_XET='1', TOKENIZERS_PARALLELISM='false',
-        OMP_NUM_THREADS='8',VLLM_WORKER_MULTIPROC_METHOD='spawn',PYTHONDONTWRITEBYTECODE='1',
+        OMP_NUM_THREADS=os.environ.get('RLVR_CPU_THREADS','8'),VLLM_WORKER_MULTIPROC_METHOD='spawn',PYTHONDONTWRITEBYTECODE='1',
         RLVR_RUN_DIR=str(RUN),RLVR_SCRATCH_DIR=str(SCRATCH),RLVR_SOURCE_DIR=str(SOURCE),
-        RLVR_TRAIN_PYTHON=TRAIN_PYTHON,RLVR_INFER_PYTHON=INFER_PYTHON)
+        RLVR_TRAIN_PYTHON=TRAIN_PYTHON,RLVR_INFER_PYTHON=INFER_PYTHON,
+        RLVR_EXECUTION_CONFIG=json.dumps(CONFIG),RLVR_SESSION_END_EPOCH=str(SESSION_END_EPOCH))
+    if PERSIST_DIR:env['RLVR_PERSIST_DIR']=str(PERSIST_DIR)
+    if CONFIG['precision']=='float16':env['VLLM_ATTENTION_BACKEND']='XFORMERS'
     path=RUN/'worker.log'
     with path.open('a') as log_file:
         process=subprocess.Popen([python,'-u',str(Path(__file__).resolve()),*args],
@@ -477,11 +561,16 @@ def subprocess_phase(python,args,phase,timeout):
         while process.poll() is None:
             if time.monotonic()-started>timeout:
                 os.killpg(process.pid,signal.SIGTERM)
+                try:process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    os.killpg(process.pid,signal.SIGKILL);process.wait()
+                if SESSION_END_EPOCH and time.time()>=SESSION_END_EPOCH:raise SessionPause('Session budget exhausted; uncommitted optimization will replay.')
                 raise TimeoutError(f'{phase} exceeded {timeout}s')
             write_json(RUN/'status.json',dict(status='RUNNING',phase=phase,pid=process.pid,
                 elapsed_seconds=time.monotonic()-started,updated_at=time.strftime('%Y-%m-%d %H:%M:%S'),
                 config=CONFIG))
             time.sleep(30)
+        if process.returncode==75:raise SessionPause('Worker saved a partial generation and paused for the next session.')
         if process.returncode:
             raise RuntimeError(f'{phase} failed with exit code {process.returncode}; see {path}')
 
@@ -496,6 +585,7 @@ def generate(rows,model_path,n,temperature,seed,output,label,prompt_key='prompt_
 
 def evaluate(rows,model_path,seed,step,kind,n=32):
     dest=RUN/f'seed_{seed}'/f'{kind}_evaluation.json'
+    dest.parent.mkdir(parents=True,exist_ok=True)
     if dest.exists() and read_json(dest).get('step')==step:return
     raw=SCRATCH/f'{kind}_evaluation.json'
     offset={'final':0,'confirmation':1000000,'validation':2000000}.get(kind,0)
@@ -512,17 +602,26 @@ def evaluate(rows,model_path,seed,step,kind,n=32):
             successes=sum(r['reward' if validation else 'evaluation_reward'] for r in g['rollouts']),
             training_scorer_successes=sum(r['reward'] for r in g['rollouts']),
             truncated=sum(r['truncated'] for r in g['rollouts'])))
-    write_json(dest,result)
     # Retain evaluation evidence once per question rather than a new report copy.
     if kind!='validation':
-        import gzip
-        with Path(out['groups_path']).open('rb') as source, gzip.open(dest.with_suffix('.rollouts.jsonl.gz'),'wb') as f:
-            import shutil
-            shutil.copyfileobj(source,f)
+        final=dest.with_suffix('.rollouts.jsonl.gz')
+        temporary=final.with_suffix('.tmp')
+        if 'chunks' in out:
+            with temporary.open('wb') as output:
+                for chunk in out['chunks']:
+                    with (Path(out['groups_dir'])/chunk['name']).open('rb') as source:shutil.copyfileobj(source,output)
+        else:
+            with Path(out['groups_path']).open('rb') as source,gzip.open(temporary,'wb') as output:shutil.copyfileobj(source,output)
+        temporary.replace(final)
     else:
-        with (RUN/f'seed_{seed}'/'validation_curve.jsonl').open('a') as f:f.write(json.dumps(result)+'\n')
-    raw.unlink(missing_ok=True)
-    Path(out['groups_path']).unlink(missing_ok=True)
+        curve=RUN/f'seed_{seed}'/'validation_curve.jsonl'
+        existing=[json.loads(line)['step'] for line in curve.read_text().splitlines()] if curve.exists() else []
+        if step not in existing:
+            with curve.open('a') as stream:stream.write(json.dumps(result)+'\n')
+    result['precision']=CONFIG['precision']
+    write_json(dest,result)
+    clear_generation(out,raw)
+    backup_session()
 
 
 def summarize(seed):
@@ -543,7 +642,9 @@ def summarize(seed):
     no_positive={i for i in hard if exposures[i]['positives']==0}
     candidate={i for i in hard-no_positive if final_by_id[i]['successes']/final_by_id[i]['samples']<=.1}
     learned={i for i in hard-no_positive if i not in candidate}
+    numerical=read_json(RUN/'numerical_protocol.json') if (RUN/'numerical_protocol.json').exists() else {}
     result=dict(seed=seed,step=final['step'],training_population=len(initial_by_id),
+        precision=final.get('precision',numerical.get('precision','bfloat16')),numerical_protocol=numerical,
         initially_hard=len(hard),hard_without_training_positive=len(no_positive),
         single_seed_candidate_count=len(candidate),single_seed_learned_count=len(learned),
         candidate_fraction_of_initially_hard=len(candidate)/max(1,len(hard)),
@@ -588,7 +689,8 @@ def summarize(seed):
 def report_completed_seed(analysis):
     """Write continuation results without modifying the archived study."""
     path=RUN/'report.md'
-    rows=[f"- Training seed: {analysis['seed']}; completed step: {analysis['step']}.",
+    rows=[f"- Precision: {analysis.get('precision','bfloat16')}; FP16 runs are a numerical variant, separate from BF16 reproduction.",
+        f"- Training seed: {analysis['seed']}; completed step: {analysis['step']}.",
         f"- Initially hard prompts: {analysis['initially_hard']}.",
         f"- Hard prompts with no logged training positive: {analysis['hard_without_training_positive']}.",
         f"- Positive-exposed hard prompts still below the final 10% empirical threshold: {analysis['single_seed_candidate_count']}.",
@@ -611,8 +713,11 @@ def gpu_preflight():
     if not torch.cuda.is_available():
         raise RuntimeError('CUDA is unavailable. Check nvidia-smi, the CUDA-enabled Torch install, '
             'CUDA_VISIBLE_DEVICES, and container GPU passthrough. No sampling or training was started.')
-    if not torch.cuda.is_bf16_supported():raise RuntimeError('This source recipe requires BF16 GPU support.')
-    x=torch.ones((8,8),device='cuda',dtype=torch.bfloat16)
+    capability=torch.cuda.get_device_capability(0)
+    if CONFIG['precision']=='bfloat16' and capability[0]<8:
+        raise RuntimeError('Native BF16 requires Ampere or newer (e.g. L4/A100). T4 requires the explicitly labelled --precision float16 variant.')
+    if capability<(7,5):raise RuntimeError('This notebook stack requires Turing/T4 or newer.')
+    x=torch.ones((8,8),device='cuda',dtype=compute_dtype())
     assert bool(torch.isfinite(x@x).all())
     log(f'GPU preflight passed: {torch.cuda.get_device_name(0)}; Torch {torch.__version__}')
 
@@ -624,6 +729,8 @@ def persist_update(seed_dir,state,groups,rollout_seed):
     next_state=dict(state,step=state['step']+1)
     write_json(folder/'request.json',dict(seed=rollout_seed,next_state=next_state,
         prepared_from_step=state['step'],buffer_sha256=hashlib.sha256(buffer.read_bytes()).hexdigest()))
+    (seed_dir/'sampling_progress.json').unlink(missing_ok=True)
+    backup_session()
 
 
 def finish_pending_update(seed_dir,state):
@@ -657,6 +764,7 @@ def finish_pending_update(seed_dir,state):
     write_json(seed_dir/'state.json',committed)
     pending=read_json(checkpoint/'carry.json')
     shutil.rmtree(folder)
+    backup_session()
     return committed,pending
 
 
@@ -683,11 +791,12 @@ def rollback_uncommitted_stats(seed_dir,step):
 
 
 def driver(benchmark=False,seed=1):
-    global RUN_DEADLINE
+    global RUN_DEADLINE,SESSION_END_EPOCH
     import torch
     RUN.mkdir(exist_ok=True);SCRATCH.mkdir(exist_ok=True)
     gpu_preflight()
     if not (RUN/'inputs.json').exists():prepare()
+    backup_session()
     inputs=read_json(RUN/'inputs.json')['splits']
     if benchmark:
         # Runtime/memory benchmark, never interpreted as learning evidence.
@@ -705,7 +814,7 @@ def driver(benchmark=False,seed=1):
         log(f'benchmark generated {tokens} tokens in {out["elapsed_seconds"]:.1f}s')
         write_json(RUN/'status.json',dict(status='BENCHMARK_COMPLETED',benchmark=read_json(RUN/'benchmark.json')))
         return
-    RUN_DEADLINE=time.monotonic()+CONFIG['hard_timeout_hours_per_seed']*3600
+    RUN_DEADLINE=time.monotonic()+max(0,SESSION_END_EPOCH-time.time()) if SESSION_END_EPOCH else time.monotonic()+CONFIG['hard_timeout_hours_per_seed']*3600
     seed_dir=RUN/f'seed_{seed}';seed_dir.mkdir(exist_ok=True)
     # A process may stop between moving the old checkpoint aside and promoting
     # the staged replacement. Replay from the last visible committed version.
@@ -723,11 +832,15 @@ def driver(benchmark=False,seed=1):
     if (seed_dir/'pending_update/request.json').exists():
         state,pending=finish_pending_update(seed_dir,state)
         model_path=seed_dir/'latest_checkpoint'
+    elif (seed_dir/'sampling_progress.json').exists():
+        progress=read_json(seed_dir/'sampling_progress.json')
+        if progress['base_step']!=state['step']:raise ValueError('Sampling progress does not match the committed model.')
+        state=progress['state'];pending=progress['groups']
     else:rollback_uncommitted_stats(seed_dir,state['step'])
     if state['step']==0 or state['step']%CONFIG['validation_every']==0:
         evaluate(inputs['test'],model_path,seed,state['step'],'validation',n=1)
     while state['step']<CONFIG['final_step'] and state['epoch']<CONFIG['training_epochs']:
-        if time.monotonic()-started>CONFIG['hard_timeout_hours_per_seed']*3600:raise TimeoutError('Training wall-clock budget exhausted')
+        check_session_margin()
         target=CONFIG['train_batch_prompts']
         sampling_batch=CONFIG['sampling_batch_prompts']
         while len(pending)<target and state['epoch']<CONFIG['training_epochs']:
@@ -740,7 +853,6 @@ def driver(benchmark=False,seed=1):
             ids=order[state['cursor']:state['cursor']+sampling_batch]
             rows=[inputs['train'][i] for i in ids]
             dest=SCRATCH/'training_rollouts.json'
-            dest.unlink(missing_ok=True)
             rollout_seed=seed*100000+state['generation_batches']
             out=generate(rows,model_path,8,1.,rollout_seed,dest,
                 f'seed {seed} step {state["step"]+1} sampling batch {state["generation_batches"]+1}')
@@ -755,6 +867,9 @@ def driver(benchmark=False,seed=1):
             # State advanced only in the in-progress journal; checkpoint state
             # remains the last completely committed model/optimizer transaction.
             write_json(seed_dir/'sampling_journal.json',state)
+            write_json(seed_dir/'sampling_progress.json',dict(base_step=state['step'],state=state,groups=pending))
+            clear_generation(out,dest)
+            backup_session()
             log(f'seed {seed}: {len(pending)}/{target} contributing prompts collected')
         if len(pending)<target:break
         persist_update(seed_dir,state,pending,seed+state['step'])
@@ -773,11 +888,12 @@ def driver(benchmark=False,seed=1):
             model_path,seed,state['step'],'confirmation',n=128)
         analysis=summarize(seed)
     report_completed_seed(analysis)
-    write_json(RUN/'status.json',dict(status='SEED_COMPLETED',seed=seed,state=state))
+    write_json(RUN/'status.json',dict(status='SEED_COMPLETED',seed=seed,state=state,precision=CONFIG['precision']))
+    backup_session()
 
 
 def main():
-    global RUN,SCRATCH,SOURCE,TRAIN_PYTHON,INFER_PYTHON
+    global RUN,SCRATCH,SOURCE,TRAIN_PYTHON,INFER_PYTHON,PERSIST_DIR,SESSION_END_EPOCH
     parser=argparse.ArgumentParser()
     parser.add_argument('mode',choices=['prepare','benchmark','run','generate','update','summarize'])
     parser.add_argument('--request');parser.add_argument('--output');parser.add_argument('--seed',type=int,default=1)
@@ -787,6 +903,15 @@ def main():
     parser.add_argument('--infer-python',default=INFER_PYTHON)
     parser.add_argument('--max-hours',type=float,default=CONFIG['hard_timeout_hours_per_seed'])
     parser.add_argument('--steps',type=int,default=CONFIG['final_step'])
+    parser.add_argument('--precision',choices=['bfloat16','float16'],default=CONFIG['precision'])
+    parser.add_argument('--physical-batch-size',type=int,default=CONFIG['physical_batch_size'])
+    parser.add_argument('--generation-chunk-responses',type=int,default=CONFIG['generation_chunk_responses'])
+    parser.add_argument('--max-num-seqs',type=int,default=CONFIG['max_num_seqs'])
+    parser.add_argument('--max-num-batched-tokens',type=int,default=CONFIG['max_num_batched_tokens'])
+    parser.add_argument('--grading-workers',type=int,default=CONFIG['grading_workers'])
+    parser.add_argument('--enforce-eager',action='store_true',default=CONFIG['enforce_eager'])
+    parser.add_argument('--pause-margin-minutes',type=float,default=CONFIG['pause_margin_minutes'])
+    parser.add_argument('--persist-dir',type=Path,default=Path(PERSIST_DIR) if PERSIST_DIR else None)
     args=parser.parse_args()
     RUN=args.run_dir.expanduser().resolve();RUN.mkdir(parents=True,exist_ok=True)
     SCRATCH=(args.scratch_dir or RUN/'scratch').expanduser().resolve();SCRATCH.mkdir(parents=True,exist_ok=True)
@@ -794,6 +919,23 @@ def main():
     INFER_PYTHON=str(Path(shutil.which(args.infer_python) or args.infer_python).expanduser().resolve())
     if args.max_hours<=0 or args.steps<1:parser.error('--max-hours and --steps must be positive')
     CONFIG['hard_timeout_hours_per_seed']=args.max_hours;CONFIG['final_step']=args.steps
+    for key in ['precision','physical_batch_size','generation_chunk_responses','max_num_seqs',
+        'max_num_batched_tokens','grading_workers','enforce_eager','pause_margin_minutes']:
+        CONFIG[key]=getattr(args,key)
+    for key in ['physical_batch_size','generation_chunk_responses','max_num_seqs','max_num_batched_tokens','grading_workers']:
+        if CONFIG[key]<1:parser.error(f'{key} must be positive')
+    if not 0<=args.pause_margin_minutes<args.max_hours*60:parser.error('Pause margin must fit inside the session budget')
+    PERSIST_DIR=str(args.persist_dir.expanduser().resolve()) if args.persist_dir else None
+    CONFIG['inference_execution']='eager xFormers; no torch.compile' if args.enforce_eager and args.precision=='float16' else ('eager; no torch.compile' if args.enforce_eager else 'CUDA graphs for decode; no torch.compile')
+    if args.mode in ['run','benchmark']:
+        SESSION_END_EPOCH=time.time()+args.max_hours*3600
+        protocol_path=RUN/'numerical_protocol.json'
+        numerical={key:CONFIG[key] for key in ['precision','physical_batch_size','generation_chunk_responses',
+            'max_num_seqs','max_num_batched_tokens','enforce_eager']}
+        numerical['interpretation']='FP16 numerical variant; do not pool with BF16 reproduction' if args.precision=='float16' else 'BF16 reproduction adaptation'
+        if protocol_path.exists() and read_json(protocol_path)!=numerical:
+            parser.error('Numerical settings changed for this run; use a separate directory and explicit experiment label')
+        write_json(protocol_path,numerical)
     if args.mode in ['run','benchmark']:
         write_json(RUN/'execution_config.json',dict(config=CONFIG,run_dir=str(RUN),scratch_dir=str(SCRATCH),
             training_python=TRAIN_PYTHON,inference_python=INFER_PYTHON,
@@ -804,6 +946,11 @@ def main():
         elif args.mode=='generate':generation_worker(args.request,args.output)
         elif args.mode=='update':update_worker(args.request,args.output)
         else:driver(args.mode=='benchmark',args.seed)
+    except SessionPause as error:
+        write_json(RUN/'status.json',dict(status='PAUSED',reason=str(error),precision=CONFIG['precision']))
+        backup_session()
+        log(str(error))
+        if args.mode in ['generate','update']:sys.exit(75)
     except Exception as e:
         if args.mode in ['run','benchmark']:
             write_json(RUN/'status.json',dict(status='FAILED',error=repr(e),mode=args.mode))

@@ -8,3 +8,4 @@ __pycache__/
 !.env.example
 .DS_Store
 artifacts/.checkpoint.tar.gz
+artifacts/*.download

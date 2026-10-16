@@ -10,6 +10,12 @@ The export includes the step 1 model, full optimizer state, carry groups, exact 
 
 ## Machine requirements
 
+### Google Colab or Kaggle
+
+Use the [Colab notebook](notebooks/rlvr_colab.ipynb) or [Kaggle notebook](notebooks/rlvr_kaggle.ipynb), with the [cloud session guide](CLOUD_RUN.md). They install isolated Python environments, keep checkpoint/session state in persistent storage, and resume bounded session slices. T4 uses an explicitly labelled FP16 numerical variant; Colab L4/A100 supports the BF16 path. The 120-step scientific target is retained. Cloud GPU execution has not yet been validated here.
+
+The desktop commands below remain available for a dedicated machine.
+
 - Linux x86_64, Python **3.11** with `venv`, Git and Git LFS.
 - One NVIDIA GPU supporting BF16. The original run used an RTX 5060 Ti **16 GB**. Training and inference execute in separate processes to release VRAM between phases.
 - An NVIDIA driver compatible with CUDA 12.8 wheels. Check `nvidia-smi`; a working desktop GPU alone does not establish Torch CUDA access.

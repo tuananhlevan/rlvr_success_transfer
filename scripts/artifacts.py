@@ -1,5 +1,6 @@
 """Pack/restore the trusted migration checkpoint using checksummed LFS parts."""
 import argparse
+import base64
 import gzip
 import hashlib
 import json
@@ -8,11 +9,44 @@ from pathlib import Path
 import shutil
 import tarfile
 import tempfile
+import urllib.request
 
 PROJECT = Path(__file__).resolve().parents[1]
 ARTIFACTS = PROJECT / 'artifacts'
 SNAPSHOT = PROJECT / 'studies/rlvr_success_transfer/reproduction'
 CHUNK_BYTES = 1024 ** 3
+
+
+def download(repository='tuananhlevan/rlvr_success_transfer'):
+    """Fetch existing LFS objects over HTTPS without installing Git LFS."""
+    if len(repository.split('/'))!=2 or any(c not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_./' for c in repository):
+        raise ValueError('Expected repository in owner/name form')
+    manifest=read_json(ARTIFACTS/'manifest.json')
+    token=os.environ.get('RLVR_GITHUB_TOKEN') or os.environ.get('GITHUB_TOKEN')
+    headers={'Content-Type':'application/vnd.git-lfs+json','Accept':'application/vnd.git-lfs+json'}
+    if token:headers['Authorization']='Basic '+base64.b64encode(('x-access-token:'+token).encode()).decode()
+    for part in manifest['parts']:
+        path=ARTIFACTS/part['name']
+        if path.exists() and path.stat().st_size==part['bytes'] and digest(path)==part['sha256']:continue
+        payload=dict(operation='download',transfers=['basic'],objects=[dict(oid=part['sha256'],size=part['bytes'])])
+        req=urllib.request.Request(f'https://github.com/{repository}.git/info/lfs/objects/batch',
+            data=json.dumps(payload).encode(),headers=headers)
+        with urllib.request.urlopen(req,timeout=60) as response:record=json.load(response)['objects'][0]
+        if record.get('error'):raise RuntimeError(f'LFS object unavailable ({part["name"]}); check repository access and LFS quota')
+        action=record['actions']['download'];temporary=path.with_suffix(path.suffix+'.download')
+        offset=temporary.stat().st_size if temporary.exists() else 0
+        if offset>=part['bytes']:temporary.unlink();offset=0
+        download_headers=dict(action.get('header',{}))
+        if offset:download_headers['Range']=f'bytes={offset}-'
+        request=urllib.request.Request(action['href'],headers=download_headers)
+        with urllib.request.urlopen(request,timeout=120) as response:
+            mode='ab' if offset and response.status==206 else 'wb'
+            with temporary.open(mode) as output:shutil.copyfileobj(response,output,8*1024**2)
+        if temporary.stat().st_size!=part['bytes'] or digest(temporary)!=part['sha256']:
+            raise ValueError(f'Incomplete/corrupt download: {part["name"]}; rerun to resume it')
+        temporary.replace(path)
+        print(f'Downloaded and verified {part["name"]}',flush=True)
+    verify(manifest)
 
 
 def digest(path):
@@ -141,11 +175,16 @@ def restore(run_dir):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);sub=p.add_subparsers(dest='mode',required=True)
+    global ARTIFACTS
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('--artifact-dir',type=Path,default=ARTIFACTS)
+    sub=p.add_subparsers(dest='mode',required=True)
     a=sub.add_parser('pack');a.add_argument('--checkpoint',required=True);a.add_argument('--buffer',required=True);a.add_argument('--request',required=True)
     sub.add_parser('verify');a=sub.add_parser('restore');a.add_argument('--run-dir',default=str(PROJECT/'runs/reproduction'))
-    args=p.parse_args()
+    a=sub.add_parser('download');a.add_argument('--repository',default='tuananhlevan/rlvr_success_transfer')
+    args=p.parse_args();ARTIFACTS=args.artifact_dir.resolve()
     if args.mode=='pack':pack(args.checkpoint,args.buffer,args.request)
+    elif args.mode=='download':download(args.repository)
     elif args.mode=='verify':verify()
     else:restore(args.run_dir)
 
