@@ -829,6 +829,7 @@ def driver(benchmark=False,seed=1):
     started=time.monotonic()
     checkpoint_carry=seed_dir/'latest_checkpoint'/'carry.json'
     pending=read_json(checkpoint_carry) if checkpoint_carry.exists() else []
+    resumed_sampling=(seed_dir/'sampling_progress.json').exists()
     if (seed_dir/'pending_update/request.json').exists():
         state,pending=finish_pending_update(seed_dir,state)
         model_path=seed_dir/'latest_checkpoint'
@@ -841,6 +842,7 @@ def driver(benchmark=False,seed=1):
         evaluate(inputs['test'],model_path,seed,state['step'],'validation',n=1)
     while state['step']<CONFIG['final_step'] and state['epoch']<CONFIG['training_epochs']:
         check_session_margin()
+        cycle_started=time.monotonic()
         target=CONFIG['train_batch_prompts']
         sampling_batch=CONFIG['sampling_batch_prompts']
         while len(pending)<target and state['epoch']<CONFIG['training_epochs']:
@@ -875,6 +877,12 @@ def driver(benchmark=False,seed=1):
         persist_update(seed_dir,state,pending,seed+state['step'])
         state,pending=finish_pending_update(seed_dir,state)
         model_path=seed_dir/'latest_checkpoint'
+        measurement_id=os.environ.get('RLVR_TIMING_MEASUREMENT_ID')
+        if measurement_id and not resumed_sampling:
+            with (seed_dir/'step_timings.jsonl').open('a') as stream:
+                stream.write(json.dumps(dict(measurement_id=measurement_id,step=state['step'],
+                    seconds=time.monotonic()-cycle_started,scope='sampling, optimization and checkpoint publication; excludes validation/evaluation'))+'\n')
+        resumed_sampling=False
         if state['step']%CONFIG['validation_every']==0:evaluate(inputs['test'],model_path,seed,state['step'],'validation',n=1)
     # The immutable base model can be evaluated after training without leaking
     # outcomes into its fixed, full-population evaluation sample or RNG seed.

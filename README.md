@@ -23,6 +23,8 @@ Setup detects the platform and GPU, installs dependencies, prepares/restores dat
 
 Setup streams progress into the cell and saves `.cloud/setup.log`, with an elapsed-time heartbeat every 20 seconds. The first setup downloads several gigabytes of dependencies and, for default BF16, a 5.5 GB checkpoint before saving it to Drive. For an old silent setup, interrupt the cell, run `!git pull --ff-only`, then `%run setup.py --restart` to retry with retained caches. See [setup progress and retry](CLOUD_RUN.md#setup-progress-and-retry).
 
+Run prints session deadlines and a progress update every minute. Its training ETA calibrates from complete cycles on the current invocation; validation/final evaluations and runtime downtime are explicitly excluded. See [finish estimates](CLOUD_RUN.md#run-progress-and-finish-estimates).
+
 T4 automatically uses a labelled FP16 variant and starts a fresh seed. L4/A100 uses BF16 and resumes the exported seed-1 checkpoint by default. The 120-step scientific target is retained. Cloud GPU execution remains unverified here.
 
 ## Dedicated Linux machine

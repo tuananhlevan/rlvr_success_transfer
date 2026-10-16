@@ -6,8 +6,11 @@ import signal
 from pathlib import Path
 import subprocess
 import sys
+import threading
+import uuid
 
 from session_store import candidates,publish,restore
+from run_progress import RunProgress
 
 PROJECT=Path(__file__).resolve().parents[1]
 
@@ -44,11 +47,17 @@ def main():
     env=os.environ.copy();env.update(CUDA_VISIBLE_DEVICES='0',PYTHONUNBUFFERED='1',
         RLVR_TRAIN_PYTHON=str(PROJECT/'.venv/train/bin/python'),
         RLVR_INFER_PYTHON=str(PROJECT/'.venv/infer/bin/python'),HF_HUB_DISABLE_XET='1',RLVR_CPU_THREADS='2')
+    measurement_id=uuid.uuid4().hex;env['RLVR_TIMING_MEASUREMENT_ID']=measurement_id
     print('Launching a bounded slice; scientific target remains 120 outer steps.',flush=True)
     with (run/'live.log').open('a') as log:
+        lock=threading.Lock()
+        def emit(line):
+            with lock:
+                print(line,end='',flush=True);log.write(line);log.flush()
         process=subprocess.Popen(command,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,bufsize=1,env=env)
         try:
-            for line in process.stdout:print(line,end='',flush=True);log.write(line);log.flush()
+            with RunProgress(run,args.seed,args.hours,args.pause_margin_minutes,measurement_id,emit):
+                for line in process.stdout:emit(line)
             code=process.wait()
         except KeyboardInterrupt:
             status_path=run/'status.json'
