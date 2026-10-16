@@ -41,6 +41,14 @@ If an older checkout only prints `Setting up colab`, interrupt the setup cell, t
 
 `--restart` stops leftover installer/download/prepare processes belonging to this checkout and retains completed downloads and caches. It refuses to kill an active checkpoint restore; let that process finish before retrying. A matching completed environment installation is reused, and GPU checks run again. A partially installed environment is checked against the pinned requirements using the existing package cache. Do not reset the runtime or delete caches just to retry.
 
+### Missing Drive snapshot objects
+
+If a saved manifest references missing or corrupt blobs, setup checks whether their exact hashes are present in the trusted export manifest. For matching objects it downloads/reuses the export, verifies and extracts it, repairs only those blobs, then retries restoration of the original saved manifest. It preserves the saved model, rollout buffers, manifests and later sampling evidence; it does not restart the experiment from the export. Existing dependency installations are reused.
+
+For example, blob `266fbb3cfcea1212a9a23e40af9244a7630e5bebac6396c7b4589388ca7ea91c` is the exported step-1 `optimizer.pt` (3,952,505,547 bytes). Its absence from one reported Drive vault is recoverable from the repository export. This does not identify why Drive lost or failed to retain that object. Recovery may need the 5.5 GB artifact download, temporary local extraction space and another verified optimizer upload.
+
+Recovery stops if any diagnosed blob has no exact export match, or if the source is a read-only attached input. Saved state is retained for diagnosis. No model or optimizer state is substituted by filename or training-step number. Restore verifies the actual local copied bytes before accepting the session, and reports missing files before copying the large checkpoint.
+
 Once setup reports completion, run `!python run.py`.
 
 ## Run progress and finish estimates
@@ -106,12 +114,13 @@ An overflow lowers the scale and retries the **same** logical minibatch, without
 
 ## Verified here
 
-- **29 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
+- **35 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
 - Setup/run orchestration checks cover automatic defaults, saved configuration reuse and refusal to run after failed installation. Other checks cover interrupted snapshot publication, immutable-file reuse, stale-checkpoint pruning, corrupt snapshot rejection, cross-host generation resume without repeating completed samples, concatenated compressed response evidence, and `PAUSED` status.
 - Actual CPU FP16 arithmetic checks compare the split backward path against an unchunked calculation with tied weights; master parameters/moments stay FP32. An injected overflow does not consume an AdamW update.
 - A resumable HTTPS LFS download is tested with a simulated ranged response, including separation of repository credentials from object-host requests. Both notebooks' code cells compile. Their outputs are empty, and no credentials are embedded.
 - Setup checks cover streamed stdout/stderr, timed heartbeats, failed/interrupted status, child termination on interruption, completed-install reuse with repeated GPU checks, and exclusion of training commands from the restart matcher.
 - ETA checks cover calibration, exclusion of other invocations, recent-cycle averaging, session-budget messages, and distinguishing completed training from unfinished evaluation. No cloud timing accuracy has been measured.
 - Worker diagnostics checks verify bounded failure output and exclusion of earlier workers' tracebacks.
+- Snapshot recovery checks reproduce a missing exported optimizer blob, preserve newer sampling evidence and the manifest pointer, reject unavailable exact hashes and incorrect recovery bytes, detect corruption during restore, and leave existing state intact after an interrupted repair. Real Drive durability remains unverified.
 
 **Not verified:** a live Colab/Kaggle installation, end-to-end GPU generation/training in the new environments, T4 peak memory, session throughput or platform persistence under a real VM eviction. The local Torch installation currently reports CUDA unavailable. Setup automatically runs the GPU doctor; then run an initial slice before budgeting the full study. A source GPU/CPU timing estimate cannot establish a cloud completion date.

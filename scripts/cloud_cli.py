@@ -5,9 +5,11 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 
-from session_store import atomic_json,candidates,publish,restore
+from session_store import SnapshotRestoreError,atomic_json,candidates,publish,restore
 from setup_progress import SetupReporter,stop_previous_setup
+from snapshot_recovery import recovery_plan,repair_blobs
 
 PROJECT=Path(__file__).resolve().parents[1]
 
@@ -74,9 +76,28 @@ def initialize_data(config,artifact_dir=None,resume_from=None,reporter=None):
         else:publish(run,vault)
     source=vault if candidates(vault) else Path(resume_from).expanduser().resolve() if resume_from else None
     if source:
-        if reporter:
-            with reporter.stage('Restore saved session from persistent storage'):restore(source,run)
-        else:restore(source,run)
+        def restore_saved():
+            if reporter:
+                with reporter.stage('Restore saved session from persistent storage'):restore(source,run)
+            else:restore(source,run)
+        try:restore_saved()
+        except SnapshotRestoreError as error:
+            # An attached Kaggle input is read-only. Never mutate it or silently
+            # replace newer saved state with an older exported experiment.
+            if source!=vault:raise
+            artifacts=Path(artifact_dir).resolve() if artifact_dir else PROJECT/'artifacts'
+            plan=recovery_plan(error.blob_issues,artifacts/'manifest.json')
+            emit=reporter.output if reporter else print
+            emit('[recovery] Saved snapshot references unavailable blobs with exact matches in the export. Recovering those bytes; training will resume from the saved manifest.')
+            command=[sys.executable,str(PROJECT/'scripts/artifacts.py'),'--artifact-dir',str(artifacts)]
+            if not artifact_dir:execute('Download/cache verified export for snapshot repair',[*command,'download'])
+            with tempfile.TemporaryDirectory(prefix='vault-repair-',dir=run.parent) as temp:
+                export=Path(temp)/'export'
+                execute('Verify and extract recovery checkpoint',[*command,'restore','--run-dir',str(export)])
+                if reporter:
+                    with reporter.stage('Repair missing snapshot blobs without resetting progress'):repair_blobs(vault,export,plan,emit)
+                else:repair_blobs(vault,export,plan,emit)
+            restore_saved()
         if source!=vault:snapshot()
         return 'restored saved session'
     if config['start_from_export']:

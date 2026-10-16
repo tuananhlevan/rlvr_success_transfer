@@ -13,6 +13,12 @@ import tempfile
 import time
 
 
+class SnapshotRestoreError(ValueError):
+    def __init__(self,errors,blob_issues):
+        super().__init__('No complete snapshot found: '+'; '.join(errors))
+        self.blob_issues=blob_issues
+
+
 def sha(path):
     digest=hashlib.sha256()
     with Path(path).open('rb') as stream:
@@ -97,24 +103,40 @@ def restore(vault,run):
     vault=Path(vault).resolve();run=Path(run).resolve()
     if run.exists() and any(run.iterdir()):raise FileExistsError('Restore requires an empty local run directory')
     run.parent.mkdir(parents=True,exist_ok=True)
-    errors=[]
+    errors=[];first_issues=[]
     for candidate in candidates(vault):
         stage=Path(tempfile.mkdtemp(prefix='rlvr-restore-',dir=run.parent))
+        issues=[]
         try:
             manifest=json.loads(candidate.read_text())
+            # Check missing objects before spending minutes copying large files.
+            for name,record in manifest['files'].items():
+                safe_path(stage,name)
+                digest=record['sha256']
+                if len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):raise ValueError('Invalid blob hash')
+                blob=vault/'blobs'/digest
+                if not blob.exists() or blob.stat().st_size!=record['bytes']:
+                    issues.append(dict(name=name,**record))
+            if issues:raise ValueError('Missing or wrong-size snapshot blobs: '+', '.join(r['name'] for r in issues))
             for name,record in manifest['files'].items():
                 target=safe_path(stage,name);target.parent.mkdir(parents=True,exist_ok=True)
                 digest=record['sha256']
                 if len(digest)!=64 or any(c not in '0123456789abcdef' for c in digest):raise ValueError('Invalid blob hash')
                 blob=vault/'blobs'/digest
-                if blob.stat().st_size!=record['bytes'] or sha(blob)!=digest:raise ValueError(f'Corrupt snapshot blob: {name}')
                 shutil.copyfile(blob,target)
+                # Hash the local copy: verifies the bytes actually restored and
+                # avoids reading every multi-GB object twice over Drive.
+                if target.stat().st_size!=record['bytes'] or sha(target)!=digest:
+                    issues.append(dict(name=name,**record))
+                    raise ValueError(f'Corrupt snapshot blob: {name}')
             if run.exists():run.rmdir()
             stage.rename(run)
             return manifest
-        except (ValueError,KeyError,OSError,json.JSONDecodeError) as error:errors.append(str(error))
+        except (ValueError,KeyError,OSError,json.JSONDecodeError) as error:
+            if not errors:first_issues=issues
+            errors.append(str(error))
         finally:shutil.rmtree(stage,ignore_errors=True)
-    raise ValueError('No complete snapshot found: '+'; '.join(errors))
+    raise SnapshotRestoreError(errors,first_issues)
 
 
 def main():

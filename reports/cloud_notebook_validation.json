@@ -4,8 +4,8 @@
   "python": "3.11.14",
   "torch": "2.9.1",
   "unit_tests": {
-    "run": 29,
-    "passed": 29
+    "run": 35,
+    "passed": 35
   },
   "notebooks": [
     "notebooks/rlvr_kaggle.ipynb",
@@ -16,6 +16,8 @@
   "broken_local_markdown_links": [],
   "current_host_cuda_available": false,
   "live_colab_tested": false,
+  "user_reported_colab_checks": "A100-SXM4-40GB, training Torch 2.9.1+cu128, inference Torch 2.9.0+cu128 and GPU doctor passed; saved Drive restore failed because the exported step-1 optimizer blob was absent. Reported by user; not independently executed here.",
+  "snapshot_recovery_validation": "CPU fixtures exercise exact-hash export repair, unchanged saved manifest/progress, refusal of unknown hashes, early missing-object diagnosis, corruption during copying, and interrupted repair. No real Drive recovery executed here.",
   "run_eta_validation": "CPU fixtures check current-invocation timing isolation, latest-five-cycle averaging, calibration, budget display and explicit evaluation exclusions; no cloud ETA accuracy measurement",
   "live_kaggle_tested": false,
   "fp16_interpretation": "Numerical variant, not the source BF16 recipe",
