@@ -1,6 +1,8 @@
 # New direction screen: when can implicit feedback justify a policy update?
 
-**Date:** 16 October 2026. **Status:** one candidate for a bounded falsification study; **no new main project has passed all gates**. This report replaces neither the original literature analysis nor the rejection ledger. The previous conditional-design direction remains a theoretical note, not the recommended main study.
+**Date:** 16 October 2026. **Status: NO-GO as a main research project after the completed public-data audit and expanded prior-art check.** The current anonymous-timing formulation is retired. No replacement main project has passed the practical and novelty gates. The previous conditional-design direction remains a theoretical note.
+
+**Completed artifacts:** [reproducible CPU audit](../../studies/feedback_timing/audit.py), [canonical results and provenance](../../studies/feedback_timing/results.json). This report is the canonical interpretation; earlier candidate language below describes the hypothesis that was screened.
 
 ## 1. Candidate and practical decision
 
@@ -10,7 +12,7 @@ The practical decision is whether an alignment pipeline should use recorded anno
 
 The proposed contribution would concern **identifying a beneficial decision under measurement uncertainty**. Neither collecting response times, fitting a drift-diffusion model, adding annotator effects, nor applying a generic robust objective would be a new contribution.
 
-**Why this is only a candidate:** a real NLP timing failure is documented, and the 2026 theory explicitly leaves heterogeneous measurement processes unresolved. However, the failure has not been attributed to our proposed mechanism. A method that reliably improves deployed generation has not been established. We must not infer that missing theorem conditions explain an observed experimental failure.
+**Why the candidate was screened out:** the documented NLP weakness does not establish our proposed causal mechanism; the available timing field cannot isolate it; the tested ordinary predictors leave no consistent timing benefit; and closer prior work already occupies much of the decision-identification framing. The exact correlated additive-delay model is not proven solved, but an unoccupied model variant alone is insufficient grounds for investment.
 
 ## 2. Evidence, intuition, and reading scope
 
@@ -24,6 +26,7 @@ All numbers in this section are **the authors' results**, not our experiments. T
 | [Preference Learning with Response Time: Robust Losses and Guarantees](https://arxiv.org/html/2505.22820), 2025; model, policy-loss discussion, Appendix A | Errors in an estimated response-time model need not enter reward estimation at first order. | Orthogonal losses and guarantees; analysis includes unknown barriers and non-decision-time estimation error. | A new nuisance-robust timing loss or generic DPO-plus-time objective would collide with this work. Arbitrary correlated population heterogeneity is a different contract, not automatically an unsolved problem. |
 | [Enhancing Preference-based Linear Bandits via Human Response Time](https://proceedings.neurips.cc/paper_files/paper/2024/hash/1e2dd2f1efbc6e65b68f17ce6e158b34-Abstract-Conference.html), NeurIPS 2024; abstract and model/estimator passages | A fast, consistent choice can contain strength information even when choices saturate. | Timing-aware utility estimation and fixed-budget best-arm identification already exist. | Timing-aware acquisition and better information per unit time are not new proposals. |
 | [Testing the drift-diffusion model](https://pmc.ncbi.nlm.nih.gov/articles/PMC7776861/), 2020; identification and related-work discussion | A good fit to reaction times is not automatically identification of their psychological cause. | Identification/testing under stated restrictions; discusses difficulty separating random non-decision time and boundaries. | Generic nonidentification of timing components is old. It cannot be the main novelty claim. |
+| [Time is Knowledge: What Response Times Reveal](https://arxiv.org/html/2408.14872v4), June 2026 revision of a 2024 preprint; §§2.2–2.6, §3.1, Appendix B | A useful decision may be identifiable even if the full latent model is not. | Characterizes properties shared by observationally equivalent models; handles uncertainty over timing functions and studies speed heterogeneity, including preference–speed dependence under stated normalization assumptions. Includes an optimal-nudge application. | Its chronometric model and noise extensions do not solve every stochastic DDM with arbitrary correlated additive delays. Nevertheless, our broad conceptual framing substantially overlaps. |
 
 **Additional calibration collisions:** [Factoring Out Nondecision Time](https://www.ppw.kuleuven.be/okp/_pdf/Verdonck2016FONDT.pdf), 2016, already uses convolution across experimental conditions to remove a shared nuisance distribution. A [revised 2026 eLife study](https://elifesciences.org/reviewed-preprints/109730v2) uses external non-decision-time information and discusses earlier calibration alternatives. Relevant sections were inspected by a worker. These are mandatory comparisons where their shared-nuisance/repeated-condition assumptions apply.
 
@@ -31,7 +34,7 @@ All numbers in this section are **the authors' results**, not our experiments. T
 
 There is a meaningful tension between an identification result for a specified measurement process and disappointing timing-based learning in actual text annotation. They are **not contradictory findings**: their observation protocols and targets differ. A useful study must determine whether resolving that difference changes the quality of alignment decisions after strong existing remedies.
 
-The main opportunity is conditional: characterize which remaining uncertainty matters for a policy decision, and determine whether a small amount of additional evidence can resolve it. Merely obtaining a better psychological parameter fit would not satisfy the practical goal.
+The initial opportunity was to characterize which uncertainty matters for a policy decision. The expanded search substantially weakened that novelty argument. Merely obtaining a better psychological parameter fit would not satisfy the practical goal.
 
 ## 3. Prior-art and simple-remedy gate
 
@@ -46,7 +49,7 @@ The main opportunity is conditional: characterize which remaining uncertainty ma
 | Collect agreement or an explicit strength label | ResponseRank evaluates both. Additional annotations may be preferable to recovering timing information. | Compare at matched annotation time and expense, including choice-only with more labels. |
 | Learn each person separately | Relevant when repeated observations exist. | Compare with repeated-ID and temporary-session baselines. Do not hide available IDs to manufacture an advantage. |
 
-**Search-bounded remaining question:** anonymous population-level **policy identification and improvement guarantees** under correlated measurement heterogeneity, together with a demonstrably useful observation protocol. No inspected source provided that entire package. This is weaker than establishing priority, and classical partial-identification, decision-theory and mixture-identification literature still require a dedicated audit.
+**Updated novelty assessment:** [Time is Knowledge](https://arxiv.org/html/2408.14872v4) already makes identification of decision-relevant properties, without complete latent recovery, central to its analysis. Its §2.6.1 examines robustness across admissible timing functions; §2.6.3 and Appendix B study speed heterogeneity and baseline normalization. Earlier [Time Will Tell](https://www.journals.uchicago.edu/doi/full/10.1086/713732), JPE 2021, also recovers preference information from choice and timing under explicit assumptions. A stochastic DDM with unrestricted type-correlated additive delays remains technically distinct; no exact solution was located in the inspected sources. That distinction does not establish a useful or sufficiently substantial contribution.
 
 ### What would make it too trivial?
 
@@ -85,7 +88,7 @@ $$
 \right\}.
 $$
 
-This robust objective is **standard scaffolding**, not our new method. A full result would need an observable finite-sample uncertainty set, useful rather than vacuous guarantees, and upper/lower bounds for the actual permitted measurements. Parameter nonidentification need not prevent decision identification; that distinction is the target.
+This robust objective is **standard scaffolding**, not our new method. A full result would need an observable finite-sample uncertainty set, useful rather than vacuous guarantees, and upper/lower bounds for the actual permitted measurements. Parameter nonidentification need not prevent decision identification, but that distinction is already present in the closest literature.
 
 | Earlier finding | Legitimate contribution to this candidate | What cannot be imported |
 |---|---|---|
@@ -113,36 +116,69 @@ Each additive delay is sampled independently of that type's DDM trajectory. Both
 
 For binary actions with utility gap equal to mean drift, uniform reference and KL coefficient $\tau=1$, the optimal positive-action probabilities are 0.622459 and 0.377541. The minimax regularized regret of an observation-only rule is attained by probability $1/2$ and equals $\log\cosh(1/4)=0.0309298$. Unlike our earlier dimension-dependent example, this illustration has a fixed nonzero decision gap. That alone does **not** establish significance or novelty.
 
-The numeric identities were checked with Python's standard library. They are neither simulated participant results nor language-model results. No empirical failure has been reproduced in this search.
+The numeric identities were checked with Python's standard library. They are neither simulated participant results nor language-model results. The public-data audit below does not reproduce this constructed mechanism.
 
-## 5. Bounded falsification study before theory investment
+**Investment implication of our theory:** if both populations remain admissible, the robust improvement objective cannot certify a nonzero beneficial update: their utility directions oppose each other, and the reference policy attains the safe value zero. Additional defensible assumptions or measurements are necessary. This is a useful reason to reject an unsupported method proposal, not evidence that we have a practical timing method. The previous information findings strengthen this diagnosis; they do not supply the missing observation protocol or a new theorem with established priority.
 
-### Gate A: verify the residual on existing human annotations
+## 5. Executed public-data audit
 
-Use [MultiPref](https://huggingface.co/datasets/allenai/multipref) and the [released ResponseRank implementation/results](https://github.com/timokau/response-rank). Confirm released timing fields, measurement boundaries, annotation order and available IDs before interpreting time as decision time.
+### Data and target
 
-1. Reproduce the **data-level** relation between time, stated strength, disagreement and text properties; inspect held-out annotators as well as held-out prompts. Avoid counting each rater's opinion as an independent prompt.
-2. Compare raw timing, per-annotator normalization, annotator-by-length strata, flexible observed-context adjustment, existing orthogonal losses and an appropriate hierarchical DDM. Preserve choice-only, explicit-strength and agreement baselines.
-3. Diagnose whether residual timing variation provides information beyond those baselines. Held-out log loss and preference accuracy measure prediction, not true cardinal utility.
-4. Evaluate response selection where matched human judgments actually support it. Do not invent rewards for unobserved alternative responses or reinterpret observational annotations as randomized policy evaluations.
+Downloaded the complete public MultiPref training JSONL at revision `12910233a0238a997ebe425656e9dfed7b0ff031`. The 64,787,194-byte file has SHA-256 `027072c52e39300c55ebc34265dda5ef2cfb1682edbc22b1a7d978c94776aaca`. The runner verifies this hash before extraction; raw data remains in an ignored local cache.
 
-**Immediate stop:** no reliable residual timing information; standard adjustment recovers it; agreement/extra labels dominate at matched resource cost; or the released data cannot support the necessary target. MultiPref failure alone is not a reason to construct an increasingly elaborate timing estimator.
+The release contains **10,461 response comparisons and 41,844 annotations**. Excluding 10,997 ties leaves **30,847 non-tie annotations**, covering 5,304 prompt IDs and 227 evaluator IDs. The target is whether an annotator reports a **clear** rather than **slight** preference (43.36% clear). It is not correctness, independently measured cardinal preference, or policy utility. We pool A and B choices for this strength-prediction audit.
 
-### Gate B: establish a measurement intervention if Gate A survives
+Inspected all released annotation field names and the [official ResponseRank MultiPref loader](https://github.com/timokau/response-rank/blob/8bc9b17ca59db5e1502fe3783acef482975d761c/src/responserank/llm/data/datasets/multipref.py) and [stratification implementation](https://github.com/timokau/response-rank/blob/8bc9b17ca59db5e1502fe3783acef482975d761c/src/responserank/llm/data/stratification.py). The released measure is `time_spent`; no separate choice-click timestamp is exposed. The total annotation duration includes the multi-field task described by ResponseRank. A single annotation-level `timestamp` cannot separate reading, decision, justification and auxiliary judgments. Therefore this release cannot establish that heterogeneous decision thresholds or additive delays cause the reported reward-model weakness.
 
-If existing data cannot isolate the process, a new, appropriately authorized human study is necessary. Prepare a small within-participant protocol that distinguishes reading, choice and additional annotation time. Randomize layout/order and use matched content; separately check whether the intervention changes the preference itself. A layout-induced behavioral change cannot automatically be attributed to pure measurement noise.
+### Protocol actually run
 
-Compare a simple choice interface, the original multi-field protocol, and a conventional calibration baseline. Evaluate target judgments independently from the signal used to fit the model. Permanent identity is not necessary for a temporary session experiment, but repeated observations must be counted explicitly.
+Executed ten CPU evaluations: five fixed seeds for held-out prompts and five for held-out annotators, with 20% of distinct split groups held out. This is an exploratory screening audit, not a preregistered confirmatory experiment. All annotations of a held-out prompt stay together. Annotator holdout has no evaluator overlap, but prompts may overlap; it is not a joint prompt-and-annotator cold-start test.
 
-**First and cheapest escape to test:** record the choice-click timestamp separately from subsequent justification and auxiliary labels. The MultiPref duration used in the cited analysis includes those later tasks. If isolating the event repairs timing's usefulness, that is a measurement fix; it would not justify our more elaborate proposal. Agreement also targets consensus rather than necessarily the same cardinal population mean, so compare practical decisions and state any target mismatch.
+Compared four ridge-logistic models with fixed regularization and no test-selected hyperparameters:
 
-**This human study has not been run or authorized as participant recruitment.** Existing public-data analysis can proceed without it. No participant contact, external messages or sensitive-data collection occurred in this search.
+1. **Length/cohort:** log total pair length, log shorter-response length, log absolute response-length difference, their squares, and normal/expert cohort. Total pair length counts the prompt twice, matching the two conversations.
+2. **Length/cohort + flexible time:** adds log duration and a piecewise-linear timing basis with training-only quantile knots.
+3. **Calibrated metadata:** adds a smoothed per-annotator clear-label rate. This is an ordinary identity-based predictive baseline, not an anonymous deployment method.
+4. **Calibrated metadata + time:** adds log duration centered within annotator-by-eight-length-bucket strata, plus its square. Sparse strata fall back to annotator then global means. Training rows leave themselves out of calibration statistics; test rows use training statistics only. Unseen annotators receive global fallbacks.
 
-### Gate C: only then develop a full theory/method package
+We also evaluate the simple score “shorter time implies stronger preference,” raw and normalized. Reported AUROCs, log losses and Brier scores are held-out quantities. The five-split means are descriptive, not independent replications. Per-split 95% intervals in the JSON resample prompt clusters 1,000 times conditional on the fitted model; they do not capture full two-way annotator/prompt or training uncertainty.
 
-The potential package is: an empirically defensible nuisance class; a characterization of decision identification within that class; finite-sample bounds; a matching or near-matching observation strategy; and downstream gains against the strongest repairs. A lower bound over arbitrary delays plus a generic maximin objective would be insufficient.
+Reproduce from the repository root with a Python environment containing NumPy and SciPy:
 
-Practical success must mean better independent preference decisions or generation quality at comparable total annotation resources. A better fitted RT distribution, lower training loss or a new confidence score is not enough. There is no justified numeric improvement expectation yet.
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python studies/feedback_timing/audit.py
+```
+
+The executed environment was Python 3.11.14, NumPy 2.4.0 and SciPy 1.16.3; the JSON records the exact versions and runner hash. The measured computation took about four seconds after data download. No GPU is required. Re-running overwrites the single canonical `results.json`.
+
+### Observed results
+
+| Strength predictor / metric | Held-out prompts, mean of 5 splits | Held-out annotators, mean of 5 splits |
+|---|---:|---:|
+| Raw shorter-time score, AUROC | 0.53025 | 0.52679 |
+| Normalized shorter-time score, AUROC | 0.50932 | 0.52679 |
+| Length/cohort, AUROC | 0.64545 | 0.63299 |
+| Length/cohort + flexible time, AUROC | 0.64517 | 0.63205 |
+| Calibrated metadata, AUROC | 0.73815 | 0.62766 |
+| Calibrated metadata + time, AUROC | 0.73809 | 0.62731 |
+| Log-loss reduction from flexible time, nats/annotation | −0.00003242 | −0.00033284 |
+| Log-loss reduction from normalized time after calibration, nats/annotation | −0.00004645 | −0.00030880 |
+
+**Metric intuition:** AUROC 0.5 is chance ordering of clear versus slight labels. The raw timing score has a weak association with stated strength. Metadata is more predictive in these models. A log-loss reduction is baseline loss minus time-extended loss, so positive means adding time helps. Every mean reduction here is negative: time slightly worsens average held-out prediction in the tested models. These tiny differences are not a substantial degradation claim.
+
+For held-out prompts, all ten per-split intervals for the two timing additions include zero. Held-out annotators show mixed signs and some intervals excluding zero in opposite directions; there is no consistently transferable benefit. The normalized timing score equals the raw score for unseen annotators because subtracting the same global fallback cannot change rankings. The identity-based baseline transfers poorly to unseen people; its advantage on held-out prompts is not a general cold-start solution.
+
+### What was established, and what was not
+
+- **Established:** the public release lacks the event boundaries needed for the proposed causal explanation; raw timing weakly predicts stated strength; neither tested timing augmentation provides a consistent held-out improvement over ordinary metadata controls.
+- **Not established:** timing is universally useless; all nonlinear or hierarchical estimators fail; the arbitrary-delay construction describes real annotators; or no timing protocol could improve an alignment policy. AUROC and log loss on stated labels cannot establish downstream generation benefit or interpersonal cardinal utility.
+- **Not run:** a full ResponseRank reward-model reproduction, hierarchical DDM, orthogonal timing loss, new human study, or policy training. They are not required to decide against this particular investment: the novelty and measurement gates already fail. Their absence limits any broader claim about timing methods.
+
+### Why we stop here
+
+The original follow-up plan was a human measurement intervention followed by a theory/method campaign. It is **not an active work plan** after this audit. Separating choice-click time from later annotation is an obvious instrumentation control, and existing normalization/calibration methods remain plausible alternatives. We cannot justify assuming that a new robust optimizer is needed before these controls have been shown insufficient.
+
+A credible future reconsideration would need independent evidence of a consequential decision error that survives these remedies, a feasible measurement protocol, and a distinct theorem beyond known decision identification. Those conditions describe what would change the decision; they are not a request to fund further work now. No GPU run or participant recruitment is recommended for the current formulation.
 
 ## 6. Other directions eliminated during this search
 
@@ -159,8 +195,16 @@ These are bounded screens, not declarations that their whole fields are solved. 
 | Make DuPO masks reliable across candidate shifts | Original DuPO method/selection ablation and [Condition Mask Verification](https://aclanthology.org/2023.findings-emnlp.167.pdf), worker audit | Exact sound inversion cannot accept a wrong answer at the original missing input. Imperfect inversion needs controls against stronger inverse models and all-mask aggregation; no residual demonstrated. |
 | Improve protein local stability from unordered assay profiles | [Nature 2026 energy landscapes](https://www.nature.com/articles/s41586-026-10465-z), worker full relevant-method/results inspection | Prediction gaps are real, but a permutation-invariant design objective does not need residue assignment. No evidence that the proposed assignment mechanism is necessary for the practical decision. |
 
-## 7. Recommendation
+## 7. Investment decision
 
-The timing/measurement candidate has a concrete source-documented failure after a relevant simple repair and a mathematical connection to our previous information findings. It merits **a bounded data audit**, not another expensive training run or a declared main proposal. Its distinctive contribution, practical mechanism and independent priority remain unresolved.
+**NO-GO: retire anonymous timing under arbitrary correlated measurement heterogeneity as our next main project.**
 
-The success condition for this search is not to rename another standard remedy. If the candidate fails its baseline or measurement gate, record that result here and continue to a different problem. Do not use the illustrative impossibility example to keep it alive.
+| Investment criterion | Evidence from self-review | Verdict |
+|---|---|---|
+| Real problem | ResponseRank documents a real timing weakness; the CPU audit finds no consistent incremental benefit in its stated-strength prediction task. | A weakness exists, but our proposed mechanism is unverified. |
+| Distinct contribution | Closest timing/decision-identification work substantially overlaps the framing; robust losses and calibration already exist. | Insufficient novelty demonstrated. |
+| Theory strengthens the method | Our indistinguishable-world example rules out an assured beneficial update under unrestricted nuisance. | Useful negative constraint, not a useful new learning method. |
+| Nontrivial practical necessity | The data cannot isolate decision time; simple instrumentation and existing estimators have not been ruled out. | Necessity not established. |
+| Cost of resolving uncertainty | Would require new measurement evidence and independent utility evaluation before a defensible policy experiment. | Current evidence does not justify that investment. |
+
+This is a decision about the current formulation, not a proof that the whole response-time field is solved. The audit and theoretical note remain reusable screening evidence. We should not extend training or broaden an adversarial theorem merely to preserve this candidate.

@@ -1,0 +1,607 @@
+{
+  "material_passport": {
+    "mode": "run",
+    "type": "public-data observational audit",
+    "status": "COMPLETED",
+    "created_utc": "2026-10-16T14:04:20Z"
+  },
+  "source": {
+    "url": "https://huggingface.co/datasets/allenai/multipref/resolve/12910233a0238a997ebe425656e9dfed7b0ff031/MultiPref-Train.jsonl",
+    "revision": "12910233a0238a997ebe425656e9dfed7b0ff031",
+    "sha256": "027072c52e39300c55ebc34265dda5ef2cfb1682edbc22b1a7d978c94776aaca"
+  },
+  "runner_sha256": "da9472baca1415ccde438a955ad25bf51009fe1992c29582adadba8ea1816236",
+  "environment": {
+    "python": "3.11.14",
+    "numpy": "2.4.0",
+    "scipy": "1.16.3"
+  },
+  "protocol": {
+    "seeds": [
+      20261016,
+      20261017,
+      20261018,
+      20261019,
+      20261020
+    ],
+    "holdout_fraction": 0.2,
+    "ridge_penalty": 0.001,
+    "bootstrap_repetitions": 1000,
+    "split_uncertainty": "Per-split CIs, not independent meta-analysis across overlapping splits",
+    "bootstrap_scope": "Prompt clusters only; conditional on fitted model, not full two-way annotator/prompt uncertainty",
+    "calibration": "Training rows leave themselves out; test rows use training-only statistics",
+    "no_lm_training": true,
+    "no_latent_utility_labels": true,
+    "held_out_annotators_caveat": "Prompts may overlap; annotator transfer test, not joint cold-start test"
+  },
+  "inventory": {
+    "comparisons": 10461,
+    "annotations": 41844,
+    "preference_counts": {
+      "A-is-clearly-better": 4123,
+      "B-is-slightly-better": 10490,
+      "Tie": 10997,
+      "B-is-clearly-better": 9253,
+      "A-is-slightly-better": 6981
+    },
+    "eligible_non_ties": 30847,
+    "unique_prompts": 5304,
+    "unique_annotators": 227,
+    "clear_fraction": 0.4336240153013259,
+    "annotation_fields": [
+      "evaluator",
+      "harmless_checked_reasons",
+      "harmless_confidence",
+      "harmless_own_reason",
+      "harmless_pref",
+      "helpful_checked_reasons",
+      "helpful_confidence",
+      "helpful_own_reason",
+      "helpful_pref",
+      "overall_confidence",
+      "overall_pref",
+      "time_spent",
+      "timestamp",
+      "truthful_checked_reasons",
+      "truthful_confidence",
+      "truthful_own_reason",
+      "truthful_pref"
+    ],
+    "duration_quantiles_native_units": {
+      "min": 12.0,
+      "p25": 113.0,
+      "median": 185.0,
+      "p75": 288.0,
+      "p95": 515.0,
+      "max": 4594.0
+    },
+    "isolated_choice_timestamp_available": false,
+    "timing_measure": "time_spent, total annotation duration; timestamp is one annotation-level field",
+    "target": "self-reported clear versus slight overall preference; excludes ties"
+  },
+  "summary": {
+    "held_out_prompts": {
+      "mean_raw_timing_auc": 0.530247550062237,
+      "mean_normalized_timing_auc": 0.5093167176990204,
+      "mean_model_metrics": {
+        "length_cohort": {
+          "auroc": 0.6454484480187718,
+          "log_loss_nats": 0.6517490093277848,
+          "brier": 0.22983140524985418
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6451745133047859,
+          "log_loss_nats": 0.6517814272551188,
+          "brier": 0.22984777392344458
+        },
+        "calibrated_metadata": {
+          "auroc": 0.738154083504926,
+          "log_loss_nats": 0.5896564175428298,
+          "brier": 0.20239672716642065
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.7380922914906528,
+          "log_loss_nats": 0.589702869004744,
+          "brier": 0.20242151551588652
+        }
+      },
+      "mean_timing_log_loss_reductions": {
+        "length_cohort_plus_flexible_time": -3.241792733396671e-05,
+        "calibrated_metadata_plus_time": -4.6451461914150856e-05
+      }
+    },
+    "held_out_annotators": {
+      "mean_raw_timing_auc": 0.5267883685137803,
+      "mean_normalized_timing_auc": 0.5267883685137803,
+      "mean_model_metrics": {
+        "length_cohort": {
+          "auroc": 0.6329900117088693,
+          "log_loss_nats": 0.66552465028239,
+          "brier": 0.23622711002642105
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6320541580244543,
+          "log_loss_nats": 0.6658574934111524,
+          "brier": 0.23638975584801183
+        },
+        "calibrated_metadata": {
+          "auroc": 0.6276562661352107,
+          "log_loss_nats": 0.6712626758208765,
+          "brier": 0.2385749066653767
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.627308436632741,
+          "log_loss_nats": 0.6715714770789721,
+          "brier": 0.23869854600810697
+        }
+      },
+      "mean_timing_log_loss_reductions": {
+        "length_cohort_plus_flexible_time": -0.00033284312876223697,
+        "calibrated_metadata_plus_time": -0.00030880125809566977
+      }
+    }
+  },
+  "runs": [
+    {
+      "mode": "held_out_prompts",
+      "seed": 20261016,
+      "train_n": 24697,
+      "test_n": 6150,
+      "raw_shorter_means_clear_auc": 0.5190359860678839,
+      "normalized_shorter_means_clear_auc": 0.49949478394931995,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6429290017449009,
+          "log_loss_nats": 0.6535341249465478,
+          "brier": 0.23064608487390392
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6425025862826129,
+          "log_loss_nats": 0.6535965240262428,
+          "brier": 0.23067701894145312
+        },
+        "calibrated_metadata": {
+          "auroc": 0.7363359188454993,
+          "log_loss_nats": 0.5927724022753003,
+          "brier": 0.2035337977551082
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.7365073880658067,
+          "log_loss_nats": 0.5926547516032556,
+          "brier": 0.20347099222005716
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": -6.239907969499688e-05,
+          "prompt_bootstrap_95ci": [
+            -0.0005325877391730099,
+            0.00035709105788028235
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": 0.00011765067204451745,
+          "prompt_bootstrap_95ci": [
+            -0.0002416977409618739,
+            0.00048241489596723884
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_prompts",
+      "seed": 20261017,
+      "train_n": 24745,
+      "test_n": 6102,
+      "raw_shorter_means_clear_auc": 0.530387584888532,
+      "normalized_shorter_means_clear_auc": 0.5150153955936524,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6412116364937763,
+          "log_loss_nats": 0.6549346843013393,
+          "brier": 0.23122182113110964
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6403804817478745,
+          "log_loss_nats": 0.6551512531400264,
+          "brier": 0.2313277714107037
+        },
+        "calibrated_metadata": {
+          "auroc": 0.7364108517658561,
+          "log_loss_nats": 0.5918964070006164,
+          "brier": 0.20326022255437004
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.7360889736561862,
+          "log_loss_nats": 0.5921173421827062,
+          "brier": 0.20336237337335322
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": -0.00021656883868723461,
+          "prompt_bootstrap_95ci": [
+            -0.0006086952154833428,
+            0.00019941871853639058
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.00022093518208956658,
+          "prompt_bootstrap_95ci": [
+            -0.0006629238135199866,
+            0.00020057053763484432
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_prompts",
+      "seed": 20261018,
+      "train_n": 24633,
+      "test_n": 6214,
+      "raw_shorter_means_clear_auc": 0.5432034740675912,
+      "normalized_shorter_means_clear_auc": 0.5060247138696388,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6534890776217123,
+          "log_loss_nats": 0.6469951940044533,
+          "brier": 0.22764577122179885
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6531899888655752,
+          "log_loss_nats": 0.6470843986589553,
+          "brier": 0.22769013914871014
+        },
+        "calibrated_metadata": {
+          "auroc": 0.7453360631999055,
+          "log_loss_nats": 0.5833738137514131,
+          "brier": 0.19969845429888652
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.7453484524314397,
+          "log_loss_nats": 0.5833664133180347,
+          "brier": 0.19970418256036981
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": -8.920465450198701e-05,
+          "prompt_bootstrap_95ci": [
+            -0.0005520410145301035,
+            0.00040262235914608206
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": 7.400433378317232e-06,
+          "prompt_bootstrap_95ci": [
+            -0.0002753516194795427,
+            0.0003043498176348799
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_prompts",
+      "seed": 20261019,
+      "train_n": 24581,
+      "test_n": 6266,
+      "raw_shorter_means_clear_auc": 0.5311123366339269,
+      "normalized_shorter_means_clear_auc": 0.5167777227401581,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6416554477261838,
+          "log_loss_nats": 0.6527420556961953,
+          "brier": 0.23023018953170463
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6416389676328889,
+          "log_loss_nats": 0.6526889896441499,
+          "brier": 0.23020426283882933
+        },
+        "calibrated_metadata": {
+          "auroc": 0.7294907578389097,
+          "log_loss_nats": 0.594395632995937,
+          "brier": 0.2044781944430595
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.729212623772259,
+          "log_loss_nats": 0.5946245261165738,
+          "brier": 0.20459016642512007
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": 5.3066052045275855e-05,
+          "prompt_bootstrap_95ci": [
+            -0.00034358918837815866,
+            0.00047239961765433737
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.00022889312063680204,
+          "prompt_bootstrap_95ci": [
+            -0.0006306115002533381,
+            0.00018528601415681952
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_prompts",
+      "seed": 20261020,
+      "train_n": 24667,
+      "test_n": 6180,
+      "raw_shorter_means_clear_auc": 0.5274983686532513,
+      "normalized_shorter_means_clear_auc": 0.5092709723423327,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6479570765072855,
+          "log_loss_nats": 0.6505389876903885,
+          "brier": 0.22941315949075403
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6481605419949783,
+          "log_loss_nats": 0.6503859708062195,
+          "brier": 0.22933967727752652
+        },
+        "calibrated_metadata": {
+          "auroc": 0.7431968258744593,
+          "log_loss_nats": 0.5858438316908824,
+          "brier": 0.20101296678067898
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.7433040195275722,
+          "log_loss_nats": 0.5857513118031495,
+          "brier": 0.20097986300053233
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": 0.00015301688416910914,
+          "prompt_bootstrap_95ci": [
+            -0.00023823290691656488,
+            0.0005135210727739868
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": 9.251988773277965e-05,
+          "prompt_bootstrap_95ci": [
+            -9.513106157605119e-05,
+            0.00028441057244012045
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_annotators",
+      "seed": 20261016,
+      "train_n": 25084,
+      "test_n": 5763,
+      "raw_shorter_means_clear_auc": 0.5284473054207692,
+      "normalized_shorter_means_clear_auc": 0.5284473054207692,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6049212195002883,
+          "log_loss_nats": 0.6821140550093516,
+          "brier": 0.24397724553133432
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6051735259046659,
+          "log_loss_nats": 0.6819146046264698,
+          "brier": 0.24389666253326214
+        },
+        "calibrated_metadata": {
+          "auroc": 0.5973476772585411,
+          "log_loss_nats": 0.6905049811928302,
+          "brier": 0.24743233763436548
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.5976512182967577,
+          "log_loss_nats": 0.6907694244889995,
+          "brier": 0.2475109964070614
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": 0.0001994503828819318,
+          "prompt_bootstrap_95ci": [
+            1.2314414678213542e-06,
+            0.0003901741828374125
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.00026444329616924966,
+          "prompt_bootstrap_95ci": [
+            -0.0008507178252273212,
+            0.00032215009436031047
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_annotators",
+      "seed": 20261017,
+      "train_n": 23939,
+      "test_n": 6908,
+      "raw_shorter_means_clear_auc": 0.5415194968832386,
+      "normalized_shorter_means_clear_auc": 0.5415194968832386,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6140303862082857,
+          "log_loss_nats": 0.679827220724228,
+          "brier": 0.2429324718211761
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6139862048250606,
+          "log_loss_nats": 0.6797581305097069,
+          "brier": 0.2429068539431999
+        },
+        "calibrated_metadata": {
+          "auroc": 0.6084783150463564,
+          "log_loss_nats": 0.6884106608879526,
+          "brier": 0.24640076167409491
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.6068823255736209,
+          "log_loss_nats": 0.6895389759808119,
+          "brier": 0.24691345189500957
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": 6.909021452118623e-05,
+          "prompt_bootstrap_95ci": [
+            -0.0003125276356666315,
+            0.0004175785743432773
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.0011283150928593343,
+          "prompt_bootstrap_95ci": [
+            -0.0016825774782825795,
+            -0.000590051382086144
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_annotators",
+      "seed": 20261018,
+      "train_n": 24136,
+      "test_n": 6711,
+      "raw_shorter_means_clear_auc": 0.49853448394574373,
+      "normalized_shorter_means_clear_auc": 0.49853448394574373,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6466080649973607,
+          "log_loss_nats": 0.644416926402719,
+          "brier": 0.22639902251444902
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.642208579100778,
+          "log_loss_nats": 0.6464136003652247,
+          "brier": 0.22733849496973133
+        },
+        "calibrated_metadata": {
+          "auroc": 0.6480638957104496,
+          "log_loss_nats": 0.6442177728705772,
+          "brier": 0.2262844729733415
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.6489999770489546,
+          "log_loss_nats": 0.6434654207541204,
+          "brier": 0.22591420827057213
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": -0.0019966739625058663,
+          "prompt_bootstrap_95ci": [
+            -0.00274189249695155,
+            -0.0012119597532938315
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": 0.0007523521164568631,
+          "prompt_bootstrap_95ci": [
+            0.0002277208340363896,
+            0.001282816760170432
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_annotators",
+      "seed": 20261019,
+      "train_n": 25065,
+      "test_n": 5782,
+      "raw_shorter_means_clear_auc": 0.5270182691484854,
+      "normalized_shorter_means_clear_auc": 0.5270182691484854,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6547944570156264,
+          "log_loss_nats": 0.648640006012296,
+          "brier": 0.22827023195432056
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6538826490137489,
+          "log_loss_nats": 0.6488475966307744,
+          "brier": 0.22836185648874432
+        },
+        "calibrated_metadata": {
+          "auroc": 0.6470068704833367,
+          "log_loss_nats": 0.652763607442015,
+          "brier": 0.22999123923722428
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.6457650562745184,
+          "log_loss_nats": 0.6534186921660471,
+          "brier": 0.23028042211992167
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": -0.0002075906184785436,
+          "prompt_bootstrap_95ci": [
+            -0.0006859556030588507,
+            0.00026245295221009434
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.0006550847240320573,
+          "prompt_bootstrap_95ci": [
+            -0.001142755173288438,
+            -0.00017112414275329062
+          ]
+        }
+      }
+    },
+    {
+      "mode": "held_out_annotators",
+      "seed": 20261020,
+      "train_n": 23923,
+      "test_n": 6924,
+      "raw_shorter_means_clear_auc": 0.5384222871706642,
+      "normalized_shorter_means_clear_auc": 0.5384222871706642,
+      "models": {
+        "length_cohort": {
+          "auroc": 0.6445959308227851,
+          "log_loss_nats": 0.6726250432633559,
+          "brier": 0.2395565783108253
+        },
+        "length_cohort_plus_flexible_time": {
+          "auroc": 0.6450198312780179,
+          "log_loss_nats": 0.672353534923586,
+          "brier": 0.2394449113051215
+        },
+        "calibrated_metadata": {
+          "auroc": 0.6373845721773698,
+          "log_loss_nats": 0.6804163567110073,
+          "brier": 0.24276572180785733
+        },
+        "calibrated_metadata_plus_time": {
+          "auroc": 0.6372436059698542,
+          "log_loss_nats": 0.6806648720048817,
+          "brier": 0.24287365134797015
+        }
+      },
+      "timing_gains": {
+        "length_cohort_plus_flexible_time": {
+          "log_loss_reduction_nats": 0.00027150833977010696,
+          "prompt_bootstrap_95ci": [
+            -2.0834285264501922e-05,
+            0.0005779854747065755
+          ]
+        },
+        "calibrated_metadata_plus_time": {
+          "log_loss_reduction_nats": -0.00024851529387457055,
+          "prompt_bootstrap_95ci": [
+            -0.000506638075846947,
+            1.0641703117982726e-05
+          ]
+        }
+      }
+    }
+  ],
+  "elapsed_seconds": 3.8467630259983707
+}

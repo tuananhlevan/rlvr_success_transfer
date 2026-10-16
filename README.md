@@ -12,7 +12,7 @@ The [16 October research investment review](studies/rlvr_success_transfer/resear
 
 ## Latest direction screen
 
-The [new direction screen](reports/dpo_expanded/06_new_direction_screen.md) examines when anonymous choice-and-time feedback can justify a policy update. It identifies a documented timing weakness in real text annotation, records prior-art collisions, and specifies a bounded data audit. It is an uncommitted candidate; no new main project has passed the practical and novelty gates.
+The [new direction screen](reports/dpo_expanded/06_new_direction_screen.md) now records a **NO-GO investment decision** for the anonymous-timing candidate. The [completed public-data audit](studies/feedback_timing/results.json) covers 41,844 annotations and finds no consistent incremental timing benefit in the tested stated-strength predictors; the expanded prior-art check also weakens novelty. This does not establish that all timing methods fail. No new main project has passed the practical and novelty gates.
 
 The [exploration theory sprint](studies/conditional_design_limits/README.md) records exact design limits, matching sparse-family resource rates, and a correction distinguishing generated pairs from queried labels. Ordinary screening repairs its label bottleneck; practical LLM value and full-paper novelty remain unestablished. The [synthetic-error context study](studies/error_context_transfer/README.md) is retired after the direct prior-art check.
 
