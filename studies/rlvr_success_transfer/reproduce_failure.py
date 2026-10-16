@@ -540,6 +540,15 @@ def update_worker(request_path, output_path):
     write_json(output_path,receipt)
 
 
+def worker_error_tail(path,start=0,max_bytes=16384,max_lines=100):
+    """Bound diagnostics to this worker's appended output, not older failures."""
+    with Path(path).open('rb') as stream:
+        stream.seek(0,2);end=stream.tell()
+        stream.seek(max(start,end-max_bytes))
+        text=stream.read(max_bytes).decode('utf-8',errors='replace')
+    return '\n'.join(text.splitlines()[-max_lines:])
+
+
 def subprocess_phase(python,args,phase,timeout):
     check_session_margin()
     if RUN_DEADLINE is not None:
@@ -554,6 +563,7 @@ def subprocess_phase(python,args,phase,timeout):
     if CONFIG['precision']=='float16':env['VLLM_ATTENTION_BACKEND']='XFORMERS'
     path=RUN/'worker.log'
     with path.open('a') as log_file:
+        output_start=path.stat().st_size
         process=subprocess.Popen([python,'-u',str(Path(__file__).resolve()),*args],
             stdout=log_file,stderr=subprocess.STDOUT,env=env,start_new_session=True)
         started=time.monotonic()
@@ -572,6 +582,9 @@ def subprocess_phase(python,args,phase,timeout):
             time.sleep(30)
         if process.returncode==75:raise SessionPause('Worker saved a partial generation and paused for the next session.')
         if process.returncode:
+            details=worker_error_tail(path,output_start)
+            log(f'{phase}: worker error output from this invocation (last 100 lines, up to 16 KiB):')
+            print(details or '(Worker produced no output.)',flush=True)
             raise RuntimeError(f'{phase} failed with exit code {process.returncode}; see {path}')
 
 

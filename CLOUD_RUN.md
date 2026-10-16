@@ -51,6 +51,8 @@ The training ETA starts as **calibrating**. After a complete sampling, optimizat
 
 **This is a training ETA, not a full experiment finish estimate.** Periodic validation, final/confirmation evaluations, future setup and runtime downtime are excluded and identified in the output. Evaluation workload and generation lengths can change, so a full experiment completion date remains unestimated. Reaching 120 training steps does not mean all evaluations are finished. The session's pause margin and deadline describe the bounded invocation; checkpoint publication and an early platform disconnect can affect the actual finish time.
 
+If a worker fails, the driver prints that worker's last 100 log lines (up to 16 KiB) into the cell and `RUN/live.log`. The full worker output remains in `RUN/worker.log`. For older versions that only report an exit code, read that file to identify the underlying exception; the wrapper traceback does not establish its cause. Keep the checkpoint and pending rollout buffer while diagnosing a resume failure.
+
 ## Optional overrides
 
 ```python
@@ -104,11 +106,12 @@ An overflow lowers the scale and retries the **same** logical minibatch, without
 
 ## Verified here
 
-- **27 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
+- **29 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
 - Setup/run orchestration checks cover automatic defaults, saved configuration reuse and refusal to run after failed installation. Other checks cover interrupted snapshot publication, immutable-file reuse, stale-checkpoint pruning, corrupt snapshot rejection, cross-host generation resume without repeating completed samples, concatenated compressed response evidence, and `PAUSED` status.
 - Actual CPU FP16 arithmetic checks compare the split backward path against an unchunked calculation with tied weights; master parameters/moments stay FP32. An injected overflow does not consume an AdamW update.
 - A resumable HTTPS LFS download is tested with a simulated ranged response, including separation of repository credentials from object-host requests. Both notebooks' code cells compile. Their outputs are empty, and no credentials are embedded.
 - Setup checks cover streamed stdout/stderr, timed heartbeats, failed/interrupted status, child termination on interruption, completed-install reuse with repeated GPU checks, and exclusion of training commands from the restart matcher.
 - ETA checks cover calibration, exclusion of other invocations, recent-cycle averaging, session-budget messages, and distinguishing completed training from unfinished evaluation. No cloud timing accuracy has been measured.
+- Worker diagnostics checks verify bounded failure output and exclusion of earlier workers' tracebacks.
 
 **Not verified:** a live Colab/Kaggle installation, end-to-end GPU generation/training in the new environments, T4 peak memory, session throughput or platform persistence under a real VM eviction. The local Torch installation currently reports CUDA unavailable. Setup automatically runs the GPU doctor; then run an initial slice before budgeting the full study. A source GPU/CPU timing estimate cannot establish a cloud completion date.

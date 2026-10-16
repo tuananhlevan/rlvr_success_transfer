@@ -4,8 +4,8 @@
   "python": "3.11.14",
   "torch": "2.9.1",
   "unit_tests": {
-    "run": 27,
-    "passed": 27
+    "run": 29,
+    "passed": 29
   },
   "notebooks": [
     "notebooks/rlvr_kaggle.ipynb",
