@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import tarfile
 import tempfile
+import time
 import urllib.request
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -27,7 +28,8 @@ def download(repository='tuananhlevan/rlvr_success_transfer'):
     if token:headers['Authorization']='Basic '+base64.b64encode(('x-access-token:'+token).encode()).decode()
     for part in manifest['parts']:
         path=ARTIFACTS/part['name']
-        if path.exists() and path.stat().st_size==part['bytes'] and digest(path)==part['sha256']:continue
+        if path.exists() and path.stat().st_size==part['bytes'] and digest(path)==part['sha256']:
+            print(f'Reusing verified {part["name"]}',flush=True);continue
         payload=dict(operation='download',transfers=['basic'],objects=[dict(oid=part['sha256'],size=part['bytes'])])
         req=urllib.request.Request(f'https://github.com/{repository}.git/info/lfs/objects/batch',
             data=json.dumps(payload).encode(),headers=headers)
@@ -41,7 +43,16 @@ def download(repository='tuananhlevan/rlvr_success_transfer'):
         request=urllib.request.Request(action['href'],headers=download_headers)
         with urllib.request.urlopen(request,timeout=120) as response:
             mode='ab' if offset and response.status==206 else 'wb'
-            with temporary.open(mode) as output:shutil.copyfileobj(response,output,8*1024**2)
+            done=offset if mode=='ab' else 0
+            start=time.monotonic();last=start;initial=done
+            print(f'Downloading {part["name"]}: {done/1024**2:.0f}/{part["bytes"]/1024**2:.0f} MiB',flush=True)
+            with temporary.open(mode) as output:
+                while block:=response.read(8*1024**2):
+                    output.write(block);done+=len(block);now=time.monotonic()
+                    if now-last>=10:
+                        print(f'{part["name"]}: {done/1024**2:.0f}/{part["bytes"]/1024**2:.0f} MiB, {(done-initial)/1024**2/(now-start):.1f} MiB/s',flush=True)
+                        last=now
+        print(f'Verifying {part["name"]}',flush=True)
         if temporary.stat().st_size!=part['bytes'] or digest(temporary)!=part['sha256']:
             raise ValueError(f'Incomplete/corrupt download: {part["name"]}; rerun to resume it')
         temporary.replace(path)

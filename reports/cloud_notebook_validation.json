@@ -4,8 +4,8 @@
   "python": "3.11.14",
   "torch": "2.9.1",
   "unit_tests": {
-    "run": 21,
-    "passed": 21
+    "run": 25,
+    "passed": 25
   },
   "notebooks": [
     "notebooks/rlvr_kaggle.ipynb",
@@ -22,5 +22,5 @@
     "setup.py",
     "run.py"
   ],
-  "entrypoint_validation": "Mocked install/prepare/launch orchestration, automatic precision defaults, saved configuration reuse, failed-setup protection"
+  "entrypoint_validation": "Mocked install/prepare/launch orchestration, automatic precision defaults, saved configuration reuse, failed-setup protection; real small subprocess stdout/stderr streaming and heartbeats; mocked interrupt cleanup and completed-install reuse with GPU-doctor rerun. No live cloud installation or GPU execution."
 }

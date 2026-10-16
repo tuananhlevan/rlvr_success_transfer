@@ -21,6 +21,8 @@ Select a GPU runtime, then run:
 
 Setup detects the platform and GPU, installs dependencies, prepares/restores data and checkpoints, and configures persistence. Run starts or resumes a six-hour session slice. On Colab, approve setup's Drive mount prompt. On Kaggle, enable Internet and Files-only persistence. No supplied notebook is required. See the [cloud guide](CLOUD_RUN.md) for optional settings and resuming prior Kaggle outputs.
 
+Setup streams progress into the cell and saves `.cloud/setup.log`, with an elapsed-time heartbeat every 20 seconds. The first setup downloads several gigabytes of dependencies and, for default BF16, a 5.5 GB checkpoint before saving it to Drive. For an old silent setup, interrupt the cell, run `!git pull --ff-only`, then `%run setup.py --restart` to retry with retained caches. See [setup progress and retry](CLOUD_RUN.md#setup-progress-and-retry).
+
 T4 automatically uses a labelled FP16 variant and starts a fresh seed. L4/A100 uses BF16 and resumes the exported seed-1 checkpoint by default. The 120-step scientific target is retained. Cloud GPU execution remains unverified here.
 
 ## Dedicated Linux machine

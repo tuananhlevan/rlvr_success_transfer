@@ -26,6 +26,23 @@ Setup uses disposable storage for environments, model caches and the active run.
 
 The original reproduction remains incomplete. Passing setup or finishing one session slice does not establish persistent failure or a new research method.
 
+## Setup progress and retry
+
+Setup streams installer output into the cell, prints an elapsed-time heartbeat every 20 seconds, and records `.cloud/setup.log` plus `.cloud/setup_status.json`. The log appends across retries. A heartbeat means the wrapper is alive; use the installer output to see whether downloads or checks are advancing.
+
+The first installation downloads several gigabytes of Torch/CUDA/vLLM dependencies. BF16 also installs an approximately 1 GB prebuilt kernel cache, downloads the 5.5 GB checkpoint, verifies/extracts approximately 6 GB, and copies the initial snapshot to Drive. Download speed, local storage and Drive throughput determine setup time. The two environments are required by the pinned train/inference Torch versions.
+
+If an older checkout only prints `Setting up colab`, interrupt the setup cell, then run:
+
+```python
+!git pull --ff-only
+%run setup.py --restart
+```
+
+`--restart` stops leftover installer/download/prepare processes belonging to this checkout and retains completed downloads and caches. It refuses to kill an active checkpoint restore; let that process finish before retrying. A matching completed environment installation is reused, and GPU checks run again. A partially installed environment is checked against the pinned requirements using the existing package cache. Do not reset the runtime or delete caches just to retry.
+
+Once setup reports completion, run `!python run.py`.
+
 ## Optional overrides
 
 ```python
@@ -79,9 +96,10 @@ An overflow lowers the scale and retries the **same** logical minibatch, without
 
 ## Verified here
 
-- **21 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
+- **25 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
 - Setup/run orchestration checks cover automatic defaults, saved configuration reuse and refusal to run after failed installation. Other checks cover interrupted snapshot publication, immutable-file reuse, stale-checkpoint pruning, corrupt snapshot rejection, cross-host generation resume without repeating completed samples, concatenated compressed response evidence, and `PAUSED` status.
 - Actual CPU FP16 arithmetic checks compare the split backward path against an unchunked calculation with tied weights; master parameters/moments stay FP32. An injected overflow does not consume an AdamW update.
 - A resumable HTTPS LFS download is tested with a simulated ranged response, including separation of repository credentials from object-host requests. Both notebooks' code cells compile. Their outputs are empty, and no credentials are embedded.
+- Setup checks cover streamed stdout/stderr, timed heartbeats, failed/interrupted status, child termination on interruption, completed-install reuse with repeated GPU checks, and exclusion of training commands from the restart matcher.
 
 **Not verified:** a live Colab/Kaggle installation, end-to-end GPU generation/training in the new environments, T4 peak memory, session throughput or platform persistence under a real VM eviction. The local Torch installation currently reports CUDA unavailable. Setup automatically runs the GPU doctor; then run an initial slice before budgeting the full study. A source GPU/CPU timing estimate cannot establish a cloud completion date.

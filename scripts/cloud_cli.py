@@ -7,6 +7,7 @@ import subprocess
 import sys
 
 from session_store import atomic_json,candidates,publish,restore
+from setup_progress import SetupReporter,stop_previous_setup
 
 PROJECT=Path(__file__).resolve().parents[1]
 
@@ -58,28 +59,39 @@ def execution_env(config):
     return env
 
 
-def initialize_data(config,artifact_dir=None,resume_from=None):
+def initialize_data(config,artifact_dir=None,resume_from=None,reporter=None):
     run=Path(config['run_dir']);vault=Path(config['vault'])
-    if (run/'inputs.json').exists():return 'existing local progress'
+    if (run/'inputs.json').exists():
+        if reporter:reporter.output('[setup] Reusing existing prepared inputs and local progress.')
+        return 'existing local progress'
+    def execute(label,command):
+        if reporter:reporter.run(label,command,env=execution_env(config))
+        else:subprocess.run(command,check=True,env=execution_env(config))
+    def snapshot():
+        if reporter:
+            with reporter.stage('Save initial session snapshot to persistent storage'):
+                publish(run,vault,progress=True)
+        else:publish(run,vault)
     source=vault if candidates(vault) else Path(resume_from).expanduser().resolve() if resume_from else None
     if source:
-        restore(source,run)
-        if source!=vault:publish(run,vault)
+        if reporter:
+            with reporter.stage('Restore saved session from persistent storage'):restore(source,run)
+        else:restore(source,run)
+        if source!=vault:snapshot()
         return 'restored saved session'
-    env=execution_env(config)
     if config['start_from_export']:
         artifacts=Path(artifact_dir).resolve() if artifact_dir else PROJECT/'artifacts'
         command=[sys.executable,str(PROJECT/'scripts/artifacts.py'),'--artifact-dir',str(artifacts)]
-        if not artifact_dir:subprocess.run([*command,'download'],check=True,env=env)
-        subprocess.run([*command,'restore','--run-dir',str(run)],check=True,env=env)
+        if not artifact_dir:execute('Download exported checkpoint (about 5.5 GB)',[*command,'download'])
+        execute('Verify and extract checkpoint (about 6 GB)',[*command,'restore','--run-dir',str(run)])
         if config['precision']=='float16':
             atomic_json(run/'precision_transition.json',dict(from_precision='bfloat16',to_precision='float16',at_outer_step=1))
         origin='exported step-1 checkpoint and pending step-2 rollouts'
     else:
-        subprocess.run([str(PROJECT/'.venv/train/bin/python'),str(PROJECT/'studies/rlvr_success_transfer/reproduce_failure.py'),
-            'prepare','--run-dir',str(run),'--precision',config['precision']],check=True,env=env)
+        execute('Download pinned base model and prepare dataset',[str(PROJECT/'.venv/train/bin/python'),str(PROJECT/'studies/rlvr_success_transfer/reproduce_failure.py'),
+            'prepare','--run-dir',str(run),'--precision',config['precision']])
         origin='fresh pinned model and dataset'
-    publish(run,vault)
+    snapshot()
     return origin
 
 
@@ -91,6 +103,7 @@ def setup_main():
     parser.add_argument('--work-root',type=Path);parser.add_argument('--vault',type=Path)
     parser.add_argument('--resume-from',type=Path,help='A previous Kaggle output vault attached as input')
     parser.add_argument('--artifact-dir',type=Path,help='Attached migration artifacts instead of another LFS download')
+    parser.add_argument('--restart',action='store_true',help='Stop leftover setup installers/downloads for this checkout, retaining caches')
     choice=parser.add_mutually_exclusive_group()
     choice.add_argument('--fresh',action='store_true');choice.add_argument('--from-checkpoint',action='store_true')
     args=parser.parse_args()
@@ -99,16 +112,21 @@ def setup_main():
     if platform=='colab' and args.vault is None:mount_drive()
     start=False if args.fresh else True if args.from_checkpoint else None
     config=make_config(platform,precision,args.seed,args.work_root,args.vault,start)
+    if args.restart:
+        stopped=stop_previous_setup(PROJECT)
+        print(f'Stopped leftover setup processes: {stopped}; completed downloads are retained.',flush=True)
     folder=PROJECT/'.cloud';folder.mkdir(exist_ok=True)
     marker=folder/'setup_in_progress.json'
+    reporter=SetupReporter(folder)
     atomic_json(marker,dict(platform=platform,precision=precision))
     print(f'Setting up {platform}; GPU 0; precision={precision}',flush=True)
     if precision=='float16':print('T4/FP16 numerical variant: kept separate from BF16 reproduction.',flush=True)
     command=[sys.executable,str(PROJECT/'scripts/bootstrap_notebook.py'),
         '--work-root',config['work_root'],'--precision',precision]
     if precision=='bfloat16':command.append('--prebuilt-kernels')
-    subprocess.run(command,check=True,env=execution_env(config))
-    origin=initialize_data(config,args.artifact_dir,args.resume_from)
+    reporter.output(f'[setup] Detailed log: {folder/"setup.log"}')
+    reporter.run('Install dependencies and check GPU',command,env=execution_env(config))
+    origin=initialize_data(config,args.artifact_dir,args.resume_from,reporter=reporter)
     config.update(ready=True,origin=origin)
     atomic_json(folder/'session.json',config);marker.unlink()
     print(f'Setup complete: {origin}.\nCheckpoints: {config["vault"]}\nRun: python run.py',flush=True)

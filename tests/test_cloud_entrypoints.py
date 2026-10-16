@@ -17,12 +17,12 @@ class EntrypointTests(unittest.TestCase):
     def test_t4_setup_saves_configuration_and_run_uses_it(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
-            with patch.object(cloud,'PROJECT',root),patch.object(cloud,'detect_platform',return_value='colab'),patch.object(cloud,'detect_precision',return_value='float16'),patch.object(cloud,'mount_drive') as mount,patch.object(cloud,'initialize_data',return_value='fresh pinned model and dataset'),patch.object(cloud.subprocess,'run') as execute,patch.object(sys,'argv',['setup.py','--work-root',str(root/'runtime')]):
+            with patch.object(cloud,'PROJECT',root),patch.object(cloud,'detect_platform',return_value='colab'),patch.object(cloud,'detect_precision',return_value='float16'),patch.object(cloud,'mount_drive') as mount,patch.object(cloud,'initialize_data',return_value='fresh pinned model and dataset'),patch.object(cloud.SetupReporter,'run') as execute,patch.object(sys,'argv',['setup.py','--work-root',str(root/'runtime')]):
                 cloud.setup_main();mount.assert_called_once()
                 config=json.loads((root/'.cloud/session.json').read_text())
                 self.assertTrue(config['ready']);self.assertFalse(config['start_from_export'])
                 self.assertEqual(config['precision'],'float16')
-                self.assertNotIn('--prebuilt-kernels',execute.call_args.args[0])
+                self.assertNotIn('--prebuilt-kernels',execute.call_args.args[1])
                 self.assertFalse((root/'.cloud/setup_in_progress.json').exists())
             for phase in ['train','infer']:
                 path=root/f'.venv/{phase}/bin/python';path.parent.mkdir(parents=True);path.touch()
@@ -44,7 +44,7 @@ class EntrypointTests(unittest.TestCase):
     def test_failed_setup_blocks_run(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
-            with patch.object(cloud,'PROJECT',root),patch.object(cloud.subprocess,'run',side_effect=subprocess.CalledProcessError(1,'installer')),patch.object(sys,'argv',['setup.py','--platform','local','--precision','float16']):
+            with patch.object(cloud,'PROJECT',root),patch.object(cloud.SetupReporter,'run',side_effect=subprocess.CalledProcessError(1,'installer')),patch.object(sys,'argv',['setup.py','--platform','local','--precision','float16']):
                 with self.assertRaises(subprocess.CalledProcessError):cloud.setup_main()
             self.assertFalse((root/'.cloud/session.json').exists())
             with patch.object(cloud,'PROJECT',root),patch.object(sys,'argv',['run.py']):

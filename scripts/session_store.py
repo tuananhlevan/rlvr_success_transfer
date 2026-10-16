@@ -44,7 +44,7 @@ def selected_files(run):
         yield path,relative.as_posix()
 
 
-def publish(run,vault):
+def publish(run,vault,progress=False):
     run=Path(run).resolve();vault=Path(vault).resolve()
     if vault.is_relative_to(run) or run.is_relative_to(vault):raise ValueError('Run and vault must be separate directories')
     if not (run/'inputs.json').exists():return None
@@ -59,7 +59,9 @@ def publish(run,vault):
         digest=cached.get('sha256') if cached.get('signature')==signature else sha(path)
         blob=blobs/digest
         if not blob.exists() or blob.stat().st_size!=before.st_size:
+            if progress:print(f'[snapshot] Copying {name} ({before.st_size/1024**2:.1f} MiB)',flush=True)
             temp=blob.with_suffix('.tmp');shutil.copyfile(path,temp)
+            if progress:print(f'[snapshot] Verifying {name}',flush=True)
             if sha(temp)!=digest:raise ValueError(f'Copy hash mismatch: {name}')
             temp.replace(blob)
         after=path.stat()
