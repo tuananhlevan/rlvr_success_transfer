@@ -1,16 +1,26 @@
 # Research direction screen: when synthetic error supervision transfers
 
-Date: 16 October 2026. Status: **conditional mechanism study; no new method validated**.
+Date: 16 October 2026. Status: **retired in its current formulation after prior-art verification; no new method validated**.
 
 ## Decision
 
-The best remaining question from this screen is:
+The candidate question examined in this screen was:
 
 > When an identical wrong claim appears in an edited correct response and in a naturally generated wrong response, what determines whether a verifier learns correctness rather than an artifact of the surrounding response? Can that distinction predict transfer to a different generator before expensive policy training?
 
-This concerns the reliability of training rewards and generated answers. A convincing result could change how preference pairs and verifier training data are built. It is more consequential than reducing a router's inference cost.
+**Decision after the follow-up prior-art check: reject this formulation as the next research proposal.** The broad synthetic-to-natural transfer failure and the proposed consistency-over-correctness explanation already have direct precedents. Our four-cell pilot has a different construction, but it establishes neither a distinct mechanism nor a useful intervention beyond that literature. Do not allocate further experiment time to the current proposal. No conference acceptance likelihood is assigned.
 
-**It has not passed the user's full commitment standard.** The practical failure is documented, but the broad observation has prior art. Our small experiment exposes a useful confound rather than establishing a novel, naturally occurring residual failure. Recommend the bounded experiment in Section 6 before proposing a new loss or launching another long RL run. No conference acceptance likelihood is assigned.
+### Follow-up novelty audit, 16 October 2026
+
+| Primary source and reading scope | Overlap with our candidate | Boundary of the comparison |
+|---|---|---|
+| [Reward Models Identify Consistency, Not Causality](https://arxiv.org/html/2502.14619), February 2025; §§4–6 | Input interventions across reward models and math tasks motivate a consistency-bias explanation; ranking and Best-of-N are evaluated. | Different interventions from our answer-box swaps. The broad mechanism is already studied; their empirical interpretation is not a universal causal proof. |
+| [Synthetic Error Injection Fails to Elicit Self-Correction In Language Models](https://arxiv.org/html/2512.02389), December 2025; methods, §3.5 and §4 | Directly examines synthetic-to-natural error transfer despite high measured error coverage. | Self-correction rather than reward ranking; this difference alone does not supply a new mechanism. |
+| [Unsupervised Multimodal Reward Modeling](https://arxiv.org/html/2610.12707), October 2026; §3.4, Appendices F/G | Appendix F already contrasts strong planted-decoy discrimination with unchanged natural-caption selection; §3.4 tests verifier-labeled natural candidates. | Multimodal selection rather than our small text probe. Generic natural-error bootstrapping is already a tested remedy. |
+
+The last two sources were already in the earlier report. Keeping the candidate alive on the basis of an unverified exact-design difference was too optimistic. The newly checked 2025 consistency paper makes the mechanism overlap explicit. This audit uses paper text; it does not claim access to OpenReview discussion, reviews, rebuttals or metareviews.
+
+The recorded 94.4% / 66.7% / 6.2% results remain exploratory measurements. They are compatible with a known consistency shortcut, and the edits confound consistency with final-answer correctness. They neither reproduce every prior-paper setting nor establish a new causal explanation. The pair-accuracy metrics here and the multimodal paper's selected-caption metric are different and must not be compared as a numerical replication.
 
 ## 1. Evidence and intuition
 
@@ -25,11 +35,9 @@ This is a targeted primary-source screen, not a systematic review. Reading scope
 | [Optimal Design with Biased LLM Judges](https://arxiv.org/abs/2609.38860), September 2026; abstract-level collision check | An apparently informative comparison can mostly reveal the judge's bias. | Accounts for residual judge bias during acquisition and studies nuisance representation error. | Judge-aware acquisition and generic nuisance adjustment are not available novelty claims. |
 | [The Value of Being Wrong / SMILE](https://arxiv.org/abs/2610.16977), October 2026; abstract-level collision check | Past mistakes from the same model are useful demonstrations. | Mines model-specific errors for prediction-conditioned visual in-context learning. | “Use the model's own errors” is already a current remedy. |
 
-### What remains potentially distinct
+### Why the experiment's differences do not establish novelty
 
-The narrow hypothesis concerns an **interaction between the erroneous proposition and its surrounding response**, after controlling the image/question, error content, formatting and error-category coverage. The outcome must be natural candidate selection on unseen prompts and generators.
-
-The bounded search did not verify an exact duplicate of the proposed factorial experiment. That is **not a novelty certificate**. A mechanism study would need to predict transfer beyond existing sampler statistics and directly compare natural-error bootstrapping. A methods paper would additionally need a useful intervention that beats those remedies with equal information and compute.
+The proposed interaction between an erroneous claim and its surrounding response fits the existing consistency-bias explanation. A different factorial construction can help diagnose a model, but is insufficient as the contribution of a new paper. No independently useful transfer predictor, unresolved deployment failure surviving existing repairs, or new theoretical result has been established. The current candidate fails the novelty gate.
 
 ## 2. Initial experiment actually performed
 
@@ -115,7 +123,9 @@ Consequently a positive source margin exceeding ||w_n||_2 ||epsilon||_2 stays po
 
 The main theoretical fork is whether matched contrasts share a stable decision direction at all. If they do, ordinary calibration or transport may suffice. If they do not, a global invariant head is misspecified. A publishable contribution must characterize a measured regime and show why an existing nonlinear head, richer features, or natural-error data does not already resolve it.
 
-## 4. Proposed contribution, if the next gate succeeds
+## 4. Archived contribution plan — not recommended after the novelty audit
+
+The following records the earlier conditional plan; it is not an active proposal.
 
 Working study title: **When Does Synthetic Error Supervision Transfer to Natural Mistakes?**
 
@@ -143,7 +153,9 @@ Using pinned original ProteinMPNN code, its base checkpoint and a released MoMPN
 
 This establishes numerical sensitivity, not biological harm. Increasing K reduced variation. K=256 was an internal comparison estimate, not ground truth. We did not run a design-quality or property assay, a training-gradient experiment, or a complete baseline comparison. This is a closed exploratory check, not a second proposed study.
 
-## 6. Required next steps and decision gates
+## 6. Archived decision gates — stage 0 failed for the current formulation
+
+The follow-up audit failed the novelty requirement below. Later stages are retained as a record of the original plan, not as authorized or recommended experiments.
 
 | Stage | Concrete work | Advance only if |
 |---|---|---|
@@ -154,7 +166,7 @@ This establishes numerical sensitivity, not biological harm. Increasing K reduce
 | 4. Theory | Derive assumptions from the measured interaction; establish identifiability or an obstruction, and prove a decision-relevant guarantee with finite calibration data. | The theorem does not assume invariant error directions or reliable target labels without accounting for their cost. |
 | 5. Small policy test | Only after the preceding gates, perform a short policy update or reranking experiment on a second task/model. | Improved natural outcomes persist without sacrificing useful detail or merely changing answer format. |
 
-**Budget rule:** stage 0 uses no new training. Profile 20 VLM examples before stage 1. Allow at most two GPU-hours for an initial feature-only screen, including extraction; stop at the cap if the required data do not fit it. This is a spending limit, not an estimated completion time. No full RL training is justified by the current results.
+**Archived budget rule, inactive after rejection:** stage 0 uses no new training. Profile 20 VLM examples before stage 1. Allow at most two GPU-hours for an initial feature-only screen, including extraction; stop at the cap if the required data do not fit it. This is a spending limit, not an estimated completion time. No full RL training is justified by the current results.
 
 ## 7. Files and reproduction
 
@@ -171,4 +183,4 @@ The default input is the rollout bank already in this repository. The default mo
 
 ## Final self-review
 
-The literature supports an important problem. Our experiment is cheap and reproducible, and it prevents a misleading counterfactual result from being advertised as a new failure. The available evidence still falls short of a publication-ready method or a confirmed new theoretical contribution. **This is the next direction to falsify cheaply, not a claim that the search has already found a direction meeting every requirement.**
+The problem is real, but the current explanation overlaps directly with prior work. Our cheap pilot exposes a confound and remains reproducible; it does not establish the distinctive contribution required to pursue this as the next paper. **Retire the current formulation and retain its results as an exploratory negative screen.** Reopening would require a separately justified unresolved question and evidence beyond the known synthetic-transfer and consistency-bias findings. No further experiments are recommended for this formulation.

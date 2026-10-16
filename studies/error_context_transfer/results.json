@@ -1,6 +1,6 @@
 {
   "date": "2026-10-16",
-  "decision": "Conditional mechanism-study lead; no publication-ready method or new theorem established",
+  "decision": "Retired in current formulation after prior-art verification; core transfer failure and consistency mechanism already studied; no distinct contribution established",
   "text_quartet_probe": {
     "status": "exploratory; no new method validated",
     "meaning": "Final integer answer correctness only. Edits may contradict the reasoning; not overall solution quality labels.",
