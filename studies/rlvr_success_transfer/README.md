@@ -2,6 +2,8 @@
 
 **Status:** five full-parameter GPU pilot arms completed. Ordinary SFT repairs the sampled cases. The published persistent-failure cohort has not been reproduced; a new research-method recommendation remains withheld.
 
+**Compute decision, 16 October:** the [research investment review](research_review.md) recommends preserving the current checkpoint and requiring a bounded feasibility test before further multi-session training. A full baseline reproduction alone would not establish the intended new mechanism, repair or theorem.
+
 The question is: **when hard prompts already produce correct solutions, what prevents their learning from transferring, and what intervention actually removes that bottleneck?**
 
 - [Actual-failure reproduction: protocol, fidelity audit, and current status](reproduction_report.md). Full source population and 5,120-token responses; the reproduction must pass independent learning gates before any method recommendation.

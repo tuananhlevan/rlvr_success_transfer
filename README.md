@@ -8,6 +8,8 @@ Research notes, paper resources, completed pilot results, and a portable continu
 
 The export includes the step 1 model, full optimizer state, carry groups, exact input population, and saved step 2 rollout buffer. Resuming applies that pending update before generating new samples. The original run's starting greedy validation was **125/500 (25%)**; there is no final learning result yet. See the [reproduction report](studies/rlvr_success_transfer/reproduction_report.md) and [archived failure status](studies/rlvr_success_transfer/reproduction/status.json).
 
+The [16 October research investment review](studies/rlvr_success_transfer/research_review.md) recommends a bounded feasibility gate before additional multi-session training. The current evidence does not justify a multi-day methods/theory campaign. This recommendation does not stop an active run or change its saved protocol.
+
 ## Quick start: Colab or Kaggle
 
 Select a GPU runtime, then run:
