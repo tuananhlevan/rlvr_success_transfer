@@ -1,11 +1,11 @@
 {
   "validation_date": "2026-10-16",
-  "scope": "CPU correctness and notebook structure; no live cloud GPU run",
+  "scope": "CPU setup/run orchestration, numerical correctness and notebook structure; no live cloud GPU run",
   "python": "3.11.14",
   "torch": "2.9.1",
   "unit_tests": {
-    "run": 17,
-    "passed": 17
+    "run": 21,
+    "passed": 21
   },
   "notebooks": [
     "notebooks/rlvr_kaggle.ipynb",
@@ -17,6 +17,10 @@
   "current_host_cuda_available": false,
   "live_colab_tested": false,
   "live_kaggle_tested": false,
-  "github_ssh_connectivity": "DNS lookup unavailable in the current restricted session",
-  "fp16_interpretation": "Numerical variant, not the source BF16 recipe"
+  "fp16_interpretation": "Numerical variant, not the source BF16 recipe",
+  "entrypoints": [
+    "setup.py",
+    "run.py"
+  ],
+  "entrypoint_validation": "Mocked install/prepare/launch orchestration, automatic precision defaults, saved configuration reuse, failed-setup protection"
 }

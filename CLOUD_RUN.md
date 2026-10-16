@@ -1,29 +1,48 @@
-# Colab and Kaggle execution
+# Run in Colab or Kaggle
 
-## Choose a notebook
+Select a GPU runtime first. On Kaggle, enable Internet and Files-only persistence. Then run these commands in the platform's code cells:
 
-| Runtime | Notebook | Numerical recipe |
+```python
+!GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/tuananhlevan/rlvr_success_transfer.git /tmp/rlvr_success_transfer
+%cd /tmp/rlvr_success_transfer
+%run setup.py
+!python run.py
+```
+
+`setup.py` detects Colab/Kaggle and the GPU, installs the isolated Python environments, runs GPU checks, downloads the pinned model/data or restores the checkpoint, and saves the run configuration. It mounts Google Drive on Colab; approve the normal Drive authorization prompt. `%run` executes setup in the notebook kernel so that authorization can open. `run.py` reads the saved configuration and starts or resumes training.
+
+You do not need to upload or edit a supplied notebook, install dependencies separately, or pass the driver's internal arguments. The `.ipynb` files are optional examples. The root setup/run files are the standard entry points.
+
+## Automatic defaults
+
+| GPU | Precision | First run |
 |---|---|---|
-| Colab L4/A100 or another GPU with native BF16 | [Colab notebook](notebooks/rlvr_colab.ipynb) | BF16 forward, FP32 master parameters and AdamW |
-| Colab T4 | Same notebook, explicitly set `PRECISION="float16"` | FP16 variant, FP32 master/AdamW, loss scaling |
-| Kaggle T4 x2 | [Kaggle notebook](notebooks/rlvr_kaggle.ipynb) | FP16 variant using GPU 0 only |
+| Native BF16, such as L4/A100 | BF16 forward, FP32 master parameters and AdamW | Resume the exported seed-1 checkpoint |
+| T4 | FP16 forward, FP32 master parameters/AdamW and loss scaling | Fresh seed-1 FP16 experiment |
 
-**A T4 run is not the original BF16 numerical recipe.** Its settings and result files are labelled accordingly. Do not pool it with BF16 reproduction seeds. The notebook defaults preserve the full population, eight responses per group, 5,120-token cap, logical batch/loss weighting, learning rate, 16 AdamW updates per outer step, and 120-step scientific target. Physical transformer batches shrink to one; inference concurrency and request chunks also shrink. These change floating-point reduction order and generation scheduling.
+T4 results are labelled as an FP16 numerical variant and kept separate from the BF16 reproduction. The full population, eight responses per group, 5,120-token cap, learning rate, logical batch weighting and 120-step scientific target are retained. Physical transformer batches and inference concurrency are reduced for cloud runtimes.
 
-This remains a reproduction attempt. The local pilot was repaired by ordinary SFT, and persistent failure has not yet been reproduced. Running a notebook slice or passing a GPU check does not change that conclusion.
+Setup uses disposable storage for environments, model caches and the active run. It saves verified session snapshots to Drive on Colab or `/kaggle/working` on Kaggle. Running setup again reuses an existing local run or restores its saved snapshot. After a new runtime starts, repeat clone, setup and run.
 
-## First session
+The original reproduction remains incomplete. Passing setup or finishing one session slice does not establish persistent failure or a new research method.
 
-1. Upload the appropriate `.ipynb` through Colab's **File → Upload notebook** or Kaggle's notebook import UI.
-2. Select a GPU. For the BF16 path, use L4/A100 or another Ampere-or-newer GPU. For Kaggle, select the available T4 option and enable Internet.
-3. Configure the first cell. If GitHub is private, create a platform secret named `GITHUB_TOKEN` with repository read access and enable `USE_GITHUB_SECRET`. No SSH key is required. Public repositories need no token.
-4. Colab: mount Drive. Kaggle: enable **Files only persistence before running**. Only the vault is written under `/kaggle/working`; code, virtual environments, caches and the active run stay in disposable storage.
-5. Run the code and setup cells. The bootstrap installs managed **Python 3.11.14** and the locked training/inference environments without replacing the notebook kernel packages. The GPU doctor must pass before training. On BF16 GPUs it checks the pinned FlashInfer cache/kernel path; T4 checks xFormers attention instead.
-6. Choose fresh training or checkpoint continuation, then run a session slice. The Colab notebook defaults to the exported step-1 continuation; Kaggle defaults to a **fresh FP16 seed**. An FP16 continuation of the BF16 checkpoint is explicitly recorded as a precision transition.
+## Optional overrides
 
-If these changes are not yet available from GitHub, use the supplied **`notebook_support.zip`** overlay. Colab prompts for it when the helper script is absent. On Kaggle, attach the ZIP as input and set `CODE_OVERLAY` to its path. The overlay contains code/documentation, not the multi-gigabyte checkpoint. The notebooks then use the already exported model/data resources from the repository.
+```python
+# Start a fresh experiment on a BF16 GPU instead of downloading the exported checkpoint.
+%run setup.py --fresh
 
-Checkpoint restoration can fetch existing LFS objects through HTTPS without installing Git LFS. It verifies every part against the manifest and can resume partial downloads. Alternatively, attach the manifest, all six checkpoint parts, and `pending_update_buffer.json.gz` as a Kaggle dataset and set `ARTIFACT_DIR`. Resuming an existing vault does not download the original checkpoint again.
+# Explicitly continue the BF16 step-1 export on T4; records a precision transition.
+%run setup.py --from-checkpoint
+
+# Resume a previous Kaggle notebook's saved output, attached as input.
+%run setup.py --resume-from /kaggle/input/PREVIOUS_OUTPUT/vault_float16_seed1
+
+# Change this session's time budget without changing the scientific target.
+!python run.py --hours 8
+```
+
+`setup.py --vault PATH` selects another persistent location. `--artifact-dir PATH` uses an attached directory containing `manifest.json`, all six checkpoint parts and `pending_update_buffer.json.gz`. Otherwise setup downloads and verifies existing LFS objects over HTTPS when checkpoint migration is selected. Subsequent sessions restore the saved vault without downloading the export again. Repository credentials, when required, can be supplied through the `GITHUB_TOKEN` environment variable.
 
 ## Sessions and persistence
 
@@ -44,9 +63,9 @@ Reserve roughly **13 GB free** for old-plus-incoming checkpoint files during rep
 
 ### Resume
 
-- **Colab:** start another GPU runtime, mount the same Drive, and rerun the notebook with the same seed/precision/vault. The latest snapshot is verified and restored into local storage.
-- **Kaggle, same editing session:** reuse Files-only persistence and rerun the notebook.
-- **Kaggle, clean version/session:** save the previous outputs, attach that notebook output as input, and set `PRIOR_VAULT` to its `vault_float16_seed1` directory. Restoration reads the attached snapshot; the new session publishes to its own `/kaggle/working` vault. A new **Save & Run All** starts clean, so explicitly attach the prior outputs. [Kaggle persistence notice](https://www.kaggle.com/discussions/product-feedback/355440), [notebook version documentation](https://www.kaggle.com/docs/notebooks).
+- **Colab:** start another GPU runtime, mount the same Drive, and rerun setup and run with the same seed/precision/vault. The latest snapshot is verified and restored into local storage.
+- **Kaggle, same editing session:** reuse Files-only persistence and rerun setup and run.
+- **Kaggle, clean version/session:** save the previous outputs, attach that notebook output as input, and pass its `vault_float16_seed1` directory to `setup.py --resume-from`. Restoration reads the attached snapshot; the new session publishes to its own `/kaggle/working` vault. A new **Save & Run All** starts clean, so explicitly attach the prior outputs. [Kaggle persistence notice](https://www.kaggle.com/discussions/product-feedback/355440), [notebook version documentation](https://www.kaggle.com/docs/notebooks).
 
 `PAUSED` is a successful session slice with unfinished scientific work. **A shorter wall-clock slice does not shorten the 120-step target.** Do not replace it with `--steps 2` and treat the result as the full reproduction. If a session ends during optimization, the uncommitted outer update replays from the saved checkpoint and rollout buffer; individual inner AdamW updates are not separately checkpointed. The margin reduces this risk, but a slow phase or early platform termination can still lose work since the last publish. Mounted Drive persistence is not a transactional local filesystem, so a hard disconnect can also leave an incomplete upload; restore verifies hashes rather than trusting file existence.
 
@@ -60,9 +79,9 @@ An overflow lowers the scale and retries the **same** logical minibatch, without
 
 ## Verified here
 
-- **17 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
-- New checks cover interrupted snapshot publication, immutable-file reuse, stale-checkpoint pruning, corrupt snapshot rejection, cross-host generation resume without repeating completed samples, concatenated compressed response evidence, and `PAUSED` status.
+- **21 CPU tests**, including the eight original migration tests, pass with Torch 2.9.1.
+- Setup/run orchestration checks cover automatic defaults, saved configuration reuse and refusal to run after failed installation. Other checks cover interrupted snapshot publication, immutable-file reuse, stale-checkpoint pruning, corrupt snapshot rejection, cross-host generation resume without repeating completed samples, concatenated compressed response evidence, and `PAUSED` status.
 - Actual CPU FP16 arithmetic checks compare the split backward path against an unchunked calculation with tied weights; master parameters/moments stay FP32. An injected overflow does not consume an AdamW update.
 - A resumable HTTPS LFS download is tested with a simulated ranged response, including separation of repository credentials from object-host requests. Both notebooks' code cells compile. Their outputs are empty, and no credentials are embedded.
 
-**Not verified:** a live Colab/Kaggle installation, end-to-end GPU generation/training in the new environments, T4 peak memory, session throughput or platform persistence under a real VM eviction. The local Torch installation currently reports CUDA unavailable. Run the notebook GPU doctor and then an initial slice before budgeting the full study. A source GPU/CPU timing estimate cannot establish a cloud completion date.
+**Not verified:** a live Colab/Kaggle installation, end-to-end GPU generation/training in the new environments, T4 peak memory, session throughput or platform persistence under a real VM eviction. The local Torch installation currently reports CUDA unavailable. Setup automatically runs the GPU doctor; then run an initial slice before budgeting the full study. A source GPU/CPU timing estimate cannot establish a cloud completion date.

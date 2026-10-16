@@ -8,11 +8,22 @@ Research notes, paper resources, completed pilot results, and a portable continu
 
 The export includes the step 1 model, full optimizer state, carry groups, exact input population, and saved step 2 rollout buffer. Resuming applies that pending update before generating new samples. The original run's starting greedy validation was **125/500 (25%)**; there is no final learning result yet. See the [reproduction report](studies/rlvr_success_transfer/reproduction_report.md) and [archived failure status](studies/rlvr_success_transfer/reproduction/status.json).
 
-## Machine requirements
+## Quick start: Colab or Kaggle
 
-### Google Colab or Kaggle
+Select a GPU runtime, then run:
 
-Use the [Colab notebook](notebooks/rlvr_colab.ipynb) or [Kaggle notebook](notebooks/rlvr_kaggle.ipynb), with the [cloud session guide](CLOUD_RUN.md). They install isolated Python environments, keep checkpoint/session state in persistent storage, and resume bounded session slices. T4 uses an explicitly labelled FP16 numerical variant; Colab L4/A100 supports the BF16 path. The 120-step scientific target is retained. Cloud GPU execution has not yet been validated here.
+```python
+!GIT_LFS_SKIP_SMUDGE=1 git clone https://github.com/tuananhlevan/rlvr_success_transfer.git /tmp/rlvr_success_transfer
+%cd /tmp/rlvr_success_transfer
+%run setup.py
+!python run.py
+```
+
+Setup detects the platform and GPU, installs dependencies, prepares/restores data and checkpoints, and configures persistence. Run starts or resumes a six-hour session slice. On Colab, approve setup's Drive mount prompt. On Kaggle, enable Internet and Files-only persistence. No supplied notebook is required. See the [cloud guide](CLOUD_RUN.md) for optional settings and resuming prior Kaggle outputs.
+
+T4 automatically uses a labelled FP16 variant and starts a fresh seed. L4/A100 uses BF16 and resumes the exported seed-1 checkpoint by default. The 120-step scientific target is retained. Cloud GPU execution remains unverified here.
+
+## Dedicated Linux machine
 
 The desktop commands below remain available for a dedicated machine.
 

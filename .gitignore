@@ -9,3 +9,5 @@ __pycache__/
 .DS_Store
 artifacts/.checkpoint.tar.gz
 artifacts/*.download
+.cloud/
+.runtime/
